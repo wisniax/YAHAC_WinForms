@@ -48,12 +48,13 @@ namespace nic_z_tego_nie_bd
 			ahCacheTemp.totalPages = ahFetcher.AHpages[0].totalPages;
 
 
-			//get rid of not bin auctions //For now:)
+			//get rid of not bin auctions and assign dictionary key //For now:)
 			var tasks = new List<Task>();
 			foreach (var onePage in ahFetcher.AHpages)
 			{
 				//https://stackoverflow.com/questions/17119075/do-you-have-to-put-task-run-in-a-method-to-make-it-async
-				var task = Task.Run(()=> onePage.auctions.RemoveAll(vari => vari.bin == false));
+				//var task = Task.Run(() => onePage.auctions.RemoveAll(vari => vari.bin == false));
+				var task = Task.Run(() => prepPage(onePage));
 				tasks.Add(task);
 			}
 			await Task.WhenAll(tasks);
@@ -64,50 +65,140 @@ namespace nic_z_tego_nie_bd
 			{
 				wholeAH.AddRange(i.auctions);
 			}
-			wholeAH.Sort((x,y)=>x.item_name.CompareTo(y.item_name));
 
 			//Split to multiple lists
 			//Repo: https://stackoverflow.com/questions/2697253/using-linq-to-group-a-list-of-objects-into-a-new-grouped-list-of-list-of-objects
 			//Nahh not req rn
-		
+
 			//move to dictionary
 			List<AuctionHouseFetcher.itemData> existingItems;
+			wholeAH.Sort((x, y) => x.dictKey.CompareTo(y.dictKey));
 			foreach (var item in wholeAH)
 			{
-				if (ahCacheTemp.items.TryGetValue(item.item_name, out existingItems)==true)
+				if (ahCacheTemp.items.TryGetValue(item.dictKey, out existingItems) == true)
 				{
 					existingItems.Add(item);
 				}
 				else
 				{
-					ahCacheTemp.items.Add(item.item_name,new List<AuctionHouseFetcher.itemData> { item });
+					ahCacheTemp.items.Add(item.dictKey, new List<AuctionHouseFetcher.itemData> { item });
 				}
 			}
-
+			ahCache = ahCacheTemp;
 
 
 			//ahCacheTemp.items = Enumerable.ToDictionary(wholeAH, (a) => (a.item_name), (a) => (a));
-			
+
 
 		}
-		static void prepPages(AuctionHouseFetcher.AuctionHousePage onePage) //testing for void type should be Task<AuctionHouseFetcher.AuctionHousePage> if does not work
+		static void prepPage(AuctionHouseFetcher.AuctionHousePage onePage) //testing for void type should be Task<AuctionHouseFetcher.AuctionHousePage> if does not work
 		{
 			onePage.auctions.RemoveAll(vari => vari.bin == false);
+
+
+			//All the reforges in game
+			//var nameReforges = new[] { "", "", "", "" };
+			var swordReforges = new[] { "Gentle", "Odd", "Fast", "Fair", "Epic", "Sharp", "Sharp", "Spicy",
+						"Legendary", "Dirty", "Fabled", "Suspicious", "Gilded", "Warped", "Withered", "Bulky"};
+
+			var rodReforges = new[] { "Salty", "Treacherous", "Stiff", "Lucky" };
+
+			var bowReforges = new[] { "Deadly", "Fine", "Grand", "Hasty", "Neat", "Rapid", "Unreal", "Awkward",
+						"Rich", "Precise", "Spiritual", "Headstrong" };
+
+			var armorReforges = new[] { "Clean", "Fierce", "Heavy", "Light", "Mythic", "Pure", "Smart", "Titanic",
+						"Wise", "Perfect", "Necrotic", "Ancient", "Spiked", "Renowned", "Cubic", "Warped", "Reinforced",
+						"Loving", "Ridiculous", "Empowered", "Giant", "Submerged", "Jaded", "Very", "Highly", "Extremely",
+						"Thicc", "Absolutely" };
+
+			var AccessoriesReforges = new[] { "Bizarre", "Itchy", "Ominous", "Pleasant", "Pretty", "Shiny", "Simple",
+						"Strange", "Vivid", "Godly", "Demonic", "Forceful", "Hurtful", "Keen", "Strong", "Superior", "Unpleasant",
+						"Zealous", "Silky", "Bloody", "Shaded", "Sweet" };
+
+			var toolReforges = new[] { "Moil", "Toil", "Blessed", "Bountiful", "Magnetic", "Fruitful", "Refined", "Stellar",
+						"Mithraic", "Auspicious", "Fleet", "Heated", "Ambered" };
+
+
+			//Check each item in 1 page
 			foreach (var item in onePage.auctions)
 			{
-				//Regex pattern = new Regex("[;,\t\r ]|[\n]{2}");
+				//set dictName for each item
 				string itemName = item.item_name;
-				if (itemName.Contains("[Lvl ")==true)
+				switch (item.category)
 				{
-					var index = itemName.IndexOf(']');
-					item.dictKey = itemName.Remove(0, index + 1);
-				}
-				else if (new[] { "Gentle", "Odd", "Fast" }.Any(c => itemName.Contains(c)) == true)
-				{
+					case "weapon":
+						if ((swordReforges.Any(s => itemName.Contains(s)) == true) || (bowReforges.Any(s => itemName.Contains(s)) == true))
+						{
+							int spcIndex = itemName.IndexOf(' ');
+							item.dictKey = itemName.Remove(0, spcIndex + 1);
+							break;
+						}
+						else
+						{
+							item.dictKey = itemName;
+							break;
+						}
 
-				}
-			}
-		}
+					case "armor":
+						if (armorReforges.Any(s => itemName.Contains(s)) == true)
+						{
+							
+							int spcIndex = itemName.IndexOf(' ');
+							item.dictKey = itemName.Remove(0, spcIndex + 1);
+							break;
+						}
+						else if (itemName.Contains("Not So") == true)
+						{
+							int spcIndex = itemName.IndexOf(' ');
+							spcIndex = itemName.IndexOf(' ', spcIndex + 1);
+							item.dictKey = itemName.Remove(0, spcIndex + 1);
+							break;
+						}
+						else
+						{
+							item.dictKey = itemName;
+							break;
+						}
+
+					case "accessories":
+						if (AccessoriesReforges.Any(s => itemName.Contains(s)) == true)
+						{
+							int spcIndex = itemName.IndexOf(' ');
+							item.dictKey = itemName.Remove(0, spcIndex + 1);
+							break;
+						}
+						else
+						{
+							item.dictKey = itemName;
+							break;
+						}
+
+					case "consumables":
+						item.dictKey = itemName;
+						break;
+
+					case "blocks":
+						item.dictKey = itemName;
+						break;
+
+					case "misc": //add tools reforge removal and "Even More" ref removal
+						if (itemName.Contains("[Lvl ") == true)
+						{
+							var index = itemName.IndexOf(']');
+							item.dictKey = itemName.Remove(0, index + 2);
+							break;
+						}
+						else
+						{
+							item.dictKey = itemName;
+							break;
+						}
+					default:
+						item.dictKey = "Unsorted :(";
+						break;
+				}//ENDOF switch
+			}//ENDOF foreach item
+		}//ENDOF function
 
 
 
@@ -215,13 +306,11 @@ namespace nic_z_tego_nie_bd
 			public UInt64 start { get; set; }
 			public UInt64 end { get; set; }
 			public string item_name { get; set; }
+			public string category { get; set; }
 			public string dictKey { get; set; }
 			public UInt32 starting_bid { get; set; }
 			public UInt32 highest_bid_amount { get; set; }
 			public bool bin { get; set; }
 		}
-
-
-
 	}
 }
