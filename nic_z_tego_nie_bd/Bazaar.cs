@@ -22,12 +22,12 @@ namespace nic_z_tego_nie_bd
 			guilastUpdated = 0;
 			InitializeComponent();
 		}
-		public void textBoxWrite()
-		{
-			decimal timeElapsed = (decimal)(DateTimeOffset.Now.ToUnixTimeMilliseconds() - bazaarCheckup.bazaarObj.lastUpdated) / 1000;
-			textBox1.Clear();
-			textBox1.Text = timeElapsed.ToString("F1")+" "+ HttpCliento.reqInLastMinute;
-		}
+		//public void textBoxWrite()
+		//{
+		//	decimal timeElapsed = (decimal)(DateTimeOffset.Now.ToUnixTimeMilliseconds() - bazaarCheckup.bazaarObj.lastUpdated) / 1000;
+		//	textBox1.Clear();
+		//	textBox1.Text = timeElapsed.ToString("F1")+" "+ HttpCliento.reqInLastMinute;
+		//}
 		public void listWrite()
 		{
 			listBox1.BeginUpdate();
@@ -41,7 +41,7 @@ namespace nic_z_tego_nie_bd
 
 		private void timer1_Tick(object sender, EventArgs e)
 		{
-			textBoxWrite();
+			//textBoxWrite();
 			if (bazaarCheckup.bazaarObj.lastUpdated != guilastUpdated)
 			{
 				guilastUpdated = bazaarCheckup.bazaarObj.lastUpdated;
@@ -70,7 +70,7 @@ namespace nic_z_tego_nie_bd
 
 		private void timer2_Tick(object sender, EventArgs e)
 		{
-			textBoxWrite();
+			//textBoxWrite();
 			if (bazaarCheckup.bazaarObj.lastUpdated != guilastUpdated)
 			{
 				guilastUpdated = bazaarCheckup.bazaarObj.lastUpdated;

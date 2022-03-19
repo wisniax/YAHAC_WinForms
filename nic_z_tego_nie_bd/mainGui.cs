@@ -67,6 +67,15 @@ namespace nic_z_tego_nie_bd
 			loadForm(new AuctionHouse());
 		}
 
+		private void timerRefScreenTimer_Tick(object sender, EventArgs e)
+		{
+			decimal ahTime = (Decimal)(DateTimeOffset.Now.ToUnixTimeMilliseconds() - AuctionHouseInstance.ahCache.lastUpdated) / 1000;
+			decimal bzTime = (Decimal)(DateTimeOffset.Now.ToUnixTimeMilliseconds() - bazaarCheckup.bazaarObj.lastUpdated) / 1000;
+			int reqInLastMin = HttpCliento.reqInLastMinute;
+			ahAgeBox.Text = ahTime.ToString("F1");
+			bzAgeBox.Text = bzTime.ToString("F1");
+			apiReqBox.Text = reqInLastMin.ToString();
+		}
 
 		private void buttonBazaar_Click(object sender, EventArgs e)
 		{

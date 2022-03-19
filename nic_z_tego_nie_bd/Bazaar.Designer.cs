@@ -33,7 +33,6 @@ namespace nic_z_tego_nie_bd
 			System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
             "amount",
             "price"}, -1);
-			this.textBox1 = new System.Windows.Forms.TextBox();
 			this.timer1 = new System.Windows.Forms.Timer(this.components);
 			this.listBox1 = new System.Windows.Forms.ListBox();
 			this.listView1 = new System.Windows.Forms.ListView();
@@ -41,17 +40,6 @@ namespace nic_z_tego_nie_bd
 			this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
 			this.timer2 = new System.Windows.Forms.Timer(this.components);
 			this.SuspendLayout();
-			// 
-			// textBox1
-			// 
-			this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.textBox1.Location = new System.Drawing.Point(556, 397);
-			this.textBox1.Multiline = true;
-			this.textBox1.Name = "textBox1";
-			this.textBox1.ReadOnly = true;
-			this.textBox1.Size = new System.Drawing.Size(82, 41);
-			this.textBox1.TabIndex = 1;
-			this.textBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
 			// 
 			// timer1
 			// 
@@ -110,7 +98,6 @@ namespace nic_z_tego_nie_bd
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(650, 450);
-			this.Controls.Add(this.textBox1);
 			this.Controls.Add(this.listBox1);
 			this.Controls.Add(this.listView1);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -118,13 +105,10 @@ namespace nic_z_tego_nie_bd
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "Bazaar";
 			this.ResumeLayout(false);
-			this.PerformLayout();
 
 		}
 
 		#endregion
-
-		private System.Windows.Forms.TextBox textBox1;
 		private System.Windows.Forms.Timer timer1;
 		private System.Windows.Forms.ListBox listBox1;
 		private System.Windows.Forms.ListView listView1;

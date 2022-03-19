@@ -34,8 +34,12 @@ namespace nic_z_tego_nie_bd
 			this.panelSideMenu = new System.Windows.Forms.Panel();
 			this.buttonAh = new System.Windows.Forms.Button();
 			this.buttonBazaar = new System.Windows.Forms.Button();
-			this.mainPanel = new System.Windows.Forms.Panel();
 			this.timerAH = new System.Windows.Forms.Timer(this.components);
+			this.ahAgeBox = new System.Windows.Forms.TextBox();
+			this.bzAgeBox = new System.Windows.Forms.TextBox();
+			this.apiReqBox = new System.Windows.Forms.TextBox();
+			this.mainPanel = new System.Windows.Forms.Panel();
+			this.timerRefScreenTimer = new System.Windows.Forms.Timer(this.components);
 			this.panelSideMenu.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -55,7 +59,7 @@ namespace nic_z_tego_nie_bd
 			this.panelSideMenu.Location = new System.Drawing.Point(0, 0);
 			this.panelSideMenu.Name = "panelSideMenu";
 			this.panelSideMenu.Padding = new System.Windows.Forms.Padding(3);
-			this.panelSideMenu.Size = new System.Drawing.Size(150, 450);
+			this.panelSideMenu.Size = new System.Drawing.Size(150, 411);
 			this.panelSideMenu.TabIndex = 0;
 			// 
 			// buttonAh
@@ -88,6 +92,54 @@ namespace nic_z_tego_nie_bd
 			this.buttonBazaar.UseVisualStyleBackColor = false;
 			this.buttonBazaar.Click += new System.EventHandler(this.buttonBazaar_Click);
 			// 
+			// timerAH
+			// 
+			this.timerAH.Enabled = true;
+			this.timerAH.Interval = 1000;
+			this.timerAH.Tick += new System.EventHandler(this.timerAH_Tick);
+			// 
+			// ahAgeBox
+			// 
+			this.ahAgeBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.ahAgeBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			this.ahAgeBox.Cursor = System.Windows.Forms.Cursors.Arrow;
+			this.ahAgeBox.Location = new System.Drawing.Point(748, 383);
+			this.ahAgeBox.MaxLength = 4;
+			this.ahAgeBox.Name = "ahAgeBox";
+			this.ahAgeBox.ReadOnly = true;
+			this.ahAgeBox.Size = new System.Drawing.Size(24, 16);
+			this.ahAgeBox.TabIndex = 3;
+			this.ahAgeBox.Text = "AH";
+			this.ahAgeBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+			// 
+			// bzAgeBox
+			// 
+			this.bzAgeBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.bzAgeBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			this.bzAgeBox.Cursor = System.Windows.Forms.Cursors.Arrow;
+			this.bzAgeBox.Location = new System.Drawing.Point(718, 383);
+			this.bzAgeBox.MaxLength = 4;
+			this.bzAgeBox.Name = "bzAgeBox";
+			this.bzAgeBox.ReadOnly = true;
+			this.bzAgeBox.Size = new System.Drawing.Size(24, 16);
+			this.bzAgeBox.TabIndex = 4;
+			this.bzAgeBox.Text = "bz";
+			this.bzAgeBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+			// 
+			// apiReqBox
+			// 
+			this.apiReqBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.apiReqBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			this.apiReqBox.Cursor = System.Windows.Forms.Cursors.Arrow;
+			this.apiReqBox.Location = new System.Drawing.Point(718, 361);
+			this.apiReqBox.MaxLength = 10;
+			this.apiReqBox.Name = "apiReqBox";
+			this.apiReqBox.ReadOnly = true;
+			this.apiReqBox.Size = new System.Drawing.Size(54, 16);
+			this.apiReqBox.TabIndex = 5;
+			this.apiReqBox.Text = "req/sec";
+			this.apiReqBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+			// 
 			// mainPanel
 			// 
 			this.mainPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -95,26 +147,29 @@ namespace nic_z_tego_nie_bd
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.mainPanel.Location = new System.Drawing.Point(153, 3);
 			this.mainPanel.Name = "mainPanel";
-			this.mainPanel.Size = new System.Drawing.Size(646, 447);
+			this.mainPanel.Size = new System.Drawing.Size(628, 408);
 			this.mainPanel.TabIndex = 2;
 			// 
-			// timerAH
+			// timerRefScreenTimer
 			// 
-			this.timerAH.Enabled = true;
-			this.timerAH.Interval = 1000;
-			this.timerAH.Tick += new System.EventHandler(this.timerAH_Tick);
+			this.timerRefScreenTimer.Enabled = true;
+			this.timerRefScreenTimer.Tick += new System.EventHandler(this.timerRefScreenTimer_Tick);
 			// 
 			// MainGui
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(800, 450);
+			this.ClientSize = new System.Drawing.Size(784, 411);
+			this.Controls.Add(this.apiReqBox);
 			this.Controls.Add(this.panelSideMenu);
+			this.Controls.Add(this.ahAgeBox);
+			this.Controls.Add(this.bzAgeBox);
 			this.Controls.Add(this.mainPanel);
 			this.Name = "MainGui";
 			this.Text = "Form1";
 			this.panelSideMenu.ResumeLayout(false);
 			this.ResumeLayout(false);
+			this.PerformLayout();
 
         }
 
@@ -122,9 +177,13 @@ namespace nic_z_tego_nie_bd
         private System.Windows.Forms.Timer timerBZ;
 		private System.Windows.Forms.Panel panelSideMenu;
 		private System.Windows.Forms.Button buttonBazaar;
-		private System.Windows.Forms.Panel mainPanel;
 		private System.Windows.Forms.Button buttonAh;
 		private System.Windows.Forms.Timer timerAH;
+		private System.Windows.Forms.TextBox ahAgeBox;
+		private System.Windows.Forms.TextBox bzAgeBox;
+		private System.Windows.Forms.TextBox apiReqBox;
+		private System.Windows.Forms.Panel mainPanel;
+		private System.Windows.Forms.Timer timerRefScreenTimer;
 	}
 }
 

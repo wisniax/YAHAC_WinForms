@@ -110,7 +110,9 @@ namespace nic_z_tego_nie_bd
 		public static async Task refresh()
 		{
 			var ahFetcher = new AuctionHouseFetcher();
-			await Task.Run(() => ahFetcher.refresh());
+			var ahFetchTask = await ahFetcher.refresh();
+			if (ahFetchTask == false) return;
+			//await Task.Run(() => ahFetcher.refresh());
 			auctionHouse ahCacheTemp = new auctionHouse();
 			ahCacheTemp.items = new Dictionary<string, List<AuctionHouseFetcher.itemData>>();
 			ahCacheTemp.totalAuctions = ahFetcher.AHpages[0].totalAuctions;
@@ -215,6 +217,7 @@ namespace nic_z_tego_nie_bd
 							int spcIndex = item.dictKey.IndexOf('✪');
 							int count = item.dictKey.Count(f => f == '✪');
 							item.dictKey = item.dictKey.Remove(spcIndex, count);
+							item.dictKey = item.dictKey.TrimEnd();
 						}
 
 						break;
@@ -242,6 +245,7 @@ namespace nic_z_tego_nie_bd
 							int spcIndex = item.dictKey.IndexOf('✪');
 							int count = item.dictKey.Count(f => f == '✪');
 							item.dictKey = item.dictKey.Remove(spcIndex, count);
+							item.dictKey = item.dictKey.TrimEnd();
 						}
 
 						break;
@@ -324,11 +328,13 @@ namespace nic_z_tego_nie_bd
 			page1TimeStamp = 0;
 			AHpages = new List<AuctionHousePage>(); //new AuctionHousePage[100]
 		}
-		public async Task refresh()
+		public async Task<bool> refresh()
 		{//https://stackoverflow.com/questions/25009437/running-multiple-async-tasks-and-waiting-for-them-all-to-complete
 		 //https://docs.microsoft.com/en-us/dotnet/standard/asynchronous-programming-patterns/task-based-asynchronous-pattern-tap
 			AHpages.Clear();
 			var firstPage = await getAhPageAsync(0);
+			if (firstPage.success == false) return false;
+
 			AHpages.Add(firstPage);
 			page1TimeStamp = AHpages[0].lastUpdated;
 			int page1age = (int)(DateTimeOffset.Now.ToUnixTimeMilliseconds() - page1TimeStamp);
@@ -343,13 +349,14 @@ namespace nic_z_tego_nie_bd
 				}
 				//Handle them
 				try { await Task.WhenAll(tasks); }
-				catch { await refresh(); return; }
+				catch { await Task.Delay(5000); return false; }
 				//Parse collected data
 				for (int i = 1; (i < AHpages[0].totalPages); i++)
 				{
 					AHpages.Add(tasks[i - 1].Result);
-					if (AHpages[i - 1].lastUpdated != page1TimeStamp) { await refresh(); return; }
+					if (AHpages[i].lastUpdated != page1TimeStamp) { await Task.Delay(5000); return false; }
 				}
+				return true;
 			}
 			else
 			{//If the data was too old wait a bit and repeat the refresh Task then
@@ -362,7 +369,7 @@ namespace nic_z_tego_nie_bd
 					await Task.Delay(5000);
 				}
 				await refresh();
-				return;
+				return true;
 			}
 		}
 
