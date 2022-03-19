@@ -6,7 +6,9 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 using System.Windows.Forms;
+using System.Windows;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
@@ -16,9 +18,77 @@ namespace nic_z_tego_nie_bd
 	//AH FORM
 	public partial class AuctionHouse : Form
 	{
+		public long guilastUpdated;
 		public AuctionHouse()
 		{
+			guilastUpdated = 0;
 			InitializeComponent();
+			listBoxWrite();
+		}
+		public void listBoxWrite()
+		{
+			listBox1.BeginUpdate();
+			listBox1.Items.Clear();
+			guilastUpdated = AuctionHouseInstance.ahCache.lastUpdated;
+			foreach (var item in AuctionHouseInstance.ahCache.items)
+			{
+				listBox1.Items.Add(item.Key);
+			}
+			listBox1.EndUpdate();
+		}
+
+		private void timer1_Tick(object sender, EventArgs e)
+		{
+			if ((guilastUpdated != AuctionHouseInstance.ahCache.lastUpdated) && (AuctionHouseInstance.ahCache.success == true))
+			{
+				timer1.Stop();
+				listBoxWrite();
+				timer1.Start();
+			}
+		}
+
+		private void listBox1_DoubleClick(object sender, EventArgs e)
+		{
+			if (listBox1.SelectedItem == null) return;
+			listBox1.Hide();
+			timer1.Stop();
+			guilastUpdated = 0;
+			timer2.Start();
+			listViewItemDetails.Show();
+		}
+		private void showExtraInfo()
+		{
+			listViewItemDetails.Items.Clear();
+			var listedItems = AuctionHouseInstance.ahCache.items[listBox1.SelectedItem.ToString()];
+			listedItems.Sort((x, y) => x.starting_bid.CompareTo(y.starting_bid));
+			foreach (var item in listedItems)
+			{
+				var ahitem = listViewItemDetails.Items.Add(item.item_name);
+				ahitem.Tag = item.uuid;
+				ahitem.SubItems.Add(item.starting_bid.ToString());
+				ahitem.SubItems.Add(item.uuid);
+			}
+		}
+
+		private void timer2_Tick(object sender, EventArgs e)
+		{
+			if (AuctionHouseInstance.ahCache.lastUpdated != guilastUpdated)
+			{
+				guilastUpdated = AuctionHouseInstance.ahCache.lastUpdated;
+				showExtraInfo();
+			}
+		}
+
+		private void listViewItemDetails_DoubleClick(object sender, EventArgs e)
+		{
+			if (listViewItemDetails.SelectedItems == null) return;
+			var selectedItems = listViewItemDetails.SelectedItems;
+			if (selectedItems.Count != 1) return;
+			string clipText = "/viewauction " + selectedItems[0].Tag;
+			var thread = new Thread(() => Clipboard.SetText(clipText));
+			thread.SetApartmentState(ApartmentState.STA);
+			thread.Start();
+			thread.Join();
 		}
 	}
 
@@ -28,11 +98,12 @@ namespace nic_z_tego_nie_bd
 	//AH MAIN CLASS
 	public static class AuctionHouseInstance
 	{
-		static auctionHouse ahCache;
+		public static auctionHouse ahCache;
 		static AuctionHouseInstance()
 		{
 			ahCache = new auctionHouse();
 			ahCache.items = new Dictionary<string, List<AuctionHouseFetcher.itemData>>();
+			ahCache.lastUpdated = 0;
 		}
 
 		//Main AH caching function
@@ -42,7 +113,6 @@ namespace nic_z_tego_nie_bd
 			await Task.Run(() => ahFetcher.refresh());
 			auctionHouse ahCacheTemp = new auctionHouse();
 			ahCacheTemp.items = new Dictionary<string, List<AuctionHouseFetcher.itemData>>();
-			ahCacheTemp.success = ahFetcher.AHpages[0].success;
 			ahCacheTemp.totalAuctions = ahFetcher.AHpages[0].totalAuctions;
 			ahCacheTemp.lastUpdated = ahFetcher.AHpages[0].lastUpdated;
 			ahCacheTemp.totalPages = ahFetcher.AHpages[0].totalPages;
@@ -84,6 +154,7 @@ namespace nic_z_tego_nie_bd
 					ahCacheTemp.items.Add(item.dictKey, new List<AuctionHouseFetcher.itemData> { item });
 				}
 			}
+			ahCacheTemp.success = ahFetcher.AHpages[0].success;
 			ahCache = ahCacheTemp;
 
 
@@ -91,15 +162,17 @@ namespace nic_z_tego_nie_bd
 
 
 		}
-		static void prepPage(AuctionHouseFetcher.AuctionHousePage onePage) //testing for void type should be Task<AuctionHouseFetcher.AuctionHousePage> if does not work
+
+		//Function to prepare page for export to dictionary
+		static void prepPage(AuctionHouseFetcher.AuctionHousePage onePage)
 		{
 			onePage.auctions.RemoveAll(vari => vari.bin == false);
 
 
 			//All the reforges in game
-			//var nameReforges = new[] { "", "", "", "" };
-			var swordReforges = new[] { "Gentle", "Odd", "Fast", "Fair", "Epic", "Sharp", "Sharp", "Spicy",
-						"Legendary", "Dirty", "Fabled", "Suspicious", "Gilded", "Warped", "Withered", "Bulky"};
+			var swordReforges = new[] { "Gentle", "Odd", "Fast", "Fair", "Epic", "Sharp", "Sharp", "Spicy", 
+				"Legendary", "Dirty", "Fabled", "Suspicious", "Gilded", "Warped", "Withered", "Bulky", 
+				"Heroic", "Forceful"};
 
 			var rodReforges = new[] { "Salty", "Treacherous", "Stiff", "Lucky" };
 
@@ -109,7 +182,7 @@ namespace nic_z_tego_nie_bd
 			var armorReforges = new[] { "Clean", "Fierce", "Heavy", "Light", "Mythic", "Pure", "Smart", "Titanic",
 						"Wise", "Perfect", "Necrotic", "Ancient", "Spiked", "Renowned", "Cubic", "Warped", "Reinforced",
 						"Loving", "Ridiculous", "Empowered", "Giant", "Submerged", "Jaded", "Very", "Highly", "Extremely",
-						"Thicc", "Absolutely" };
+						"Thicc", "Absolutely", "Zealous", "Godly", "Candied", "Ancient" };
 
 			var AccessoriesReforges = new[] { "Bizarre", "Itchy", "Ominous", "Pleasant", "Pretty", "Shiny", "Simple",
 						"Strange", "Vivid", "Godly", "Demonic", "Forceful", "Hurtful", "Keen", "Strong", "Superior", "Unpleasant",
@@ -131,34 +204,47 @@ namespace nic_z_tego_nie_bd
 						{
 							int spcIndex = itemName.IndexOf(' ');
 							item.dictKey = itemName.Remove(0, spcIndex + 1);
-							break;
 						}
 						else
 						{
 							item.dictKey = itemName;
-							break;
 						}
+
+						if (item.dictKey.Contains('✪'))
+						{
+							int spcIndex = item.dictKey.IndexOf('✪');
+							int count = item.dictKey.Count(f => f == '✪');
+							item.dictKey = item.dictKey.Remove(spcIndex, count);
+						}
+
+						break;
 
 					case "armor":
 						if (armorReforges.Any(s => itemName.Contains(s)) == true)
 						{
-							
+
 							int spcIndex = itemName.IndexOf(' ');
 							item.dictKey = itemName.Remove(0, spcIndex + 1);
-							break;
 						}
 						else if (itemName.Contains("Not So") == true)
 						{
 							int spcIndex = itemName.IndexOf(' ');
 							spcIndex = itemName.IndexOf(' ', spcIndex + 1);
 							item.dictKey = itemName.Remove(0, spcIndex + 1);
-							break;
 						}
 						else
 						{
 							item.dictKey = itemName;
-							break;
 						}
+
+						if (item.dictKey.Contains('✪'))
+						{
+							int spcIndex = item.dictKey.IndexOf('✪');
+							int count = item.dictKey.Count(f => f == '✪');
+							item.dictKey = item.dictKey.Remove(spcIndex, count);
+						}
+
+						break;
 
 					case "accessories":
 						if (AccessoriesReforges.Any(s => itemName.Contains(s)) == true)
@@ -246,7 +332,7 @@ namespace nic_z_tego_nie_bd
 			AHpages.Add(firstPage);
 			page1TimeStamp = AHpages[0].lastUpdated;
 			int page1age = (int)(DateTimeOffset.Now.ToUnixTimeMilliseconds() - page1TimeStamp);
-			if (page1age < 57000)
+			if (page1age < 55000)
 			{
 				//Crate list of TO DO tasks
 				var tasks = new List<Task<AuctionHousePage>>();
@@ -267,13 +353,13 @@ namespace nic_z_tego_nie_bd
 			}
 			else
 			{//If the data was too old wait a bit and repeat the refresh Task then
-				await Task.Delay(10000);
+				await Task.Delay(5000);
 				long temppage1age = page1age;
 				while (temppage1age == page1age)
 				{
 					var tempfirstPage = await getAhPageAsync(0);
 					temppage1age = tempfirstPage.lastUpdated;
-					await Task.Delay(2000);
+					await Task.Delay(5000);
 				}
 				await refresh();
 				return;

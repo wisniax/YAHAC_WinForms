@@ -63,8 +63,8 @@ namespace nic_z_tego_nie_bd
 			listView1.Items.Clear();
 			for (int i = 0; i < bazaarCheckup.bazaarObj.products[listBox1.SelectedItem.ToString()].buy_summary.Count; i++)
 			{
-				var chuj = listView1.Items.Add(bazaarCheckup.bazaarObj.products[listBox1.SelectedItem.ToString()].buy_summary[i].amount.ToString());
-				chuj.SubItems.Add(bazaarCheckup.bazaarObj.products[listBox1.SelectedItem.ToString()].buy_summary[i].pricePerUnit.ToString());
+				var bzitem = listView1.Items.Add(bazaarCheckup.bazaarObj.products[listBox1.SelectedItem.ToString()].buy_summary[i].amount.ToString());
+				bzitem.SubItems.Add(bazaarCheckup.bazaarObj.products[listBox1.SelectedItem.ToString()].buy_summary[i].pricePerUnit.ToString());
 			}
 		}
 

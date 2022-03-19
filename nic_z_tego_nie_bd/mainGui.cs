@@ -21,26 +21,19 @@ namespace nic_z_tego_nie_bd
 	{
 		public BazaarCheckup bazaarCheckup;
 		public AuctionHouseFetcher auctionHouseFetcher;
-		Task taskBz;
-		Thread taskAh;
+		Task taskBz, taskAh;
 		public MainGui()
 		{
 			taskBz = new Task(() => bazaarCheckup = new BazaarCheckup());
-			//taskAh = new Thread(() => auctionHouseFetcher = new AuctionHouseFetcher());
-			taskAh = new Thread(() => AuctionHouseInstance.refresh());
-			//taskAh = new Thread(()=>AuctionHouseFetcher.refresh());
-			taskAh.Name = "threadAH";
-			taskAh.Start();
+			//taskAh = new Task(() => AuctionHouseInstance.refresh());
+			//taskAh.Start();
 			taskBz.Start();
-			//	bazaarCheckup = new BazaarCheckup();
-			//	AuctionHouseFetcher auctionHouseFetcher = new AuctionHouseFetcher();
 			InitializeComponent();
 			taskBz.Wait();
 			loadForm(new Bazaar(bazaarCheckup));
 		}
 		public void loadForm(object objForm)
 		{
-			taskBz.Wait();
 			if (this.mainPanel.Controls.Count > 0) this.mainPanel.Controls.RemoveAt(0);
 			Form form = objForm as Form;
 			form.TopLevel = false;
@@ -49,20 +42,35 @@ namespace nic_z_tego_nie_bd
 			this.mainPanel.Tag = form;
 			form.Show();
 		}
-		int timerVar = 0;
-		private void timer1_Tick(object sender, EventArgs e)
+		private async void timer1_Tick(object sender, EventArgs e)
 		{
-			if ((DateTimeOffset.Now.ToUnixTimeMilliseconds() - bazaarCheckup.bazaarObj.lastUpdated > 12000) && (timerVar <= 0))
+			if (DateTimeOffset.Now.ToUnixTimeMilliseconds() - bazaarCheckup.bazaarObj.lastUpdated > 12000)
 			{
-				timerVar = 10;
-				Task.Run(()=> bazaarCheckup.refresh());
+				timerBZ.Stop();
+				await Task.Run(()=> bazaarCheckup.refresh());
+				timerBZ.Start();
 			}
-			else timerVar--;
+		}
+		private async void timerAH_Tick(object sender, EventArgs e)
+		{
+			if (DateTimeOffset.Now.ToUnixTimeMilliseconds() - AuctionHouseInstance.ahCache.lastUpdated > 65000) 
+			{
+				timerAH.Stop();
+				await Task.Run(()=>AuctionHouseInstance.refresh());
+				timerAH.Start();
+			}
+		}
+
+		private void buttonAh_Click(object sender, EventArgs e)
+		{
+			//taskAh.Wait();
+			loadForm(new AuctionHouse());
 		}
 
 
 		private void buttonBazaar_Click(object sender, EventArgs e)
 		{
+			taskBz.Wait();
 			loadForm(new Bazaar(bazaarCheckup));
 		}
 
