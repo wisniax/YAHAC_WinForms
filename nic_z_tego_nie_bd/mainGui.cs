@@ -21,12 +21,10 @@ namespace nic_z_tego_nie_bd
 	{
 		public BazaarCheckup bazaarCheckup;
 		public AuctionHouseFetcher auctionHouseFetcher;
-		Task taskBz, taskAh;
+		Task taskBz;
 		public MainGui()
 		{
 			taskBz = new Task(() => bazaarCheckup = new BazaarCheckup());
-			//taskAh = new Task(() => AuctionHouseInstance.refresh());
-			//taskAh.Start();
 			taskBz.Start();
 			InitializeComponent();
 			taskBz.Wait();

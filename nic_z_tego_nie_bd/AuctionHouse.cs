@@ -184,7 +184,7 @@ namespace nic_z_tego_nie_bd
 			var armorReforges = new[] { "Clean", "Fierce", "Heavy", "Light", "Mythic", "Pure", "Smart", "Titanic",
 						"Wise", "Perfect", "Necrotic", "Ancient", "Spiked", "Renowned", "Cubic", "Warped", "Reinforced",
 						"Loving", "Ridiculous", "Empowered", "Giant", "Submerged", "Jaded", "Very", "Highly", "Extremely",
-						"Thicc", "Absolutely", "Zealous", "Godly", "Candied", "Ancient" };
+						"Thicc", "Absolutely", "Zealous", "Godly", "Candied", "Ancient", "Forceful" };
 
 			var AccessoriesReforges = new[] { "Bizarre", "Itchy", "Ominous", "Pleasant", "Pretty", "Shiny", "Simple",
 						"Strange", "Vivid", "Godly", "Demonic", "Forceful", "Hurtful", "Keen", "Strong", "Superior", "Unpleasant",
@@ -198,91 +198,62 @@ namespace nic_z_tego_nie_bd
 			foreach (var item in onePage.auctions)
 			{
 				//set dictName for each item
-				string itemName = item.item_name;
+				item.dictKey = item.item_name;
 				switch (item.category)
 				{
 					case "weapon":
-						if ((swordReforges.Any(s => itemName.Contains(s)) == true) || (bowReforges.Any(s => itemName.Contains(s)) == true))
-						{
-							int spcIndex = itemName.IndexOf(' ');
-							item.dictKey = itemName.Remove(0, spcIndex + 1);
-						}
-						else
-						{
-							item.dictKey = itemName;
-						}
+						item.dictKey = Regex.Replace(item.dictKey, @"[^\u0020-\u007E]", string.Empty);
+						item.dictKey = item.dictKey.Trim();
 
-						if (item.dictKey.Contains('✪'))
+						if ((swordReforges.Any(s => item.dictKey.Contains(s)) == true) || (bowReforges.Any(s => item.dictKey.Contains(s)) == true))
 						{
-							int spcIndex = item.dictKey.IndexOf('✪');
-							int count = item.dictKey.Count(f => f == '✪');
-							item.dictKey = item.dictKey.Remove(spcIndex, count);
-							item.dictKey = item.dictKey.TrimEnd();
+							int spcIndex = item.dictKey.IndexOf(' ');
+							item.dictKey = item.dictKey.Remove(0, spcIndex + 1);
 						}
 
 						break;
 
 					case "armor":
-						if (armorReforges.Any(s => itemName.Contains(s)) == true)
-						{
+						item.dictKey = Regex.Replace(item.dictKey, @"[^\u0020-\u007E]", string.Empty);
+						item.dictKey = item.dictKey.Trim();
 
-							int spcIndex = itemName.IndexOf(' ');
-							item.dictKey = itemName.Remove(0, spcIndex + 1);
-						}
-						else if (itemName.Contains("Not So") == true)
+						if (armorReforges.Any(s => item.dictKey.Contains(s)) == true)
 						{
-							int spcIndex = itemName.IndexOf(' ');
-							spcIndex = itemName.IndexOf(' ', spcIndex + 1);
-							item.dictKey = itemName.Remove(0, spcIndex + 1);
+							int spcIndex = item.dictKey.IndexOf(' ');
+							item.dictKey = item.dictKey.Remove(0, spcIndex + 1);
 						}
-						else
+						else if (item.dictKey.Contains("Not So") == true)
 						{
-							item.dictKey = itemName;
-						}
-
-						if (item.dictKey.Contains('✪'))
-						{
-							int spcIndex = item.dictKey.IndexOf('✪');
-							int count = item.dictKey.Count(f => f == '✪');
-							item.dictKey = item.dictKey.Remove(spcIndex, count);
-							item.dictKey = item.dictKey.TrimEnd();
+							int spcIndex = item.dictKey.IndexOf(' ');
+							spcIndex = item.dictKey.IndexOf(' ', spcIndex + 1);
+							item.dictKey = item.dictKey.Remove(0, spcIndex + 1);
 						}
 
 						break;
 
 					case "accessories":
-						if (AccessoriesReforges.Any(s => itemName.Contains(s)) == true)
+						if (AccessoriesReforges.Any(s => item.dictKey.Contains(s)) == true)
 						{
-							int spcIndex = itemName.IndexOf(' ');
-							item.dictKey = itemName.Remove(0, spcIndex + 1);
-							break;
-						}
-						else
-						{
-							item.dictKey = itemName;
-							break;
+							int spcIndex = item.dictKey.IndexOf(' ');
+							item.dictKey = item.dictKey.Remove(0, spcIndex + 1);
 						}
 
+						break;
+
 					case "consumables":
-						item.dictKey = itemName;
 						break;
 
 					case "blocks":
-						item.dictKey = itemName;
 						break;
 
 					case "misc": //add tools reforge removal and "Even More" ref removal
-						if (itemName.Contains("[Lvl ") == true)
+						if (item.dictKey.Contains("[Lvl ") == true)
 						{
-							var index = itemName.IndexOf(']');
-							item.dictKey = itemName.Remove(0, index + 2);
-							break;
+							var index = item.dictKey.IndexOf(']');
+							item.dictKey = item.dictKey.Remove(0, index + 2);
 						}
-						else
-						{
-							item.dictKey = itemName;
-							break;
-						}
+
+						break;
 					default:
 						item.dictKey = "Unsorted :(";
 						break;
@@ -301,15 +272,6 @@ namespace nic_z_tego_nie_bd
 			public long lastUpdated { get; set; }
 			public Dictionary<string, List<AuctionHouseFetcher.itemData>> items { get; set; }
 		}
-
-
-
-		//public struct AHitemdef
-		//{
-		//	public string base_name { get; set; }
-		//	public string item_name { get; set; }
-		//	public string uuid { get; set; }
-		//}
 
 	}
 
