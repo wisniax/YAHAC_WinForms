@@ -19,16 +19,11 @@ namespace nic_z_tego_nie_bd
 	//https://docs.microsoft.com/en-us/dotnet/api/system.windows.forms.control.invoke?redirectedfrom=MSDN&view=windowsdesktop-6.0#System_Windows_Forms_Control_Invoke_System_Delegate_
 	public partial class MainGui : Form
 	{
-		public BazaarCheckup bazaarCheckup;
 		public AuctionHouseFetcher auctionHouseFetcher;
-		Task taskBz;
 		public MainGui()
 		{
-			taskBz = new Task(() => bazaarCheckup = new BazaarCheckup());
-			taskBz.Start();
 			InitializeComponent();
-			taskBz.Wait();
-			loadForm(new Bazaar(bazaarCheckup));
+			buttonBazaar_Click(null, null);
 		}
 		public void loadForm(object objForm)
 		{
@@ -42,10 +37,10 @@ namespace nic_z_tego_nie_bd
 		}
 		private async void timer1_Tick(object sender, EventArgs e)
 		{
-			if (DateTimeOffset.Now.ToUnixTimeMilliseconds() - bazaarCheckup.bazaarObj.lastUpdated > 12000)
+			if (DateTimeOffset.Now.ToUnixTimeMilliseconds() - BazaarCheckup.bazaarObj.lastUpdated > 12000)
 			{
 				timerBZ.Stop();
-				await Task.Run(()=> bazaarCheckup.refresh());
+				await Task.Run(()=> BazaarCheckup.refresh());
 				timerBZ.Start();
 			}
 		}
@@ -61,14 +56,13 @@ namespace nic_z_tego_nie_bd
 
 		private void buttonAh_Click(object sender, EventArgs e)
 		{
-			//taskAh.Wait();
 			loadForm(new AuctionHouse());
 		}
 
 		private void timerRefScreenTimer_Tick(object sender, EventArgs e)
 		{
 			decimal ahTime = (Decimal)(DateTimeOffset.Now.ToUnixTimeMilliseconds() - AuctionHouseInstance.ahCache.lastUpdated) / 1000;
-			decimal bzTime = (Decimal)(DateTimeOffset.Now.ToUnixTimeMilliseconds() - bazaarCheckup.bazaarObj.lastUpdated) / 1000;
+			decimal bzTime = (Decimal)(DateTimeOffset.Now.ToUnixTimeMilliseconds() - BazaarCheckup.bazaarObj.lastUpdated) / 1000;
 			int reqInLastMin = HttpCliento.reqInLastMinute;
 			ahAgeBox.Text = ahTime.ToString("F1");
 			bzAgeBox.Text = bzTime.ToString("F1");
@@ -77,8 +71,7 @@ namespace nic_z_tego_nie_bd
 
 		private void buttonBazaar_Click(object sender, EventArgs e)
 		{
-			taskBz.Wait();
-			loadForm(new Bazaar(bazaarCheckup));
+			loadForm(new Bazaar());
 		}
 
 	}//END OF CLASS

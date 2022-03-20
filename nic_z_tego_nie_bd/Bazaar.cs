@@ -14,27 +14,19 @@ namespace nic_z_tego_nie_bd
 {
 	public partial class Bazaar : Form
 	{
-		BazaarCheckup bazaarCheckup;
 		public long guilastUpdated;
-		public Bazaar(BazaarCheckup bazaarCheckup)
+		public Bazaar()
 		{
-			this.bazaarCheckup = bazaarCheckup;
 			guilastUpdated = 0;
 			InitializeComponent();
 		}
-		//public void textBoxWrite()
-		//{
-		//	decimal timeElapsed = (decimal)(DateTimeOffset.Now.ToUnixTimeMilliseconds() - bazaarCheckup.bazaarObj.lastUpdated) / 1000;
-		//	textBox1.Clear();
-		//	textBox1.Text = timeElapsed.ToString("F1")+" "+ HttpCliento.reqInLastMinute;
-		//}
 		public void listWrite()
 		{
 			listBox1.BeginUpdate();
 			listBox1.Items.Clear();
-			foreach (var item in bazaarCheckup.bazaarObj.products)
+			foreach (var item in BazaarCheckup.bazaarObj.products)
 			{
-					listBox1.Items.Add(bazaarCheckup.bazaarObj.products[item.Key].product_id);
+					listBox1.Items.Add(BazaarCheckup.bazaarObj.products[item.Key].product_id);
 			}
 			listBox1.EndUpdate();
 		}
@@ -42,9 +34,9 @@ namespace nic_z_tego_nie_bd
 		private void timer1_Tick(object sender, EventArgs e)
 		{
 			//textBoxWrite();
-			if (bazaarCheckup.bazaarObj.lastUpdated != guilastUpdated)
+			if (BazaarCheckup.bazaarObj.lastUpdated != guilastUpdated)
 			{
-				guilastUpdated = bazaarCheckup.bazaarObj.lastUpdated;
+				guilastUpdated = BazaarCheckup.bazaarObj.lastUpdated;
 				listWrite();
 			}
 
@@ -61,44 +53,44 @@ namespace nic_z_tego_nie_bd
 		private void showExtraInfo()
 		{
 			listView1.Items.Clear();
-			for (int i = 0; i < bazaarCheckup.bazaarObj.products[listBox1.SelectedItem.ToString()].buy_summary.Count; i++)
+			for (int i = 0; i < BazaarCheckup.bazaarObj.products[listBox1.SelectedItem.ToString()].buy_summary.Count; i++)
 			{
-				var bzitem = listView1.Items.Add(bazaarCheckup.bazaarObj.products[listBox1.SelectedItem.ToString()].buy_summary[i].amount.ToString());
-				bzitem.SubItems.Add(bazaarCheckup.bazaarObj.products[listBox1.SelectedItem.ToString()].buy_summary[i].pricePerUnit.ToString());
+				var bzitem = listView1.Items.Add(BazaarCheckup.bazaarObj.products[listBox1.SelectedItem.ToString()].buy_summary[i].amount.ToString());
+				bzitem.SubItems.Add(BazaarCheckup.bazaarObj.products[listBox1.SelectedItem.ToString()].buy_summary[i].pricePerUnit.ToString());
 			}
 		}
 
 		private void timer2_Tick(object sender, EventArgs e)
 		{
 			//textBoxWrite();
-			if (bazaarCheckup.bazaarObj.lastUpdated != guilastUpdated)
+			if (BazaarCheckup.bazaarObj.lastUpdated != guilastUpdated)
 			{
-				guilastUpdated = bazaarCheckup.bazaarObj.lastUpdated;
+				guilastUpdated = BazaarCheckup.bazaarObj.lastUpdated;
 				showExtraInfo();
 			}
 		}
 	}
 
-	public class BazaarCheckup
+	public static class BazaarCheckup
 	{
-		HttpCliento httpCliento;
-		string bzString;
-		private string bzUrl = "https://api.hypixel.net/skyblock/bazaar";
-		public BazaarObj bazaarObj = new BazaarObj();
+		static private HttpCliento httpCliento;
+		static private string bzString;
+		static private string bzUrl = "https://api.hypixel.net/skyblock/bazaar";
+		static public BazaarObj bazaarObj;
 		//constructor 
-		public BazaarCheckup()
+		static BazaarCheckup()
 		{
 			httpCliento = new HttpCliento();
-			refresh();
+			bazaarObj = new BazaarObj();
 		}
-		public void refresh()
+		static public void refresh()
 		{
 			var bzTask = httpCliento.GetAsync(bzUrl);
 			var cachedBz = bzTask.Result.Content.ReadAsStringAsync();
 			bzString = cachedBz.Result;
 			bazaarObj = deserializeBz(bzString);
 		}
-		private BazaarObj deserializeBz(string toDes)
+		static private BazaarObj deserializeBz(string toDes)
 		{ //https://docs.microsoft.com/en-us/dotnet/standard/serialization/system-text-json-how-to?pivots=dotnet-6-0
 			BazaarObj bazaarObj = JsonSerializer.Deserialize<BazaarObj>(toDes);
 			return bazaarObj;
