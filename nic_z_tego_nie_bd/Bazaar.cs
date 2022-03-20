@@ -33,7 +33,6 @@ namespace nic_z_tego_nie_bd
 
 		private void timer1_Tick(object sender, EventArgs e)
 		{
-			//textBoxWrite();
 			if (BazaarCheckup.bazaarObj.lastUpdated != guilastUpdated)
 			{
 				guilastUpdated = BazaarCheckup.bazaarObj.lastUpdated;
@@ -48,21 +47,29 @@ namespace nic_z_tego_nie_bd
 			timer1.Stop();
 			guilastUpdated = 0;
 			timer2.Start();
-			listView1.Show();
+			listViewSellPrice.Show();
+			listViewBuyPrice.Show();
 		}
 		private void showExtraInfo()
 		{
-			listView1.Items.Clear();
-			for (int i = 0; i < BazaarCheckup.bazaarObj.products[listBox1.SelectedItem.ToString()].buy_summary.Count; i++)
+			listViewSellPrice.Items.Clear();
+			listViewBuyPrice.Items.Clear();
+			var sell_summary = BazaarCheckup.bazaarObj.products[listBox1.SelectedItem.ToString()].sell_summary;
+			var buy_summary = BazaarCheckup.bazaarObj.products[listBox1.SelectedItem.ToString()].buy_summary;
+			foreach (var bzitem in sell_summary)
 			{
-				var bzitem = listView1.Items.Add(BazaarCheckup.bazaarObj.products[listBox1.SelectedItem.ToString()].buy_summary[i].amount.ToString());
-				bzitem.SubItems.Add(BazaarCheckup.bazaarObj.products[listBox1.SelectedItem.ToString()].buy_summary[i].pricePerUnit.ToString());
+				var listitem = listViewSellPrice.Items.Add(bzitem.amount.ToString());
+				listitem.SubItems.Add(bzitem.pricePerUnit.ToString());
+			}
+			foreach (var bzitem in buy_summary)
+			{
+				var listitem = listViewBuyPrice.Items.Add(bzitem.amount.ToString());
+				listitem.SubItems.Add(bzitem.pricePerUnit.ToString());
 			}
 		}
 
 		private void timer2_Tick(object sender, EventArgs e)
 		{
-			//textBoxWrite();
 			if (BazaarCheckup.bazaarObj.lastUpdated != guilastUpdated)
 			{
 				guilastUpdated = BazaarCheckup.bazaarObj.lastUpdated;
@@ -77,6 +84,7 @@ namespace nic_z_tego_nie_bd
 		static private string bzString;
 		static private string bzUrl = "https://api.hypixel.net/skyblock/bazaar";
 		static public BazaarObj bazaarObj;
+
 		//constructor 
 		static BazaarCheckup()
 		{

@@ -112,7 +112,6 @@ namespace nic_z_tego_nie_bd
 			var ahFetcher = new AuctionHouseFetcher();
 			var ahFetchTask = await ahFetcher.refresh();
 			if (ahFetchTask == false) return;
-			//await Task.Run(() => ahFetcher.refresh());
 			auctionHouse ahCacheTemp = new auctionHouse();
 			ahCacheTemp.items = new Dictionary<string, List<AuctionHouseFetcher.itemData>>();
 			ahCacheTemp.totalAuctions = ahFetcher.AHpages[0].totalAuctions;
@@ -125,7 +124,6 @@ namespace nic_z_tego_nie_bd
 			foreach (var onePage in ahFetcher.AHpages)
 			{
 				//https://stackoverflow.com/questions/17119075/do-you-have-to-put-task-run-in-a-method-to-make-it-async
-				//var task = Task.Run(() => onePage.auctions.RemoveAll(vari => vari.bin == false));
 				var task = Task.Run(() => prepPage(onePage));
 				tasks.Add(task);
 			}
@@ -137,10 +135,6 @@ namespace nic_z_tego_nie_bd
 			{
 				wholeAH.AddRange(i.auctions);
 			}
-
-			//Split to multiple lists
-			//Repo: https://stackoverflow.com/questions/2697253/using-linq-to-group-a-list-of-objects-into-a-new-grouped-list-of-list-of-objects
-			//Nahh not req rn
 
 			//move to dictionary
 			List<AuctionHouseFetcher.itemData> existingItems;
@@ -156,13 +150,10 @@ namespace nic_z_tego_nie_bd
 					ahCacheTemp.items.Add(item.dictKey, new List<AuctionHouseFetcher.itemData> { item });
 				}
 			}
+
+			//Replace both objects
 			ahCacheTemp.success = ahFetcher.AHpages[0].success;
 			ahCache = ahCacheTemp;
-
-
-			//ahCacheTemp.items = Enumerable.ToDictionary(wholeAH, (a) => (a.item_name), (a) => (a));
-
-
 		}
 
 		//Function to prepare page for export to dictionary
@@ -213,7 +204,7 @@ namespace nic_z_tego_nie_bd
 
 						break;
 
-					case "armor":
+					case "armor": //BUG: Wise Dragon Armor -> Dragon Armor
 						item.dictKey = Regex.Replace(item.dictKey, @"[^\u0020-\u007E]", string.Empty);
 						item.dictKey = item.dictKey.Trim();
 
@@ -288,7 +279,7 @@ namespace nic_z_tego_nie_bd
 		{
 			httpCliento = new HttpCliento();
 			page1TimeStamp = 0;
-			AHpages = new List<AuctionHousePage>(); //new AuctionHousePage[100]
+			AHpages = new List<AuctionHousePage>();
 		}
 		public async Task<bool> refresh()
 		{//https://stackoverflow.com/questions/25009437/running-multiple-async-tasks-and-waiting-for-them-all-to-complete
@@ -302,21 +293,24 @@ namespace nic_z_tego_nie_bd
 			int page1age = (int)(DateTimeOffset.Now.ToUnixTimeMilliseconds() - page1TimeStamp);
 			if (page1age < 55000)
 			{
+
 				//Crate list of TO DO tasks
 				var tasks = new List<Task<AuctionHousePage>>();
 				for (int i = 1; (i < AHpages[0].totalPages); i++)
 				{
 					var task = getAhPageAsync(i);
-					tasks.Add(task);                                                //THOSE DO NOT WORK -->tasks.Add(new Task(()=>getAhPage(i)));	//(new Task(() => AHpages.Add(getAhPage(i))));
+					tasks.Add(task);
 				}
+
 				//Handle them
 				try { await Task.WhenAll(tasks); }
-				catch { await Task.Delay(5000); return false; }
+				catch { await Task.Delay(15000); return false; }
+
 				//Parse collected data
 				for (int i = 1; (i < AHpages[0].totalPages); i++)
 				{
 					AHpages.Add(tasks[i - 1].Result);
-					if (AHpages[i].lastUpdated != page1TimeStamp) { await Task.Delay(5000); return false; }
+					if (AHpages[i].lastUpdated != page1TimeStamp) { await Task.Delay(10000); return false; }
 				}
 				return true;
 			}
