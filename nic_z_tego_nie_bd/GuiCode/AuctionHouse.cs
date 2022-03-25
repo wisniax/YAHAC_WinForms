@@ -334,7 +334,6 @@ namespace nic_z_tego_nie_bd
 			var ahTask = await httpCliento.GetAsync(ahUrl + page.ToString());
 			var cachedAhPage = ahTask.Content.ReadAsStringAsync();
 			string toDes = cachedAhPage.Result;
-			//AHpages[page] = JsonSerializer.Deserialize<AuctionHousePage>(toDes);
 			AuctionHousePage ahObj = JsonSerializer.Deserialize<AuctionHousePage>(toDes);
 			return ahObj;
 		}

@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Net;
 using System.IO;
+using nic_z_tego_nie_bd.GuiCode;
 
 namespace nic_z_tego_nie_bd
 {
@@ -20,13 +21,31 @@ namespace nic_z_tego_nie_bd
 	public partial class MainGui : Form
 	{
 		public AuctionHouseFetcher auctionHouseFetcher;
+		public Settings settings;
 		public MainGui()
 		{
 			InitializeComponent();
-			buttonBazaar_Click(null, null);
+			loadDefaultForm(Properties.Settings.Default.Starting_Ui);
+		}
+
+		private void loadDefaultForm(string name)
+		{
+			switch (name)
+			{
+				case "Bazaar":
+					loadForm(new Bazaar());
+					break;
+				case "AuctionHouse":
+					loadForm(new AuctionHouse());
+					break;
+				default:
+					loadForm(new SettingsUi());
+					break;
+			}
 		}
 		public void loadForm(object objForm)
 		{
+			var asd = Properties.Settings.Default.Starting_Ui;
 			if (this.mainPanel.Controls.Count > 0) this.mainPanel.Controls.RemoveAt(0);
 			Form form = objForm as Form;
 			form.TopLevel = false;
@@ -53,7 +72,7 @@ namespace nic_z_tego_nie_bd
 				timerAH.Start();
 			}
 		}
-
+		
 		private void buttonAh_Click(object sender, EventArgs e)
 		{
 			loadForm(new AuctionHouse());
@@ -74,6 +93,15 @@ namespace nic_z_tego_nie_bd
 			loadForm(new Bazaar());
 		}
 
+		private void buttonSettings_Click(object sender, EventArgs e)
+		{
+			loadForm(new SettingsUi());
+		}
+
+		private void button1_Click(object sender, EventArgs e)
+		{
+			loadForm(new ItemCrafts());
+		}
 	}//END OF CLASS
 }//END OF NAMESPACE
 

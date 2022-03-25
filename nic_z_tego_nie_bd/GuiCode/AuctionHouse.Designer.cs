@@ -46,11 +46,11 @@ namespace nic_z_tego_nie_bd
 			this.listBox1.FormattingEnabled = true;
 			this.listBox1.HorizontalScrollbar = true;
 			this.listBox1.ItemHeight = 15;
-			this.listBox1.Location = new System.Drawing.Point(0, 0);
+			this.listBox1.Location = new System.Drawing.Point(3, 3);
 			this.listBox1.Margin = new System.Windows.Forms.Padding(0);
 			this.listBox1.MultiColumn = true;
 			this.listBox1.Name = "listBox1";
-			this.listBox1.Size = new System.Drawing.Size(800, 450);
+			this.listBox1.Size = new System.Drawing.Size(794, 444);
 			this.listBox1.Sorted = true;
 			this.listBox1.TabIndex = 0;
 			this.listBox1.DoubleClick += new System.EventHandler(this.listBox1_DoubleClick);
@@ -75,10 +75,10 @@ namespace nic_z_tego_nie_bd
 			this.listViewItemDetails.FullRowSelect = true;
 			this.listViewItemDetails.HideSelection = false;
 			this.listViewItemDetails.LabelWrap = false;
-			this.listViewItemDetails.Location = new System.Drawing.Point(0, 0);
+			this.listViewItemDetails.Location = new System.Drawing.Point(3, 3);
 			this.listViewItemDetails.MultiSelect = false;
 			this.listViewItemDetails.Name = "listViewItemDetails";
-			this.listViewItemDetails.Size = new System.Drawing.Size(800, 450);
+			this.listViewItemDetails.Size = new System.Drawing.Size(794, 444);
 			this.listViewItemDetails.TabIndex = 1;
 			this.listViewItemDetails.UseCompatibleStateImageBehavior = false;
 			this.listViewItemDetails.View = System.Windows.Forms.View.Details;
@@ -111,6 +111,7 @@ namespace nic_z_tego_nie_bd
 			this.Controls.Add(this.listViewItemDetails);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.Name = "AuctionHouse";
+			this.Padding = new System.Windows.Forms.Padding(3);
 			this.Text = "AuctionHouseFetcher";
 			this.ResumeLayout(false);
 

@@ -39,6 +39,7 @@ namespace nic_z_tego_nie_bd
 			this.listViewBuyPrice = new System.Windows.Forms.ListView();
 			this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
 			this.columnHeader4 = new System.Windows.Forms.ColumnHeader();
+			this.vScrollBar1 = new System.Windows.Forms.VScrollBar();
 			this.SuspendLayout();
 			// 
 			// timer1
@@ -55,11 +56,11 @@ namespace nic_z_tego_nie_bd
 			this.listBox1.FormattingEnabled = true;
 			this.listBox1.IntegralHeight = false;
 			this.listBox1.ItemHeight = 15;
-			this.listBox1.Location = new System.Drawing.Point(0, 0);
+			this.listBox1.Location = new System.Drawing.Point(3, 3);
 			this.listBox1.Margin = new System.Windows.Forms.Padding(0);
 			this.listBox1.MultiColumn = true;
 			this.listBox1.Name = "listBox1";
-			this.listBox1.Size = new System.Drawing.Size(650, 450);
+			this.listBox1.Size = new System.Drawing.Size(644, 444);
 			this.listBox1.Sorted = true;
 			this.listBox1.TabIndex = 2;
 			this.listBox1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listBox1_MouseDoubleClick);
@@ -73,10 +74,10 @@ namespace nic_z_tego_nie_bd
             this.columnHeader1,
             this.columnHeader2});
 			this.listViewSellPrice.HideSelection = false;
-			this.listViewSellPrice.Location = new System.Drawing.Point(0, 0);
+			this.listViewSellPrice.Location = new System.Drawing.Point(3, 3);
 			this.listViewSellPrice.MultiSelect = false;
 			this.listViewSellPrice.Name = "listViewSellPrice";
-			this.listViewSellPrice.Size = new System.Drawing.Size(270, 450);
+			this.listViewSellPrice.Size = new System.Drawing.Size(270, 444);
 			this.listViewSellPrice.TabIndex = 3;
 			this.listViewSellPrice.UseCompatibleStateImageBehavior = false;
 			this.listViewSellPrice.View = System.Windows.Forms.View.Details;
@@ -105,10 +106,10 @@ namespace nic_z_tego_nie_bd
             this.columnHeader3,
             this.columnHeader4});
 			this.listViewBuyPrice.HideSelection = false;
-			this.listViewBuyPrice.Location = new System.Drawing.Point(276, 0);
+			this.listViewBuyPrice.Location = new System.Drawing.Point(279, 3);
 			this.listViewBuyPrice.MultiSelect = false;
 			this.listViewBuyPrice.Name = "listViewBuyPrice";
-			this.listViewBuyPrice.Size = new System.Drawing.Size(270, 450);
+			this.listViewBuyPrice.Size = new System.Drawing.Size(270, 444);
 			this.listViewBuyPrice.TabIndex = 4;
 			this.listViewBuyPrice.UseCompatibleStateImageBehavior = false;
 			this.listViewBuyPrice.View = System.Windows.Forms.View.Details;
@@ -124,16 +125,26 @@ namespace nic_z_tego_nie_bd
 			this.columnHeader4.Text = "buy price";
 			this.columnHeader4.Width = 120;
 			// 
+			// vScrollBar1
+			// 
+			this.vScrollBar1.Dock = System.Windows.Forms.DockStyle.Right;
+			this.vScrollBar1.Location = new System.Drawing.Point(630, 3);
+			this.vScrollBar1.Name = "vScrollBar1";
+			this.vScrollBar1.Size = new System.Drawing.Size(17, 444);
+			this.vScrollBar1.TabIndex = 5;
+			// 
 			// Bazaar
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(650, 450);
+			this.Controls.Add(this.vScrollBar1);
 			this.Controls.Add(this.listViewBuyPrice);
 			this.Controls.Add(this.listViewSellPrice);
 			this.Controls.Add(this.listBox1);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.Name = "Bazaar";
+			this.Padding = new System.Windows.Forms.Padding(3);
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "Bazaar";
 			this.ResumeLayout(false);
@@ -150,5 +161,6 @@ namespace nic_z_tego_nie_bd
 		private System.Windows.Forms.ListView listViewBuyPrice;
 		private System.Windows.Forms.ColumnHeader columnHeader3;
 		private System.Windows.Forms.ColumnHeader columnHeader4;
+		private System.Windows.Forms.VScrollBar vScrollBar1;
 	}
 }

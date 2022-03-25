@@ -32,6 +32,8 @@ namespace nic_z_tego_nie_bd
 			this.components = new System.ComponentModel.Container();
 			this.timerBZ = new System.Windows.Forms.Timer(this.components);
 			this.panelSideMenu = new System.Windows.Forms.Panel();
+			this.button1 = new System.Windows.Forms.Button();
+			this.buttonSettings = new System.Windows.Forms.Button();
 			this.buttonAh = new System.Windows.Forms.Button();
 			this.buttonBazaar = new System.Windows.Forms.Button();
 			this.timerAH = new System.Windows.Forms.Timer(this.components);
@@ -53,14 +55,47 @@ namespace nic_z_tego_nie_bd
 			// 
 			this.panelSideMenu.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this.panelSideMenu.BackColor = System.Drawing.Color.Black;
+			this.panelSideMenu.Controls.Add(this.button1);
+			this.panelSideMenu.Controls.Add(this.buttonSettings);
 			this.panelSideMenu.Controls.Add(this.buttonAh);
 			this.panelSideMenu.Controls.Add(this.buttonBazaar);
 			this.panelSideMenu.Dock = System.Windows.Forms.DockStyle.Left;
 			this.panelSideMenu.Location = new System.Drawing.Point(0, 0);
+			this.panelSideMenu.Margin = new System.Windows.Forms.Padding(0);
 			this.panelSideMenu.Name = "panelSideMenu";
 			this.panelSideMenu.Padding = new System.Windows.Forms.Padding(3);
 			this.panelSideMenu.Size = new System.Drawing.Size(150, 411);
 			this.panelSideMenu.TabIndex = 0;
+			// 
+			// button1
+			// 
+			this.button1.BackColor = System.Drawing.SystemColors.AppWorkspace;
+			this.button1.Dock = System.Windows.Forms.DockStyle.Top;
+			this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this.button1.Font = new System.Drawing.Font("Sigmar One", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.button1.Location = new System.Drawing.Point(3, 83);
+			this.button1.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
+			this.button1.Name = "button1";
+			this.button1.Size = new System.Drawing.Size(144, 40);
+			this.button1.TabIndex = 3;
+			this.button1.Text = "Item Crafts";
+			this.button1.UseVisualStyleBackColor = false;
+			this.button1.Click += new System.EventHandler(this.button1_Click);
+			// 
+			// buttonSettings
+			// 
+			this.buttonSettings.BackColor = System.Drawing.SystemColors.AppWorkspace;
+			this.buttonSettings.Dock = System.Windows.Forms.DockStyle.Bottom;
+			this.buttonSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this.buttonSettings.Font = new System.Drawing.Font("Sigmar One", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.buttonSettings.Location = new System.Drawing.Point(3, 368);
+			this.buttonSettings.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
+			this.buttonSettings.Name = "buttonSettings";
+			this.buttonSettings.Size = new System.Drawing.Size(144, 40);
+			this.buttonSettings.TabIndex = 2;
+			this.buttonSettings.Text = "Settings";
+			this.buttonSettings.UseVisualStyleBackColor = false;
+			this.buttonSettings.Click += new System.EventHandler(this.buttonSettings_Click);
 			// 
 			// buttonAh
 			// 
@@ -69,11 +104,11 @@ namespace nic_z_tego_nie_bd
 			this.buttonAh.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.buttonAh.Font = new System.Drawing.Font("Sigmar One", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.buttonAh.Location = new System.Drawing.Point(3, 43);
-			this.buttonAh.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
+			this.buttonAh.Margin = new System.Windows.Forms.Padding(1);
 			this.buttonAh.Name = "buttonAh";
 			this.buttonAh.Size = new System.Drawing.Size(144, 40);
 			this.buttonAh.TabIndex = 1;
-			this.buttonAh.Text = "Open AH";
+			this.buttonAh.Text = "AH";
 			this.buttonAh.UseVisualStyleBackColor = false;
 			this.buttonAh.Click += new System.EventHandler(this.buttonAh_Click);
 			// 
@@ -88,7 +123,7 @@ namespace nic_z_tego_nie_bd
 			this.buttonBazaar.Name = "buttonBazaar";
 			this.buttonBazaar.Size = new System.Drawing.Size(144, 40);
 			this.buttonBazaar.TabIndex = 0;
-			this.buttonBazaar.Text = "Open Bazaar";
+			this.buttonBazaar.Text = "Bazaar";
 			this.buttonBazaar.UseVisualStyleBackColor = false;
 			this.buttonBazaar.Click += new System.EventHandler(this.buttonBazaar_Click);
 			// 
@@ -145,9 +180,10 @@ namespace nic_z_tego_nie_bd
 			this.mainPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.mainPanel.Location = new System.Drawing.Point(153, 3);
+			this.mainPanel.Location = new System.Drawing.Point(148, 0);
+			this.mainPanel.Margin = new System.Windows.Forms.Padding(0);
 			this.mainPanel.Name = "mainPanel";
-			this.mainPanel.Size = new System.Drawing.Size(628, 408);
+			this.mainPanel.Size = new System.Drawing.Size(636, 411);
 			this.mainPanel.TabIndex = 2;
 			// 
 			// timerRefScreenTimer
@@ -184,6 +220,8 @@ namespace nic_z_tego_nie_bd
 		private System.Windows.Forms.TextBox apiReqBox;
 		private System.Windows.Forms.Panel mainPanel;
 		private System.Windows.Forms.Timer timerRefScreenTimer;
+		private System.Windows.Forms.Button buttonSettings;
+		private System.Windows.Forms.Button button1;
 	}
 }
 

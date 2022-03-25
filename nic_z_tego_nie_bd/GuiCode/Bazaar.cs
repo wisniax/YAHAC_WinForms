@@ -109,10 +109,10 @@ namespace nic_z_tego_nie_bd
 			public bool success { get; set; }
 			public long lastUpdated { get; set; }
 			public Dictionary<string, BazaarItemDef> products { get; set; }
-			//public object products { get; set; } []
 		}
 		public struct BazaarItemDef
 		{
+			public string product_name { get; set; } //Translation from prod_id to item name requ
 			public string product_id { get; set; }
 			public List<BzOrders> sell_summary { get; set; }
 			public List<BzOrders> buy_summary { get; set; }
