@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Globalization;
 
 namespace nic_z_tego_nie_bd
 {
@@ -26,7 +27,7 @@ namespace nic_z_tego_nie_bd
 			listBox1.Items.Clear();
 			foreach (var item in BazaarCheckup.bazaarObj.products)
 			{
-					listBox1.Items.Add(BazaarCheckup.bazaarObj.products[item.Key].product_id);
+					listBox1.Items.Add(BazaarCheckup.bazaarObj.products[item.Key].product_name);
 			}
 			listBox1.EndUpdate();
 		}
@@ -54,17 +55,28 @@ namespace nic_z_tego_nie_bd
 		{
 			listViewSellPrice.Items.Clear();
 			listViewBuyPrice.Items.Clear();
-			var sell_summary = BazaarCheckup.bazaarObj.products[listBox1.SelectedItem.ToString()].sell_summary;
-			var buy_summary = BazaarCheckup.bazaarObj.products[listBox1.SelectedItem.ToString()].buy_summary;
+			var selectedItem = listBox1.SelectedItem.ToString();
+			var repoElem = Properties.AllItemsREPO.itemRepo.items.Find(findID => findID.name == selectedItem);
+			if (repoElem != null) selectedItem = repoElem.id;
+			else return;
+			List<BazaarCheckup.BzOrders> sell_summary, buy_summary;
+			try
+			{
+				sell_summary = BazaarCheckup.bazaarObj.products[selectedItem].sell_summary;
+				buy_summary = BazaarCheckup.bazaarObj.products[selectedItem].buy_summary;
+			}
+			catch { return; }
+
+
 			foreach (var bzitem in sell_summary)
 			{
-				var listitem = listViewSellPrice.Items.Add(bzitem.amount.ToString());
-				listitem.SubItems.Add(bzitem.pricePerUnit.ToString());
+				var listitem = listViewSellPrice.Items.Add(bzitem.amount.ToString("N0", CultureInfo.CreateSpecificCulture("fr-CA")));
+				listitem.SubItems.Add(bzitem.pricePerUnit.ToString("N1", CultureInfo.CreateSpecificCulture("fr-CA")));
 			}
 			foreach (var bzitem in buy_summary)
 			{
-				var listitem = listViewBuyPrice.Items.Add(bzitem.amount.ToString());
-				listitem.SubItems.Add(bzitem.pricePerUnit.ToString());
+				var listitem = listViewBuyPrice.Items.Add(bzitem.amount.ToString("N0", CultureInfo.CreateSpecificCulture("fr-CA")));
+				listitem.SubItems.Add(bzitem.pricePerUnit.ToString("N1", CultureInfo.CreateSpecificCulture("fr-CA")));
 			}
 		}
 
@@ -96,7 +108,16 @@ namespace nic_z_tego_nie_bd
 			var bzTask = httpCliento.GetAsync(bzUrl);
 			var cachedBz = bzTask.Result.Content.ReadAsStringAsync();
 			bzString = cachedBz.Result;
-			bazaarObj = deserializeBz(bzString);
+			var bazaarObjtemp = deserializeBz(bzString);
+			if (Properties.AllItemsREPO.itemRepo.success != true) return;
+			foreach (var item in bazaarObjtemp.products)
+			{
+				string prodName = item.Value.product_id;
+				var repoElem = Properties.AllItemsREPO.itemRepo.items.Find(matchID => matchID.id==prodName);
+				if (repoElem != null) item.Value.product_name = repoElem.name;
+				else item.Value.product_name = item.Value.product_id;
+			}
+			bazaarObj = bazaarObjtemp;
 		}
 		static private BazaarObj deserializeBz(string toDes)
 		{ //https://docs.microsoft.com/en-us/dotnet/standard/serialization/system-text-json-how-to?pivots=dotnet-6-0
@@ -110,7 +131,7 @@ namespace nic_z_tego_nie_bd
 			public long lastUpdated { get; set; }
 			public Dictionary<string, BazaarItemDef> products { get; set; }
 		}
-		public struct BazaarItemDef
+		public class BazaarItemDef
 		{
 			public string product_name { get; set; } //Translation from prod_id to item name requ
 			public string product_id { get; set; }

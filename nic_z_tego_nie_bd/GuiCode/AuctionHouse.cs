@@ -12,6 +12,7 @@ using System.Windows;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
+using System.Globalization;
 
 namespace nic_z_tego_nie_bd
 {
@@ -30,9 +31,12 @@ namespace nic_z_tego_nie_bd
 			listBox1.BeginUpdate();
 			listBox1.Items.Clear();
 			guilastUpdated = AuctionHouseInstance.ahCache.lastUpdated;
+			if (Properties.AllItemsREPO.itemRepo.success != true) return;
 			foreach (var item in AuctionHouseInstance.ahCache.items)
 			{
-				listBox1.Items.Add(item.Key);
+				var repoElem = Properties.AllItemsREPO.itemRepo.items.Find(matchID => matchID.id == item.Key);
+				if (repoElem != null) listBox1.Items.Add(repoElem.name);
+				else listBox1.Items.Add(item.Key);
 			}
 			listBox1.EndUpdate();
 		}
@@ -59,15 +63,25 @@ namespace nic_z_tego_nie_bd
 		private void showExtraInfo()
 		{
 			listViewItemDetails.Items.Clear();
-			var listedItems = AuctionHouseInstance.ahCache.items[listBox1.SelectedItem.ToString()];
-			listedItems.Sort((x, y) => x.starting_bid.CompareTo(y.starting_bid));
-			foreach (var item in listedItems)
+			//translate item name to id
+			var selectedItem = listBox1.SelectedItem.ToString();
+			var repoElem = Properties.AllItemsREPO.itemRepo.items.Find(findID => findID.name == selectedItem);
+			if (repoElem != null) selectedItem = repoElem.id;
+
+			//render item of given id to list
+			try
 			{
-				var ahitem = listViewItemDetails.Items.Add(item.item_name);
-				ahitem.Tag = item.uuid;
-				ahitem.SubItems.Add(item.starting_bid.ToString());
-				ahitem.SubItems.Add(item.uuid);
+				var listedItems = AuctionHouseInstance.ahCache.items[selectedItem];
+				listedItems.Sort((x, y) => x.starting_bid.CompareTo(y.starting_bid));
+				foreach (var item in listedItems)
+				{
+					var ahitem = listViewItemDetails.Items.Add(item.item_name);
+					ahitem.Tag = item.uuid;
+					ahitem.SubItems.Add(item.starting_bid.ToString("N0", CultureInfo.CreateSpecificCulture("fr-CA")));
+					ahitem.SubItems.Add(item.uuid);
+				}
 			}
+			catch { return; }
 		}
 
 		private void timer2_Tick(object sender, EventArgs e)
@@ -190,24 +204,59 @@ namespace nic_z_tego_nie_bd
 			{
 				//set dictName for each item
 				item.dictKey = item.item_name;
+
+				//Set dict key for item with matching name of the same rarity
+				item.dictKey = assignDictKey(item.item_name,item.tier);
+				if (item.dictKey != item.item_name) continue;
+
+				//Set dict key for item witch matching name of the 1 lower rarity
+				switch (item.tier)
+				{
+					case "SUPREME":
+						item.dictKey = assignDictKey(item.item_name, "MYTHIC");
+						break;
+					case "MYTHIC":
+						item.dictKey = assignDictKey(item.item_name, "LEGENDARY");
+						break;
+					case "LEGENDARY":
+						item.dictKey = assignDictKey(item.item_name, "EPIC");
+						break;
+					case "EPIC":
+						item.dictKey = assignDictKey(item.item_name, "RARE");
+						break;
+					case "RARE":
+						item.dictKey = assignDictKey(item.item_name, "UNCOMMON");
+						break;
+					case "UNCOMMON":
+						item.dictKey = assignDictKey(item.item_name, "COMMON");
+						break;
+					case "VERY_SPECIAL":
+						item.dictKey = assignDictKey(item.item_name, "SPECIAL");
+						break;
+					default:
+						break;
+				}
+				if (item.dictKey != item.item_name) continue;
+
+				//So the repo for this item does not exist? sadge just try anything then
 				switch (item.category)
 				{
 					case "weapon":
 						item.dictKey = Regex.Replace(item.dictKey, @"[^\u0020-\u007E]", string.Empty);
 						item.dictKey = item.dictKey.Trim();
-
+					
 						if ((swordReforges.Any(s => item.dictKey.Contains(s)) == true) || (bowReforges.Any(s => item.dictKey.Contains(s)) == true))
 						{
 							int spcIndex = item.dictKey.IndexOf(' ');
 							item.dictKey = item.dictKey.Remove(0, spcIndex + 1);
 						}
-
+					
 						break;
-
-					case "armor": //BUG: Wise Dragon Armor -> Dragon Armor
+					
+					case "armor": //BUG: Wise Dragon Armor -> Dragon Armor --> Partialy solved (added pre item dict assign)
 						item.dictKey = Regex.Replace(item.dictKey, @"[^\u0020-\u007E]", string.Empty);
 						item.dictKey = item.dictKey.Trim();
-
+					
 						if (armorReforges.Any(s => item.dictKey.Contains(s)) == true)
 						{
 							int spcIndex = item.dictKey.IndexOf(' ');
@@ -219,16 +268,16 @@ namespace nic_z_tego_nie_bd
 							spcIndex = item.dictKey.IndexOf(' ', spcIndex + 1);
 							item.dictKey = item.dictKey.Remove(0, spcIndex + 1);
 						}
-
+					
 						break;
-
+					
 					case "accessories":
 						if (AccessoriesReforges.Any(s => item.dictKey.Contains(s)) == true)
 						{
 							int spcIndex = item.dictKey.IndexOf(' ');
 							item.dictKey = item.dictKey.Remove(0, spcIndex + 1);
 						}
-
+					
 						break;
 
 					case "consumables":
@@ -237,7 +286,10 @@ namespace nic_z_tego_nie_bd
 					case "blocks":
 						break;
 
-					case "misc": //add tools reforge removal and "Even More" ref removal
+					case "misc": //add tools reforge removal and "Even More" ref removal <-- not req anymore?
+						item.dictKey = Regex.Replace(item.dictKey, @"[^\u0020-\u007E]", string.Empty);
+						item.dictKey = item.dictKey.Trim();
+
 						if (item.dictKey.Contains("[Lvl ") == true)
 						{
 							var index = item.dictKey.IndexOf(']');
@@ -249,9 +301,23 @@ namespace nic_z_tego_nie_bd
 						item.dictKey = "Unsorted :(";
 						break;
 				}//ENDOF switch
+				//var repoElem = Properties.AllItemsREPO.itemRepo.items.Find(matchID => matchID.name == item.dictKey);
+				//if (repoElem != null) item.dictKey = repoElem.name;
 			}//ENDOF foreach item
 		}//ENDOF function
 
+		private static string assignDictKey(string item_name, string rarity)
+		{
+			if (Properties.AllItemsREPO.rarityItemRepo.ContainsKey(rarity) == false) return item_name;
+			foreach (var dictItem in Properties.AllItemsREPO.rarityItemRepo[rarity])
+			{
+				if (item_name.Contains(dictItem.name))
+				{
+					return dictItem.id;
+				}
+			}
+			return item_name;
+		}
 
 
 
@@ -354,6 +420,7 @@ namespace nic_z_tego_nie_bd
 			public UInt64 start { get; set; }
 			public UInt64 end { get; set; }
 			public string item_name { get; set; }
+			public string tier { get; set; }
 			public string category { get; set; }
 			public string dictKey { get; set; }
 			public UInt32 starting_bid { get; set; }
