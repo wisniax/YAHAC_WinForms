@@ -112,10 +112,7 @@ namespace nic_z_tego_nie_bd
 			if (Properties.AllItemsREPO.itemRepo.success != true) return;
 			foreach (var item in bazaarObjtemp.products)
 			{
-				string prodName = item.Value.product_id;
-				var repoElem = Properties.AllItemsREPO.itemRepo.items.Find(matchID => matchID.id==prodName);
-				if (repoElem != null) item.Value.product_name = repoElem.name;
-				else item.Value.product_name = item.Value.product_id;
+				item.Value.product_name = Properties.AllItemsREPO.IDtoNAME(item.Value.product_id);
 			}
 			bazaarObj = bazaarObjtemp;
 		}

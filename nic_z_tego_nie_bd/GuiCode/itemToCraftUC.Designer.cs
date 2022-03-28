@@ -31,20 +31,20 @@ namespace nic_z_tego_nie_bd.GuiCode
 		{
 			this.labelItemName = new System.Windows.Forms.Label();
 			this.panelRecipe = new System.Windows.Forms.Panel();
-			this.panelBuy = new System.Windows.Forms.Panel();
-			this.panelSell = new System.Windows.Forms.Panel();
-			this.labelRecipe = new System.Windows.Forms.Label();
 			this.textBoxRecipe = new System.Windows.Forms.TextBox();
-			this.labelBuyNowPrice = new System.Windows.Forms.Label();
-			this.textBoxBINprice = new System.Windows.Forms.TextBox();
-			this.labelBuyOfferPrice = new System.Windows.Forms.Label();
+			this.labelRecipe = new System.Windows.Forms.Label();
+			this.panelBuy = new System.Windows.Forms.Panel();
 			this.textBoxOfferBUY = new System.Windows.Forms.TextBox();
-			this.labelsellPrice = new System.Windows.Forms.Label();
-			this.textBoxsellPrice = new System.Windows.Forms.TextBox();
-			this.labelProfit = new System.Windows.Forms.Label();
-			this.labelInterest = new System.Windows.Forms.Label();
-			this.textBoxProfit = new System.Windows.Forms.TextBox();
+			this.labelBuyOfferPrice = new System.Windows.Forms.Label();
+			this.textBoxBINprice = new System.Windows.Forms.TextBox();
+			this.labelBuyNowPrice = new System.Windows.Forms.Label();
+			this.panelSell = new System.Windows.Forms.Panel();
 			this.textBoxInterest = new System.Windows.Forms.TextBox();
+			this.textBoxProfit = new System.Windows.Forms.TextBox();
+			this.labelInterest = new System.Windows.Forms.Label();
+			this.labelProfit = new System.Windows.Forms.Label();
+			this.textBoxsellPrice = new System.Windows.Forms.TextBox();
+			this.labelsellPrice = new System.Windows.Forms.Label();
 			this.panelRecipe.SuspendLayout();
 			this.panelBuy.SuspendLayout();
 			this.panelSell.SuspendLayout();
@@ -61,7 +61,7 @@ namespace nic_z_tego_nie_bd.GuiCode
 			this.labelItemName.Name = "labelItemName";
 			this.labelItemName.Size = new System.Drawing.Size(490, 21);
 			this.labelItemName.TabIndex = 1;
-			this.labelItemName.Text = "Super Compactor 7000";
+			this.labelItemName.Text = "NaN";
 			this.labelItemName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
 			// panelRecipe
@@ -76,6 +76,36 @@ namespace nic_z_tego_nie_bd.GuiCode
 			this.panelRecipe.Size = new System.Drawing.Size(186, 86);
 			this.panelRecipe.TabIndex = 2;
 			// 
+			// textBoxRecipe
+			// 
+			this.textBoxRecipe.BackColor = System.Drawing.SystemColors.ActiveCaption;
+			this.textBoxRecipe.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			this.textBoxRecipe.Cursor = System.Windows.Forms.Cursors.Arrow;
+			this.textBoxRecipe.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.textBoxRecipe.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.textBoxRecipe.Location = new System.Drawing.Point(0, 20);
+			this.textBoxRecipe.Multiline = true;
+			this.textBoxRecipe.Name = "textBoxRecipe";
+			this.textBoxRecipe.ReadOnly = true;
+			this.textBoxRecipe.Size = new System.Drawing.Size(186, 66);
+			this.textBoxRecipe.TabIndex = 3;
+			this.textBoxRecipe.Text = "NaN";
+			this.textBoxRecipe.WordWrap = false;
+			// 
+			// labelRecipe
+			// 
+			this.labelRecipe.BackColor = System.Drawing.SystemColors.HotTrack;
+			this.labelRecipe.Dock = System.Windows.Forms.DockStyle.Top;
+			this.labelRecipe.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this.labelRecipe.Font = new System.Drawing.Font("Lemon", 9.749999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.labelRecipe.Location = new System.Drawing.Point(0, 0);
+			this.labelRecipe.Margin = new System.Windows.Forms.Padding(3);
+			this.labelRecipe.Name = "labelRecipe";
+			this.labelRecipe.Size = new System.Drawing.Size(186, 20);
+			this.labelRecipe.TabIndex = 2;
+			this.labelRecipe.Text = "Raw recipe:";
+			this.labelRecipe.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
 			// panelBuy
 			// 
 			this.panelBuy.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -89,6 +119,58 @@ namespace nic_z_tego_nie_bd.GuiCode
 			this.panelBuy.Name = "panelBuy";
 			this.panelBuy.Size = new System.Drawing.Size(146, 86);
 			this.panelBuy.TabIndex = 3;
+			// 
+			// textBoxOfferBUY
+			// 
+			this.textBoxOfferBUY.BackColor = System.Drawing.SystemColors.ActiveCaption;
+			this.textBoxOfferBUY.Dock = System.Windows.Forms.DockStyle.Top;
+			this.textBoxOfferBUY.Location = new System.Drawing.Point(0, 63);
+			this.textBoxOfferBUY.Name = "textBoxOfferBUY";
+			this.textBoxOfferBUY.ReadOnly = true;
+			this.textBoxOfferBUY.Size = new System.Drawing.Size(146, 23);
+			this.textBoxOfferBUY.TabIndex = 6;
+			this.textBoxOfferBUY.Text = "NaN";
+			this.textBoxOfferBUY.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+			// 
+			// labelBuyOfferPrice
+			// 
+			this.labelBuyOfferPrice.BackColor = System.Drawing.SystemColors.HotTrack;
+			this.labelBuyOfferPrice.Dock = System.Windows.Forms.DockStyle.Top;
+			this.labelBuyOfferPrice.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this.labelBuyOfferPrice.Font = new System.Drawing.Font("Lemon", 9.749999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.labelBuyOfferPrice.Location = new System.Drawing.Point(0, 43);
+			this.labelBuyOfferPrice.Margin = new System.Windows.Forms.Padding(3);
+			this.labelBuyOfferPrice.Name = "labelBuyOfferPrice";
+			this.labelBuyOfferPrice.Size = new System.Drawing.Size(146, 20);
+			this.labelBuyOfferPrice.TabIndex = 5;
+			this.labelBuyOfferPrice.Text = "Buy via offer:";
+			this.labelBuyOfferPrice.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// textBoxBINprice
+			// 
+			this.textBoxBINprice.BackColor = System.Drawing.SystemColors.ActiveCaption;
+			this.textBoxBINprice.Dock = System.Windows.Forms.DockStyle.Top;
+			this.textBoxBINprice.Location = new System.Drawing.Point(0, 20);
+			this.textBoxBINprice.Name = "textBoxBINprice";
+			this.textBoxBINprice.ReadOnly = true;
+			this.textBoxBINprice.Size = new System.Drawing.Size(146, 23);
+			this.textBoxBINprice.TabIndex = 4;
+			this.textBoxBINprice.Text = "NaN";
+			this.textBoxBINprice.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+			// 
+			// labelBuyNowPrice
+			// 
+			this.labelBuyNowPrice.BackColor = System.Drawing.SystemColors.HotTrack;
+			this.labelBuyNowPrice.Dock = System.Windows.Forms.DockStyle.Top;
+			this.labelBuyNowPrice.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this.labelBuyNowPrice.Font = new System.Drawing.Font("Lemon", 9.749999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.labelBuyNowPrice.Location = new System.Drawing.Point(0, 0);
+			this.labelBuyNowPrice.Margin = new System.Windows.Forms.Padding(3);
+			this.labelBuyNowPrice.Name = "labelBuyNowPrice";
+			this.labelBuyNowPrice.Size = new System.Drawing.Size(146, 20);
+			this.labelBuyNowPrice.TabIndex = 3;
+			this.labelBuyNowPrice.Text = "Buy now price:";
+			this.labelBuyNowPrice.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
 			// panelSell
 			// 
@@ -106,126 +188,29 @@ namespace nic_z_tego_nie_bd.GuiCode
 			this.panelSell.Size = new System.Drawing.Size(146, 86);
 			this.panelSell.TabIndex = 3;
 			// 
-			// labelRecipe
+			// textBoxInterest
 			// 
-			this.labelRecipe.BackColor = System.Drawing.SystemColors.HotTrack;
-			this.labelRecipe.Dock = System.Windows.Forms.DockStyle.Top;
-			this.labelRecipe.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.labelRecipe.Font = new System.Drawing.Font("Lemon", 9.749999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-			this.labelRecipe.Location = new System.Drawing.Point(0, 0);
-			this.labelRecipe.Margin = new System.Windows.Forms.Padding(3);
-			this.labelRecipe.Name = "labelRecipe";
-			this.labelRecipe.Size = new System.Drawing.Size(186, 20);
-			this.labelRecipe.TabIndex = 2;
-			this.labelRecipe.Text = "Raw recipe:";
-			this.labelRecipe.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			this.textBoxInterest.BackColor = System.Drawing.SystemColors.ActiveCaption;
+			this.textBoxInterest.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+			this.textBoxInterest.ForeColor = System.Drawing.Color.Maroon;
+			this.textBoxInterest.Location = new System.Drawing.Point(73, 63);
+			this.textBoxInterest.Name = "textBoxInterest";
+			this.textBoxInterest.ReadOnly = true;
+			this.textBoxInterest.Size = new System.Drawing.Size(73, 23);
+			this.textBoxInterest.TabIndex = 11;
+			this.textBoxInterest.Text = "NaN";
+			this.textBoxInterest.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
 			// 
-			// textBoxRecipe
+			// textBoxProfit
 			// 
-			this.textBoxRecipe.BackColor = System.Drawing.SystemColors.ActiveCaption;
-			this.textBoxRecipe.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this.textBoxRecipe.Cursor = System.Windows.Forms.Cursors.Arrow;
-			this.textBoxRecipe.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.textBoxRecipe.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-			this.textBoxRecipe.Location = new System.Drawing.Point(0, 20);
-			this.textBoxRecipe.Multiline = true;
-			this.textBoxRecipe.Name = "textBoxRecipe";
-			this.textBoxRecipe.ReadOnly = true;
-			this.textBoxRecipe.Size = new System.Drawing.Size(186, 66);
-			this.textBoxRecipe.TabIndex = 3;
-			this.textBoxRecipe.Text = "Enchanted redstone block\r\n";
-			this.textBoxRecipe.WordWrap = false;
-			// 
-			// labelBuyNowPrice
-			// 
-			this.labelBuyNowPrice.BackColor = System.Drawing.SystemColors.HotTrack;
-			this.labelBuyNowPrice.Dock = System.Windows.Forms.DockStyle.Top;
-			this.labelBuyNowPrice.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.labelBuyNowPrice.Font = new System.Drawing.Font("Lemon", 9.749999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-			this.labelBuyNowPrice.Location = new System.Drawing.Point(0, 0);
-			this.labelBuyNowPrice.Margin = new System.Windows.Forms.Padding(3);
-			this.labelBuyNowPrice.Name = "labelBuyNowPrice";
-			this.labelBuyNowPrice.Size = new System.Drawing.Size(146, 20);
-			this.labelBuyNowPrice.TabIndex = 3;
-			this.labelBuyNowPrice.Text = "Buy now price:";
-			this.labelBuyNowPrice.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// textBoxBINprice
-			// 
-			this.textBoxBINprice.BackColor = System.Drawing.SystemColors.ActiveCaption;
-			this.textBoxBINprice.Dock = System.Windows.Forms.DockStyle.Top;
-			this.textBoxBINprice.Location = new System.Drawing.Point(0, 20);
-			this.textBoxBINprice.Name = "textBoxBINprice";
-			this.textBoxBINprice.ReadOnly = true;
-			this.textBoxBINprice.Size = new System.Drawing.Size(146, 23);
-			this.textBoxBINprice.TabIndex = 4;
-			this.textBoxBINprice.Text = "11 552 154";
-			this.textBoxBINprice.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-			// 
-			// labelBuyOfferPrice
-			// 
-			this.labelBuyOfferPrice.BackColor = System.Drawing.SystemColors.HotTrack;
-			this.labelBuyOfferPrice.Dock = System.Windows.Forms.DockStyle.Top;
-			this.labelBuyOfferPrice.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.labelBuyOfferPrice.Font = new System.Drawing.Font("Lemon", 9.749999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-			this.labelBuyOfferPrice.Location = new System.Drawing.Point(0, 43);
-			this.labelBuyOfferPrice.Margin = new System.Windows.Forms.Padding(3);
-			this.labelBuyOfferPrice.Name = "labelBuyOfferPrice";
-			this.labelBuyOfferPrice.Size = new System.Drawing.Size(146, 20);
-			this.labelBuyOfferPrice.TabIndex = 5;
-			this.labelBuyOfferPrice.Text = "Buy via offer:";
-			this.labelBuyOfferPrice.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// textBoxOfferBUY
-			// 
-			this.textBoxOfferBUY.BackColor = System.Drawing.SystemColors.ActiveCaption;
-			this.textBoxOfferBUY.Dock = System.Windows.Forms.DockStyle.Top;
-			this.textBoxOfferBUY.Location = new System.Drawing.Point(0, 63);
-			this.textBoxOfferBUY.Name = "textBoxOfferBUY";
-			this.textBoxOfferBUY.ReadOnly = true;
-			this.textBoxOfferBUY.Size = new System.Drawing.Size(146, 23);
-			this.textBoxOfferBUY.TabIndex = 6;
-			this.textBoxOfferBUY.Text = "11 244 652";
-			this.textBoxOfferBUY.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-			// 
-			// labelsellPrice
-			// 
-			this.labelsellPrice.BackColor = System.Drawing.SystemColors.HotTrack;
-			this.labelsellPrice.Dock = System.Windows.Forms.DockStyle.Top;
-			this.labelsellPrice.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.labelsellPrice.Font = new System.Drawing.Font("Lemon", 9.749999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-			this.labelsellPrice.Location = new System.Drawing.Point(0, 0);
-			this.labelsellPrice.Margin = new System.Windows.Forms.Padding(3);
-			this.labelsellPrice.Name = "labelsellPrice";
-			this.labelsellPrice.Size = new System.Drawing.Size(146, 20);
-			this.labelsellPrice.TabIndex = 6;
-			this.labelsellPrice.Text = "Sell price";
-			this.labelsellPrice.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// textBoxsellPrice
-			// 
-			this.textBoxsellPrice.BackColor = System.Drawing.SystemColors.ActiveCaption;
-			this.textBoxsellPrice.Dock = System.Windows.Forms.DockStyle.Top;
-			this.textBoxsellPrice.Location = new System.Drawing.Point(0, 20);
-			this.textBoxsellPrice.Name = "textBoxsellPrice";
-			this.textBoxsellPrice.ReadOnly = true;
-			this.textBoxsellPrice.Size = new System.Drawing.Size(146, 23);
-			this.textBoxsellPrice.TabIndex = 7;
-			this.textBoxsellPrice.Text = "12 384 692";
-			this.textBoxsellPrice.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-			// 
-			// labelProfit
-			// 
-			this.labelProfit.BackColor = System.Drawing.SystemColors.HotTrack;
-			this.labelProfit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.labelProfit.Font = new System.Drawing.Font("Lemon", 9.749999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-			this.labelProfit.Location = new System.Drawing.Point(0, 43);
-			this.labelProfit.Margin = new System.Windows.Forms.Padding(3);
-			this.labelProfit.Name = "labelProfit";
-			this.labelProfit.Size = new System.Drawing.Size(73, 20);
-			this.labelProfit.TabIndex = 8;
-			this.labelProfit.Text = "Profit";
-			this.labelProfit.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			this.textBoxProfit.BackColor = System.Drawing.SystemColors.ActiveCaption;
+			this.textBoxProfit.Location = new System.Drawing.Point(0, 63);
+			this.textBoxProfit.Name = "textBoxProfit";
+			this.textBoxProfit.ReadOnly = true;
+			this.textBoxProfit.Size = new System.Drawing.Size(73, 23);
+			this.textBoxProfit.TabIndex = 10;
+			this.textBoxProfit.Text = "NaN";
+			this.textBoxProfit.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
 			// 
 			// labelInterest
 			// 
@@ -240,29 +225,44 @@ namespace nic_z_tego_nie_bd.GuiCode
 			this.labelInterest.Text = "Interest";
 			this.labelInterest.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
-			// textBoxProfit
+			// labelProfit
 			// 
-			this.textBoxProfit.BackColor = System.Drawing.SystemColors.ActiveCaption;
-			this.textBoxProfit.Location = new System.Drawing.Point(0, 63);
-			this.textBoxProfit.Name = "textBoxProfit";
-			this.textBoxProfit.ReadOnly = true;
-			this.textBoxProfit.Size = new System.Drawing.Size(73, 23);
-			this.textBoxProfit.TabIndex = 10;
-			this.textBoxProfit.Text = "752 224";
-			this.textBoxProfit.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+			this.labelProfit.BackColor = System.Drawing.SystemColors.HotTrack;
+			this.labelProfit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this.labelProfit.Font = new System.Drawing.Font("Lemon", 9.749999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.labelProfit.Location = new System.Drawing.Point(0, 43);
+			this.labelProfit.Margin = new System.Windows.Forms.Padding(3);
+			this.labelProfit.Name = "labelProfit";
+			this.labelProfit.Size = new System.Drawing.Size(73, 20);
+			this.labelProfit.TabIndex = 8;
+			this.labelProfit.Text = "Profit";
+			this.labelProfit.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
-			// textBoxInterest
+			// textBoxsellPrice
 			// 
-			this.textBoxInterest.BackColor = System.Drawing.SystemColors.ActiveCaption;
-			this.textBoxInterest.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-			this.textBoxInterest.ForeColor = System.Drawing.Color.Maroon;
-			this.textBoxInterest.Location = new System.Drawing.Point(73, 63);
-			this.textBoxInterest.Name = "textBoxInterest";
-			this.textBoxInterest.ReadOnly = true;
-			this.textBoxInterest.Size = new System.Drawing.Size(73, 23);
-			this.textBoxInterest.TabIndex = 11;
-			this.textBoxInterest.Text = "22%";
-			this.textBoxInterest.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+			this.textBoxsellPrice.BackColor = System.Drawing.SystemColors.ActiveCaption;
+			this.textBoxsellPrice.Dock = System.Windows.Forms.DockStyle.Top;
+			this.textBoxsellPrice.Location = new System.Drawing.Point(0, 20);
+			this.textBoxsellPrice.Name = "textBoxsellPrice";
+			this.textBoxsellPrice.ReadOnly = true;
+			this.textBoxsellPrice.Size = new System.Drawing.Size(146, 23);
+			this.textBoxsellPrice.TabIndex = 7;
+			this.textBoxsellPrice.Text = "NaN";
+			this.textBoxsellPrice.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+			// 
+			// labelsellPrice
+			// 
+			this.labelsellPrice.BackColor = System.Drawing.SystemColors.HotTrack;
+			this.labelsellPrice.Dock = System.Windows.Forms.DockStyle.Top;
+			this.labelsellPrice.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this.labelsellPrice.Font = new System.Drawing.Font("Lemon", 9.749999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.labelsellPrice.Location = new System.Drawing.Point(0, 0);
+			this.labelsellPrice.Margin = new System.Windows.Forms.Padding(3);
+			this.labelsellPrice.Name = "labelsellPrice";
+			this.labelsellPrice.Size = new System.Drawing.Size(146, 20);
+			this.labelsellPrice.TabIndex = 6;
+			this.labelsellPrice.Text = "Sell price";
+			this.labelsellPrice.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
 			// itemToCraftUC
 			// 

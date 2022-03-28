@@ -29,13 +29,13 @@ namespace nic_z_tego_nie_bd.GuiCode
 		private void ParseStaticData()
 		{
 			//Set tiltle
-			labelItemName.Text = itemRecipe.item_name;
+			labelItemName.Text = Properties.AllItemsREPO.IDtoNAME(itemRecipe.item_dictKey);
 
 			//Set recipe
 			textBoxRecipe.Clear();
 			foreach (var itemReq in itemRecipe.reqItems)
 			{
-				textBoxRecipe.Text += itemReq.amount.ToString() + " × " + itemReq.item_name + '\n';
+				textBoxRecipe.AppendText(itemReq.amount.ToString() + " × " + Properties.AllItemsREPO.IDtoNAME(itemReq.item_dictKey) + Environment.NewLine);
 			}
 		}
 
@@ -50,73 +50,77 @@ namespace nic_z_tego_nie_bd.GuiCode
 			decimal expectedProfit;
 			decimal interest;
 
-			//Item sell price
-			try
-			{
-				switch (itemRecipe.sellTo)
+
+			ItemsToCraft.Source source = BazaarCheckup.bazaarObj.products.ContainsKey(itemRecipe.item_dictKey) == true ? ItemsToCraft.Source.Bazaar : ItemsToCraft.Source.AuctionHouse;
+			if (source == ItemsToCraft.Source.AuctionHouse && AuctionHouseInstance.ahCache.items.ContainsKey(itemRecipe.item_dictKey) == true)
+			{ //Add something if item is not found HERE
+				switch (source)
 				{
 					case ItemsToCraft.Source.Bazaar:
-						sellPrice = BazaarCheckup.bazaarObj.products[itemRecipe.selldictKey].buy_summary[0].pricePerUnit - 1;
+						sellPrice = BazaarCheckup.bazaarObj.products[itemRecipe.item_dictKey].buy_summary[0].pricePerUnit - 1;
 						break;
 					case ItemsToCraft.Source.AuctionHouse:
-						sellPrice = (decimal)AuctionHouseInstance.ahCache.items[itemRecipe.selldictKey][0].starting_bid - 1;
+						AuctionHouseInstance.ahCache.items[itemRecipe.item_dictKey].Sort((a, b) => a.starting_bid.CompareTo(b.starting_bid));
+						sellPrice = (decimal)AuctionHouseInstance.ahCache.items[itemRecipe.item_dictKey][0].starting_bid - 1;
 						break;
 				}
 			}
-			catch { return; } //Better error handling SOON TM :)
 
 
-			//Buy now and via offer price
-			try
+
+
+			buyNowPrice = 0;
+			buyViaOfferPrice = 0;
+			foreach (var reqItem in itemRecipe.reqItems)
 			{
-				buyNowPrice = 0;
-				buyViaOfferPrice = 0;
-				foreach (var reqItem in itemRecipe.reqItems)
+				var reqItemAmountLeft = reqItem.amount;
+				ItemsToCraft.Source reqItemSource = BazaarCheckup.bazaarObj.products.ContainsKey(reqItem.item_dictKey) == true ? ItemsToCraft.Source.Bazaar : ItemsToCraft.Source.AuctionHouse;
+				if (reqItemSource == ItemsToCraft.Source.AuctionHouse && AuctionHouseInstance.ahCache.items.ContainsKey(reqItem.item_dictKey) == false) return; //Add something if item is not found HERE
+				switch (reqItemSource)
 				{
-					var reqItemAmountLeft = reqItem.amount;
-					switch (reqItem.source)
-					{
-						case ItemsToCraft.Source.Bazaar:
-							var bzOrders = BazaarCheckup.bazaarObj.products[reqItem.item_dictKey].buy_summary; //BZ list regarding this specific item
-							var bzOrdersOffer = BazaarCheckup.bazaarObj.products[reqItem.item_dictKey].sell_summary;
-							for (int i = 0; reqItemAmountLeft > 0; i++)
-							{
-								buyNowPrice += bzOrders[i].pricePerUnit * (bzOrders[i].amount >= reqItemAmountLeft ? reqItemAmountLeft : bzOrders[i].amount);
-								reqItemAmountLeft = bzOrders[i].amount >= reqItemAmountLeft ? 0 : reqItemAmountLeft - bzOrders[i].amount;
-							}
-							buyViaOfferPrice += (decimal.Add(bzOrdersOffer[0].pricePerUnit, (decimal)0.1)) * reqItem.amount;
-							break;
-						case ItemsToCraft.Source.AuctionHouse:
-							var ahOrders = AuctionHouseInstance.ahCache.items[reqItem.item_dictKey]; //BZ list regarding this specific item
-							for (int i = 0; reqItemAmountLeft > 0; i++)
-							{
-								buyNowPrice += ahOrders[i].starting_bid;
-								buyViaOfferPrice += ahOrders[i].starting_bid;
-								reqItemAmountLeft--;
-							}
-							break;
-					}
+					case ItemsToCraft.Source.Bazaar:
+						var bzOrders = BazaarCheckup.bazaarObj.products[reqItem.item_dictKey].buy_summary; //BZ list regarding this specific item
+						var bzOrdersOffer = BazaarCheckup.bazaarObj.products[reqItem.item_dictKey].sell_summary;
+						for (int i = 0; reqItemAmountLeft > 0; i++)
+						{
+							buyNowPrice += bzOrders[i].pricePerUnit * (bzOrders[i].amount >= reqItemAmountLeft ? reqItemAmountLeft : bzOrders[i].amount);
+							reqItemAmountLeft = bzOrders[i].amount >= reqItemAmountLeft ? 0 : reqItemAmountLeft - bzOrders[i].amount;
+						}
+						buyViaOfferPrice += (decimal.Add(bzOrdersOffer[0].pricePerUnit, (decimal)0.1)) * reqItem.amount;
+						break;
+					case ItemsToCraft.Source.AuctionHouse:
+						var ahOrders = AuctionHouseInstance.ahCache.items[reqItem.item_dictKey]; //BZ list regarding this specific item
+						for (int i = 0; reqItemAmountLeft > 0; i++)
+						{
+							buyNowPrice += ahOrders[i].starting_bid;
+							buyViaOfferPrice += ahOrders[i].starting_bid;
+							reqItemAmountLeft--;
+						}
+						break;
 				}
 			}
-			catch { return; }
-
-
-			//Profit and interest calculation
-			expectedProfit = (sellPrice * (decimal)0.99) - baseCost - buyNowPrice; //Calculation for AH only for now
-			interest = 100*expectedProfit / buyNowPrice;
 
 
 			//Print gathered data to UserControl
 			textBoxBINprice.Clear();
-			textBoxBINprice.Text = (buyNowPrice).ToString("N", CultureInfo.CreateSpecificCulture("fr-CA"));
+			textBoxBINprice.Text = (buyNowPrice).ToString("N0", CultureInfo.CreateSpecificCulture("fr-CA"));
 			textBoxOfferBUY.Clear();
-			textBoxOfferBUY.Text = (buyViaOfferPrice).ToString("N", CultureInfo.CreateSpecificCulture("fr-CA"));
+			textBoxOfferBUY.Text = (buyViaOfferPrice).ToString("N0", CultureInfo.CreateSpecificCulture("fr-CA"));
 			textBoxsellPrice.Clear();
-			textBoxsellPrice.Text = sellPrice.ToString("N", CultureInfo.CreateSpecificCulture("fr-CA"));
-			textBoxProfit.Clear();
-			textBoxProfit.Text = expectedProfit.ToString("N", CultureInfo.CreateSpecificCulture("fr-CA"));
-			textBoxInterest.Clear();
-			textBoxInterest.Text = interest.ToString("P");
+			textBoxsellPrice.Text = sellPrice.ToString("N0", CultureInfo.CreateSpecificCulture("fr-CA"));
+
+			//Profit and interest calculation
+			if (sellPrice != 0)
+			{
+				expectedProfit = (sellPrice * (decimal)0.99) - baseCost - buyNowPrice; //Calculation for AH only for now
+				interest = expectedProfit / buyNowPrice;
+				textBoxProfit.Clear();
+				textBoxProfit.Text = expectedProfit.ToString("N0", CultureInfo.CreateSpecificCulture("fr-CA"));
+				textBoxInterest.Clear();
+				textBoxInterest.Text = interest.ToString("P");
+			}
+
+
 
 		}//ENDOF refreshF
 

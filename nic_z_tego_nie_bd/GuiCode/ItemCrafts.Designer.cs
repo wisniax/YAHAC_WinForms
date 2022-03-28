@@ -29,7 +29,9 @@ namespace nic_z_tego_nie_bd
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+			this.timer1 = new System.Windows.Forms.Timer(this.components);
 			this.SuspendLayout();
 			// 
 			// flowLayoutPanel1
@@ -44,6 +46,12 @@ namespace nic_z_tego_nie_bd
 			this.flowLayoutPanel1.Padding = new System.Windows.Forms.Padding(3);
 			this.flowLayoutPanel1.Size = new System.Drawing.Size(622, 402);
 			this.flowLayoutPanel1.TabIndex = 0;
+			// 
+			// timer1
+			// 
+			this.timer1.Enabled = true;
+			this.timer1.Interval = 1000;
+			this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
 			// 
 			// ItemCrafts
 			// 
@@ -63,5 +71,6 @@ namespace nic_z_tego_nie_bd
 		#endregion
 
 		private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+		private System.Windows.Forms.Timer timer1;
 	}
 }

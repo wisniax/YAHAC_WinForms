@@ -21,7 +21,7 @@ namespace nic_z_tego_nie_bd.Properties
 			genRarityItemsRepo();
 		}
 
-		public static void populateList()
+		private static void populateList()
 		{
 			var httpCl = new HttpCliento();
 			var repoTask = httpCl.GetAsync(repoURL);
@@ -46,6 +46,15 @@ namespace nic_z_tego_nie_bd.Properties
 					rarityItemRepo.Add(item.tier, new List<Item> { item });
 				}
 			}
+		}
+
+
+		//item_dictKey --> item_NAME conversion
+		public static string IDtoNAME(string itemID)
+		{
+			var repoElem = Properties.AllItemsREPO.itemRepo.items.Find(matchID => matchID.id == itemID);
+			if (repoElem != null) return repoElem.name;
+			else return itemID;
 		}
 
 

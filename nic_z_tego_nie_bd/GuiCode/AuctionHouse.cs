@@ -34,9 +34,7 @@ namespace nic_z_tego_nie_bd
 			if (Properties.AllItemsREPO.itemRepo.success != true) return;
 			foreach (var item in AuctionHouseInstance.ahCache.items)
 			{
-				var repoElem = Properties.AllItemsREPO.itemRepo.items.Find(matchID => matchID.id == item.Key);
-				if (repoElem != null) listBox1.Items.Add(repoElem.name);
-				else listBox1.Items.Add(item.Key);
+				listBox1.Items.Add(Properties.AllItemsREPO.IDtoNAME(item.Key));
 			}
 			listBox1.EndUpdate();
 		}
@@ -64,9 +62,8 @@ namespace nic_z_tego_nie_bd
 		{
 			listViewItemDetails.Items.Clear();
 			//translate item name to id
-			var selectedItem = listBox1.SelectedItem.ToString();
-			var repoElem = Properties.AllItemsREPO.itemRepo.items.Find(findID => findID.name == selectedItem);
-			if (repoElem != null) selectedItem = repoElem.id;
+			//wrong function bc im stupid... List must be switched to listView as it can store item tag (name--Id conversion is lossy) As such whole function have to be rebuilt
+			var selectedItem = Properties.AllItemsREPO.IDtoNAME(listBox1.SelectedItem.ToString()); 
 
 			//render item of given id to list
 			try

@@ -68,7 +68,11 @@ namespace nic_z_tego_nie_bd
 			if (DateTimeOffset.Now.ToUnixTimeMilliseconds() - AuctionHouseInstance.ahCache.lastUpdated > 65000) 
 			{
 				timerAH.Stop();
-				await Task.Run(()=>AuctionHouseInstance.refresh());
+				try
+				{
+					await Task.Run(() => AuctionHouseInstance.refresh());
+				}
+				catch { }
 				timerAH.Start();
 			}
 		}
