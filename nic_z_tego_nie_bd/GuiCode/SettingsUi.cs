@@ -18,7 +18,10 @@ namespace nic_z_tego_nie_bd.GuiCode
 		public SettingsUi()
 		{
 			InitializeComponent();
+			var uisToChooseFrom = new List<string> { "AuctionHouse", "Bazaar","Item Crafts", "Settings" };
+			comboBoxChoooseStartUi.DataSource = uisToChooseFrom;
 			comboBoxChoooseStartUi.SelectedItem = Properties.Settings.Default.Starting_Ui;
+			if (uisToChooseFrom.Contains(comboBoxChoooseStartUi.SelectedItem)==false) { comboBoxChoooseStartUi.SelectedItem = uisToChooseFrom.First(s => s.Contains("Settings")); }
 			itemRecipe = new();
 			itemRecipe.reqItems = new();
 			//comboBoxItemToCraft.Text = "Adding new item";
@@ -155,6 +158,7 @@ namespace nic_z_tego_nie_bd.GuiCode
 			public string item_name { get; set; }
 			public string item_dictKey { get; set; }
 		}
+
 	}
 
 

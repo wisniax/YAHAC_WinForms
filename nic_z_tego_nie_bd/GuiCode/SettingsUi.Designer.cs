@@ -55,10 +55,6 @@ namespace nic_z_tego_nie_bd.GuiCode
 			// 
 			this.comboBoxChoooseStartUi.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.comboBoxChoooseStartUi.FormattingEnabled = true;
-			this.comboBoxChoooseStartUi.Items.AddRange(new object[] {
-            "AuctionHouse",
-            "Bazaar",
-            "None :("});
 			this.comboBoxChoooseStartUi.Location = new System.Drawing.Point(12, 41);
 			this.comboBoxChoooseStartUi.Name = "comboBoxChoooseStartUi";
 			this.comboBoxChoooseStartUi.Size = new System.Drawing.Size(121, 23);

@@ -38,6 +38,9 @@ namespace nic_z_tego_nie_bd
 				case "AuctionHouse":
 					loadForm(new AuctionHouse());
 					break;
+				case "Item Crafts":
+					loadForm(new ItemCrafts());
+					break;
 				default:
 					loadForm(new SettingsUi());
 					break;

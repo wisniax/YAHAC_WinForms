@@ -49,10 +49,10 @@ namespace nic_z_tego_nie_bd.GuiCode
 			decimal buyViaOfferPrice;
 			decimal expectedProfit;
 			decimal interest;
-
+			while (BazaarCheckup.bazaarObj.success!=true||AuctionHouseInstance.ahCache.success!=true) { return; }
 
 			ItemsToCraft.Source source = BazaarCheckup.bazaarObj.products.ContainsKey(itemRecipe.item_dictKey) == true ? ItemsToCraft.Source.Bazaar : ItemsToCraft.Source.AuctionHouse;
-			if (source == ItemsToCraft.Source.AuctionHouse && AuctionHouseInstance.ahCache.items.ContainsKey(itemRecipe.item_dictKey) == true)
+			if (source != ItemsToCraft.Source.AuctionHouse || AuctionHouseInstance.ahCache.items.ContainsKey(itemRecipe.item_dictKey) == true)
 			{ //Add something if item is not found HERE
 				switch (source)
 				{
@@ -83,6 +83,7 @@ namespace nic_z_tego_nie_bd.GuiCode
 						var bzOrdersOffer = BazaarCheckup.bazaarObj.products[reqItem.item_dictKey].sell_summary;
 						for (int i = 0; reqItemAmountLeft > 0; i++)
 						{
+							if (i == bzOrders.Count) { buyNowPrice = 0; break; }
 							buyNowPrice += bzOrders[i].pricePerUnit * (bzOrders[i].amount >= reqItemAmountLeft ? reqItemAmountLeft : bzOrders[i].amount);
 							reqItemAmountLeft = bzOrders[i].amount >= reqItemAmountLeft ? 0 : reqItemAmountLeft - bzOrders[i].amount;
 						}
@@ -90,10 +91,12 @@ namespace nic_z_tego_nie_bd.GuiCode
 						break;
 					case ItemsToCraft.Source.AuctionHouse:
 						var ahOrders = AuctionHouseInstance.ahCache.items[reqItem.item_dictKey]; //BZ list regarding this specific item
+						ahOrders.Sort((a, b) => a.starting_bid.CompareTo(b.starting_bid));
 						for (int i = 0; reqItemAmountLeft > 0; i++)
 						{
+							if (i == ahOrders.Count) { buyNowPrice = 0; break; }
 							buyNowPrice += ahOrders[i].starting_bid;
-							buyViaOfferPrice += ahOrders[i].starting_bid;
+							buyViaOfferPrice += ahOrders[0].starting_bid;
 							reqItemAmountLeft--;
 						}
 						break;
@@ -102,15 +105,44 @@ namespace nic_z_tego_nie_bd.GuiCode
 
 
 			//Print gathered data to UserControl
-			textBoxBINprice.Clear();
-			textBoxBINprice.Text = (buyNowPrice).ToString("N0", CultureInfo.CreateSpecificCulture("fr-CA"));
-			textBoxOfferBUY.Clear();
-			textBoxOfferBUY.Text = (buyViaOfferPrice).ToString("N0", CultureInfo.CreateSpecificCulture("fr-CA"));
-			textBoxsellPrice.Clear();
-			textBoxsellPrice.Text = sellPrice.ToString("N0", CultureInfo.CreateSpecificCulture("fr-CA"));
+
+			if (buyNowPrice != 0)
+			{
+				textBoxBINprice.Clear();
+				textBoxBINprice.Text = (buyNowPrice).ToString("N0", CultureInfo.CreateSpecificCulture("fr-CA"));
+			}
+			else
+			{
+				textBoxBINprice.Clear();
+				textBoxBINprice.Text = "NaN";
+			}
+
+
+			if (buyViaOfferPrice != 0)
+			{
+				textBoxOfferBUY.Clear();
+				textBoxOfferBUY.Text = (buyViaOfferPrice).ToString("N0", CultureInfo.CreateSpecificCulture("fr-CA"));
+			}
+			else
+			{
+				textBoxOfferBUY.Clear();
+				textBoxOfferBUY.Text = "NaN";
+			}
+
+
+			if (sellPrice != 0)
+			{
+				textBoxsellPrice.Clear();
+				textBoxsellPrice.Text = sellPrice.ToString("N0", CultureInfo.CreateSpecificCulture("fr-CA"));
+			}
+			else
+			{
+				textBoxsellPrice.Clear();
+				textBoxsellPrice.Text = "NaN";
+			}
 
 			//Profit and interest calculation
-			if (sellPrice != 0)
+			if ((sellPrice != 0&&buyNowPrice !=0)&&(sellPrice>=buyNowPrice))
 			{
 				expectedProfit = (sellPrice * (decimal)0.99) - baseCost - buyNowPrice; //Calculation for AH only for now
 				interest = expectedProfit / buyNowPrice;
@@ -119,9 +151,22 @@ namespace nic_z_tego_nie_bd.GuiCode
 				textBoxInterest.Clear();
 				textBoxInterest.Text = interest.ToString("P");
 			}
-
-
-
+			else if (sellPrice != 0 && buyViaOfferPrice != 0)
+			{
+				expectedProfit = (sellPrice * (decimal)0.99) - baseCost - buyViaOfferPrice; //Calculation for AH only for now
+				interest = expectedProfit / buyViaOfferPrice;
+				textBoxProfit.Clear();
+				textBoxProfit.Text = expectedProfit.ToString("N0", CultureInfo.CreateSpecificCulture("fr-CA")) + " (O)";
+				textBoxInterest.Clear();
+				textBoxInterest.Text = interest.ToString("P");
+			}
+			else
+			{
+				textBoxProfit.Clear();
+				textBoxProfit.Text = "NaN";
+				textBoxInterest.Clear();
+				textBoxInterest.Text = "NaN";
+			}
 		}//ENDOF refreshF
 
 

@@ -35,11 +35,14 @@ namespace nic_z_tego_nie_bd
 				tempitemsUi.Add(itemUC);
 			}
 			itemsUi = tempitemsUi;
+			var tempLocation = flowLayoutPanel1.VerticalScroll.Value;
 			flowLayoutPanel1.Controls.Clear();
 			foreach (var item in itemsUi)
 			{
 				flowLayoutPanel1.Controls.Add(item);
 			}
+			//flowLayoutPanel1.VerticalScroll.Value = tempLocation;
+			flowLayoutPanel1.AutoScrollPosition = new Point(0,Math.Abs(tempLocation));
 			timestampAH = AuctionHouseInstance.ahCache.lastUpdated;
 			timestampBZ = BazaarCheckup.bazaarObj.lastUpdated;
 		}

@@ -3,12 +3,9 @@
   <Profiles />
   <Settings>
     <Setting Name="Starting_Ui" Type="System.String" Scope="User">
-      <Value Profile="(Default)">none</Value>
+      <Value Profile="(Default)">Settings</Value>
     </Setting>
     <Setting Name="items" Type="System.String" Scope="User">
-      <Value Profile="(Default)">none</Value>
-    </Setting>
-    <Setting Name="test" Type="System.String" Scope="User">
       <Value Profile="(Default)">none</Value>
     </Setting>
   </Settings>

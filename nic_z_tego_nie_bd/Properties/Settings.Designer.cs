@@ -25,7 +25,7 @@ namespace nic_z_tego_nie_bd.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("none")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Settings")]
         public string Starting_Ui {
             get {
                 return ((string)(this["Starting_Ui"]));
@@ -44,18 +44,6 @@ namespace nic_z_tego_nie_bd.Properties {
             }
             set {
                 this["items"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("none")]
-        public string test {
-            get {
-                return ((string)(this["test"]));
-            }
-            set {
-                this["test"] = value;
             }
         }
     }
