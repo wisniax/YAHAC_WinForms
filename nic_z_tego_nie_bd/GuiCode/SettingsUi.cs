@@ -114,6 +114,8 @@ namespace nic_z_tego_nie_bd.GuiCode
 		private void buttonRemoveWholeSelectedItem_Click(object sender, EventArgs e)
 		{
 			ItemsToCraft.items.Remove(itemRecipe);
+			itemRecipe = new();
+			itemRecipe.reqItems = new();
 			generateComboItemToCraftList();
 		}
 
