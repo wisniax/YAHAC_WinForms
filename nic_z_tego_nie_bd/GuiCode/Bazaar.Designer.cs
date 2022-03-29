@@ -39,7 +39,6 @@ namespace nic_z_tego_nie_bd
 			this.listViewBuyPrice = new System.Windows.Forms.ListView();
 			this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
 			this.columnHeader4 = new System.Windows.Forms.ColumnHeader();
-			this.vScrollBar1 = new System.Windows.Forms.VScrollBar();
 			this.SuspendLayout();
 			// 
 			// timer1
@@ -125,20 +124,11 @@ namespace nic_z_tego_nie_bd
 			this.columnHeader4.Text = "buy price";
 			this.columnHeader4.Width = 120;
 			// 
-			// vScrollBar1
-			// 
-			this.vScrollBar1.Dock = System.Windows.Forms.DockStyle.Right;
-			this.vScrollBar1.Location = new System.Drawing.Point(630, 3);
-			this.vScrollBar1.Name = "vScrollBar1";
-			this.vScrollBar1.Size = new System.Drawing.Size(17, 444);
-			this.vScrollBar1.TabIndex = 5;
-			// 
 			// Bazaar
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(650, 450);
-			this.Controls.Add(this.vScrollBar1);
 			this.Controls.Add(this.listViewBuyPrice);
 			this.Controls.Add(this.listViewSellPrice);
 			this.Controls.Add(this.listBox1);
@@ -161,6 +151,5 @@ namespace nic_z_tego_nie_bd
 		private System.Windows.Forms.ListView listViewBuyPrice;
 		private System.Windows.Forms.ColumnHeader columnHeader3;
 		private System.Windows.Forms.ColumnHeader columnHeader4;
-		private System.Windows.Forms.VScrollBar vScrollBar1;
 	}
 }

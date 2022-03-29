@@ -28,15 +28,48 @@ namespace nic_z_tego_nie_bd
 		}
 		public void listBoxWrite()
 		{
-			listBox1.BeginUpdate();
-			listBox1.Items.Clear();
+			listViewItems.BeginUpdate();
+			//listViewItems.Items.Clear();
 			guilastUpdated = AuctionHouseInstance.ahCache.lastUpdated;
 			if (Properties.AllItemsREPO.itemRepo.success != true) return;
-			foreach (var item in AuctionHouseInstance.ahCache.items)
+			var sorted = AuctionHouseInstance.ahCache.items.OrderBy(x => Properties.AllItemsREPO.IDtoNAME(x.Key));
+			foreach (var item in sorted)
 			{
-				listBox1.Items.Add(Properties.AllItemsREPO.IDtoNAME(item.Key));
+				var addedID = listViewItems.Items.Add(Properties.AllItemsREPO.IDtoNAME(item.Key));
+				addedID.Tag = item.Key;
+				switch (item.Value[0].tier)
+				{
+					case "SUPREME":
+						addedID.ForeColor = Color.FromArgb(Convert.ToInt32("55FFFF", 16)); //DIVINE? 55FFFF
+						break;
+					case "MYTHIC":
+						addedID.ForeColor = Color.FromArgb(Convert.ToInt32("FF55FF", 16)); //MYTHIC FF55FF
+						break;
+					case "LEGENDARY":
+						addedID.ForeColor = Color.FromArgb(Convert.ToInt32("FFAA00", 16)); //LEGENDARY FFAA00
+						break;
+					case "EPIC":
+						addedID.ForeColor = Color.FromArgb(Convert.ToInt32("AA00AA", 16)); //EPIC AA00AA
+						break;
+					case "RARE":
+						addedID.ForeColor = Color.FromArgb(Convert.ToInt32("5555FF", 16)); //RARE 5555FF
+						break;
+					case "UNCOMMON":
+						addedID.ForeColor = Color.FromArgb(Convert.ToInt32("55FF55", 16)); //UNCOMMON 55FF55
+						break;
+					case "VERY_SPECIAL":
+						addedID.ForeColor = Color.FromArgb(Convert.ToInt32("FF5555", 16)); //VERY SPECIAL FF5555
+						break;
+					case "SPECIAL":
+						addedID.ForeColor = Color.FromArgb(Convert.ToInt32("FF5555", 16)); //SPECIAL FF5555
+						break;
+					default:
+						addedID.ForeColor = Color.FromArgb(Convert.ToInt32("000000", 16)); //COMMON FFFFFF But its white so we use 000000
+						break;
+				}
 			}
-			listBox1.EndUpdate();
+			listViewItems.EndUpdate();
+			//listViewItems.Refresh();
 		}
 
 		private void timer1_Tick(object sender, EventArgs e)
@@ -49,10 +82,10 @@ namespace nic_z_tego_nie_bd
 			}
 		}
 
-		private void listBox1_DoubleClick(object sender, EventArgs e)
+		private void listViewItems_DoubleClick(object sender, EventArgs e)
 		{
-			if (listBox1.SelectedItem == null) return;
-			listBox1.Hide();
+			if (listViewItems.SelectedItems.Count == 0) return;
+			listViewItems.Hide();
 			timer1.Stop();
 			guilastUpdated = 0;
 			timer2.Start();
@@ -63,7 +96,7 @@ namespace nic_z_tego_nie_bd
 			listViewItemDetails.Items.Clear();
 			//translate item name to id
 			//wrong function bc im stupid... List must be switched to listView as it can store item tag (name--Id conversion is lossy) As such whole function have to be rebuilt
-			var selectedItem = Properties.AllItemsREPO.IDtoNAME(listBox1.SelectedItem.ToString()); 
+			var selectedItem = listViewItems.SelectedItems[0].Tag.ToString();
 
 			//render item of given id to list
 			try
@@ -101,6 +134,8 @@ namespace nic_z_tego_nie_bd
 			thread.Start();
 			thread.Join();
 		}
+
+
 	}
 
 
@@ -164,6 +199,7 @@ namespace nic_z_tego_nie_bd
 
 			//Replace both objects
 			ahCacheTemp.success = ahFetcher.AHpages[0].success;
+			//var cos = from entry in ahCacheTemp.items orderby Properties.AllItemsREPO.IDtoNAME(entry.Key) ascending select entry; //ahCacheTemp.items.OrderByDescending(x => Properties.AllItemsREPO.IDtoNAME(x.Key));
 			ahCache = ahCacheTemp;
 		}
 
