@@ -14,10 +14,12 @@ namespace nic_z_tego_nie_bd.GuiCode
 	public partial class itemToCraftUC : UserControl
 	{
 		ItemsToCraft.ItemRecipe itemRecipe;
+		public UInt32 profit { get; private set; }
+
 		public itemToCraftUC()
 		{
+			profit = new();
 			InitializeComponent();
-
 		}
 		public void initialize(ItemsToCraft.ItemRecipe item)
 		{
@@ -41,13 +43,12 @@ namespace nic_z_tego_nie_bd.GuiCode
 
 		public void refreshData()
 		{
-			decimal baseCost = 1200; //Price to put up an BIN auction
-
+			UInt32 baseCost = 1200; //Price to put up an BIN auction
 			//Prepare all variables
 			decimal sellPrice = 0;
 			decimal buyNowPrice;
 			decimal buyViaOfferPrice;
-			decimal expectedProfit;
+			decimal expectedProfit = 0;
 			decimal interest;
 			while (BazaarCheckup.bazaarObj.success!=true||AuctionHouseInstance.ahCache.success!=true) { return; }
 
@@ -167,6 +168,8 @@ namespace nic_z_tego_nie_bd.GuiCode
 				textBoxInterest.Clear();
 				textBoxInterest.Text = "NaN";
 			}
+			if (expectedProfit > 0) profit = (UInt32)expectedProfit;
+			else profit = 0;
 		}//ENDOF refreshF
 
 

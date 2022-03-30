@@ -36,6 +36,7 @@ namespace nic_z_tego_nie_bd
 			}
 			itemsUi = tempitemsUi;
 			var tempLocation = flowLayoutPanel1.VerticalScroll.Value;
+			itemsUi.Sort((a,b)=>b.profit.CompareTo(a.profit));
 			flowLayoutPanel1.Controls.Clear();
 			foreach (var item in itemsUi)
 			{
