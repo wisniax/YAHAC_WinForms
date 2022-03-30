@@ -89,6 +89,7 @@ namespace nic_z_tego_nie_bd.GuiCode
 		private void buttonAddToItemReqList_Click(object sender, EventArgs e)
 		{
 			//Check whether we generate new item recipe or add req items to already existing one
+			if (!Properties.AllItemsREPO.itemRepo.items.Contains((Properties.AllItemsREPO.Item)comboBoxAddItemToRecipe.SelectedItem)) return;
 			if (((ItemRecipePair)comboBoxItemToCraft.SelectedItem).item_dictKey == "Add new item")
 			{
 				itemRecipe.item_dictKey = ((Properties.AllItemsREPO.Item)comboBoxAddItemToRecipe.SelectedItem).id;
