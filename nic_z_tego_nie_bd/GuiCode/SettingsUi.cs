@@ -96,13 +96,13 @@ namespace nic_z_tego_nie_bd.GuiCode
 				var itemek = new ItemRecipePair { item_name = Properties.AllItemsREPO.IDtoNAME(itemRecipe.item_dictKey), item_dictKey = itemRecipe.item_dictKey };
 				comboBoxItemToCraft.Items.Add(itemek);
 				buttonRemoveWholeSelectedItem.Enabled = true;
-				buttonSaveItem.Enabled = true;
 				labelItemToAddAmount.Enabled = true;
 				numericUpDownItemToAddAmount.Enabled = true;
 				comboBoxItemToCraft.SelectedItem = itemek;
 			}
 			else
 			{
+				buttonSaveItem.Enabled = true;
 				ItemsToCraft.reqItem item = new();
 				item.item_dictKey = ((Properties.AllItemsREPO.Item)comboBoxAddItemToRecipe.SelectedItem).id;
 				item.amount = (UInt32)numericUpDownItemToAddAmount.Value;
@@ -126,6 +126,13 @@ namespace nic_z_tego_nie_bd.GuiCode
 			var startUi = comboBoxChoooseStartUi.SelectedItem.ToString();
 			Properties.Settings.Default.Starting_Ui = startUi;
 			Properties.Settings.Default.Save();
+			if (buttonSaveItem.Enabled)
+			{
+				ItemsToCraft.items.Add(itemRecipe);
+				itemRecipe = new();
+				itemRecipe.reqItems = new();
+				generateComboItemToCraftList();
+			}
 			ItemsToCraft.saveRecipes();
 		}
 

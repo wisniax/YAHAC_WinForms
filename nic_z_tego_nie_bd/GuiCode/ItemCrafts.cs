@@ -47,13 +47,22 @@ namespace nic_z_tego_nie_bd
 			timestampAH = AuctionHouseInstance.ahCache.lastUpdated;
 			timestampBZ = BazaarCheckup.bazaarObj.lastUpdated;
 		}
+		private void refreshAllUis()
+		{
+			foreach (var item in itemsUi)
+			{
+				item.refreshData();
+			}
+			timestampAH = AuctionHouseInstance.ahCache.lastUpdated;
+			timestampBZ = BazaarCheckup.bazaarObj.lastUpdated;
+		}
 
 		private void timer1_Tick(object sender, EventArgs e)
 		{
 			if (timestampAH!= AuctionHouseInstance.ahCache.lastUpdated) //Check only for ah bc update takes too long and does not remember current pos :(
 			{
 				timer1.Stop();
-				renderAllUis();
+				refreshAllUis();
 				timer1.Start();
 			}
 		}
