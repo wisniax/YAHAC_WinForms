@@ -37,7 +37,8 @@ namespace nic_z_tego_nie_bd.GuiCode
 			textBoxRecipe.Clear();
 			foreach (var itemReq in itemRecipe.reqItems)
 			{
-				textBoxRecipe.AppendText(itemReq.amount.ToString() + " × " + Properties.AllItemsREPO.IDtoNAME(itemReq.item_dictKey) + Environment.NewLine);
+				textBoxRecipe.AppendText(itemReq.amount.ToString() + " × " + Properties.AllItemsREPO.IDtoNAME(itemReq.item_dictKey));
+				if (itemReq.item_dictKey!=itemRecipe.reqItems.Last().item_dictKey) { textBoxRecipe.AppendText(Environment.NewLine); };
 			}
 		}
 
@@ -46,10 +47,10 @@ namespace nic_z_tego_nie_bd.GuiCode
 			UInt32 baseCost = 1200; //Price to put up an BIN auction
 			//Prepare all variables
 			decimal sellPrice = 0;
-			decimal buyNowPrice;
-			decimal buyViaOfferPrice;
+			decimal buyNowPrice = 0;
+			decimal buyViaOfferPrice = 0;
 			decimal expectedProfit = 0;
-			decimal interest;
+			decimal interest = 0;
 			while (BazaarCheckup.bazaarObj.success!=true||AuctionHouseInstance.ahCache.success!=true) { return; }
 
 			ItemsToCraft.Source source = BazaarCheckup.bazaarObj.products.ContainsKey(itemRecipe.item_dictKey) == true ? ItemsToCraft.Source.Bazaar : ItemsToCraft.Source.AuctionHouse;
@@ -168,7 +169,7 @@ namespace nic_z_tego_nie_bd.GuiCode
 				textBoxInterest.Clear();
 				textBoxInterest.Text = "NaN";
 			}
-			if (expectedProfit > 0) profit = (UInt32)expectedProfit;
+			if (expectedProfit > 0&&interest>0) profit = (UInt32)(expectedProfit*interest);
 			else profit = 0;
 		}//ENDOF refreshF
 

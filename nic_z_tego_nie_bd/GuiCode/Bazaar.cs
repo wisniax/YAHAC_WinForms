@@ -24,11 +24,13 @@ namespace nic_z_tego_nie_bd
 		public void listWrite()
 		{
 			listBox1.BeginUpdate();
+			var scroolpos = listBox1.TopIndex;
 			listBox1.Items.Clear();
 			foreach (var item in BazaarCheckup.bazaarObj.products)
 			{
 					listBox1.Items.Add(BazaarCheckup.bazaarObj.products[item.Key].product_name);
 			}
+			listBox1.TopIndex = scroolpos;
 			listBox1.EndUpdate();
 		}
 
