@@ -28,7 +28,7 @@ namespace nic_z_tego_nie_bd
 		{
 			List<GuiCode.itemToCraftUC> tempitemsUi = new();
 			if (GuiCode.ItemsToCraft.items == null) return;
-			foreach (var item in GuiCode.ItemsToCraft.items)//Multicore UserControls render cooming soon
+			foreach (var item in GuiCode.ItemsToCraft.items)//Multicore UserControls render NOT cooming soon
 			{
 				var itemUC = new GuiCode.itemToCraftUC();
 				itemUC.initialize(item);

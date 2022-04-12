@@ -32,7 +32,6 @@ namespace nic_z_tego_nie_bd
 			this.components = new System.ComponentModel.Container();
 			this.timerBZ = new System.Windows.Forms.Timer(this.components);
 			this.panelSideMenu = new System.Windows.Forms.Panel();
-			this.itemuc1 = new nic_z_tego_nie_bd.GuiCode.itemUC();
 			this.button1 = new System.Windows.Forms.Button();
 			this.buttonSettings = new System.Windows.Forms.Button();
 			this.buttonAh = new System.Windows.Forms.Button();
@@ -56,7 +55,6 @@ namespace nic_z_tego_nie_bd
 			// 
 			this.panelSideMenu.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this.panelSideMenu.BackColor = System.Drawing.Color.Black;
-			this.panelSideMenu.Controls.Add(this.itemuc1);
 			this.panelSideMenu.Controls.Add(this.button1);
 			this.panelSideMenu.Controls.Add(this.buttonSettings);
 			this.panelSideMenu.Controls.Add(this.buttonAh);
@@ -68,16 +66,6 @@ namespace nic_z_tego_nie_bd
 			this.panelSideMenu.Padding = new System.Windows.Forms.Padding(3);
 			this.panelSideMenu.Size = new System.Drawing.Size(150, 411);
 			this.panelSideMenu.TabIndex = 0;
-			// 
-			// itemuc1
-			// 
-			this.itemuc1.BackColor = System.Drawing.SystemColors.WindowText;
-			this.itemuc1.ForeColor = System.Drawing.SystemColors.Control;
-			this.itemuc1.Location = new System.Drawing.Point(12, 187);
-			this.itemuc1.Name = "itemuc1";
-			this.itemuc1.Padding = new System.Windows.Forms.Padding(1);
-			this.itemuc1.Size = new System.Drawing.Size(74, 71);
-			this.itemuc1.TabIndex = 4;
 			// 
 			// button1
 			// 
@@ -234,7 +222,6 @@ namespace nic_z_tego_nie_bd
 		private System.Windows.Forms.Timer timerRefScreenTimer;
 		private System.Windows.Forms.Button buttonSettings;
 		private System.Windows.Forms.Button button1;
-		private GuiCode.itemUC itemuc1;
 	}
 }
 

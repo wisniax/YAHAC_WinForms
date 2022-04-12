@@ -15,80 +15,100 @@ namespace nic_z_tego_nie_bd
 {
 	public partial class Bazaar : Form
 	{
-		public long guilastUpdated;
+		public List<GuiCode.itemUC> itemsUi;
+		public long timestampBZ;
+		bool success;
 		public Bazaar()
 		{
-			guilastUpdated = 0;
+			timestampBZ = 0;
+			itemsUi = new();
 			InitializeComponent();
 		}
-		public void listWrite()
+		void renderAllItems()
 		{
-			listBox1.BeginUpdate();
-			var scroolpos = listBox1.TopIndex;
-			listBox1.Items.Clear();
+			List<GuiCode.itemUC> tempitemsUi = new();
+			if (BazaarCheckup.bazaarObj.success != true) return;
 			foreach (var item in BazaarCheckup.bazaarObj.products)
 			{
-					listBox1.Items.Add(BazaarCheckup.bazaarObj.products[item.Key].product_name);
+				var itemUC = new GuiCode.itemUC();
+				itemUC.initialize(item.Key);
+				tempitemsUi.Add(itemUC);
 			}
-			listBox1.TopIndex = scroolpos;
-			listBox1.EndUpdate();
+			itemsUi = tempitemsUi;
+			flowLayoutPanel1.Controls.Clear();
+			foreach (var item in itemsUi)
+			{
+				flowLayoutPanel1.Controls.Add(item);
+			}
+			timestampBZ = BazaarCheckup.bazaarObj.lastUpdated;
 		}
+		//public void listWrite()
+		//{
+		//	listBox1.BeginUpdate();
+		//	var scroolpos = listBox1.TopIndex;
+		//	listBox1.Items.Clear();
+		//	foreach (var item in BazaarCheckup.bazaarObj.products)
+		//	{
+		//			listBox1.Items.Add(BazaarCheckup.bazaarObj.products[item.Key].product_name);
+		//	}
+		//	listBox1.TopIndex = scroolpos;
+		//	listBox1.EndUpdate();
+		//}
 
 		private void timer1_Tick(object sender, EventArgs e)
 		{
-			if (BazaarCheckup.bazaarObj.lastUpdated != guilastUpdated)
+			if (BazaarCheckup.bazaarObj.lastUpdated != timestampBZ)
 			{
-				guilastUpdated = BazaarCheckup.bazaarObj.lastUpdated;
-				listWrite();
+				if (timestampBZ ==0) renderAllItems();
 			}
 		}
-		private void listBox1_MouseDoubleClick(object sender, MouseEventArgs e)
-		{
-			if (listBox1.SelectedItem == null) return;
-			listBox1.Hide();
-			timer1.Stop();
-			guilastUpdated = 0;
-			timer2.Start();
-			listViewSellPrice.Show();
-			listViewBuyPrice.Show();
-		}
-		private void showExtraInfo()
-		{
-			listViewSellPrice.Items.Clear();
-			listViewBuyPrice.Items.Clear();
-			var selectedItem = listBox1.SelectedItem.ToString();
-			var repoElem = Properties.AllItemsREPO.itemRepo.items.Find(findID => findID.name == selectedItem);
-			if (repoElem != null) selectedItem = repoElem.id;
-			else return;
-			List<BazaarCheckup.BzOrders> sell_summary, buy_summary;
-			try
-			{
-				sell_summary = BazaarCheckup.bazaarObj.products[selectedItem].sell_summary;
-				buy_summary = BazaarCheckup.bazaarObj.products[selectedItem].buy_summary;
-			}
-			catch { return; }
+		//private void listBox1_MouseDoubleClick(object sender, MouseEventArgs e)
+		//{
+		//	if (listBox1.SelectedItem == null) return;
+		//	listBox1.Hide();
+		//	timer1.Stop();
+		//	guilastUpdated = 0;
+		//	timer2.Start();
+		//	listViewSellPrice.Show();
+		//	listViewBuyPrice.Show();
+		//}
+		//private void showExtraInfo()
+		//{
+		//	listViewSellPrice.Items.Clear();
+		//	listViewBuyPrice.Items.Clear();
+		//	var selectedItem = listBox1.SelectedItem.ToString();
+		//	var repoElem = Properties.AllItemsREPO.itemRepo.items.Find(findID => findID.name == selectedItem);
+		//	if (repoElem != null) selectedItem = repoElem.id;
+		//	else return;
+		//	List<BazaarCheckup.BzOrders> sell_summary, buy_summary;
+		//	try
+		//	{
+		//		sell_summary = BazaarCheckup.bazaarObj.products[selectedItem].sell_summary;
+		//		buy_summary = BazaarCheckup.bazaarObj.products[selectedItem].buy_summary;
+		//	}
+		//	catch { return; }
+		//
+		//
+		//	foreach (var bzitem in sell_summary)
+		//	{
+		//		var listitem = listViewSellPrice.Items.Add(bzitem.amount.ToString("N0", CultureInfo.CreateSpecificCulture("fr-CA")));
+		//		listitem.SubItems.Add(bzitem.pricePerUnit.ToString("N1", CultureInfo.CreateSpecificCulture("fr-CA")));
+		//	}
+		//	foreach (var bzitem in buy_summary)
+		//	{
+		//		var listitem = listViewBuyPrice.Items.Add(bzitem.amount.ToString("N0", CultureInfo.CreateSpecificCulture("fr-CA")));
+		//		listitem.SubItems.Add(bzitem.pricePerUnit.ToString("N1", CultureInfo.CreateSpecificCulture("fr-CA")));
+		//	}
+		//}
 
-
-			foreach (var bzitem in sell_summary)
-			{
-				var listitem = listViewSellPrice.Items.Add(bzitem.amount.ToString("N0", CultureInfo.CreateSpecificCulture("fr-CA")));
-				listitem.SubItems.Add(bzitem.pricePerUnit.ToString("N1", CultureInfo.CreateSpecificCulture("fr-CA")));
-			}
-			foreach (var bzitem in buy_summary)
-			{
-				var listitem = listViewBuyPrice.Items.Add(bzitem.amount.ToString("N0", CultureInfo.CreateSpecificCulture("fr-CA")));
-				listitem.SubItems.Add(bzitem.pricePerUnit.ToString("N1", CultureInfo.CreateSpecificCulture("fr-CA")));
-			}
-		}
-
-		private void timer2_Tick(object sender, EventArgs e)
-		{
-			if (BazaarCheckup.bazaarObj.lastUpdated != guilastUpdated)
-			{
-				guilastUpdated = BazaarCheckup.bazaarObj.lastUpdated;
-				showExtraInfo();
-			}
-		}
+		//private void timer2_Tick(object sender, EventArgs e)
+		//{
+		//	if (BazaarCheckup.bazaarObj.lastUpdated != guilastUpdated)
+		//	{
+		//		guilastUpdated = BazaarCheckup.bazaarObj.lastUpdated;
+		//		showExtraInfo();
+		//	}
+		//}
 	}
 
 	public static class BazaarCheckup
