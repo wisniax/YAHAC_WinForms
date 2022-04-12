@@ -41,7 +41,6 @@ namespace nic_z_tego_nie_bd
 				guilastUpdated = BazaarCheckup.bazaarObj.lastUpdated;
 				listWrite();
 			}
-
 		}
 		private void listBox1_MouseDoubleClick(object sender, MouseEventArgs e)
 		{

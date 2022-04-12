@@ -56,6 +56,12 @@ namespace nic_z_tego_nie_bd.Properties
 			if (repoElem != null) return repoElem.name;
 			else return itemID;
 		}
+		public static string IDtoMATERIAL(string itemID)
+		{
+			var repoElem = Properties.AllItemsREPO.itemRepo.items.Find(matchID => matchID.id == itemID);
+			if (repoElem != null) return repoElem.material;
+			else return itemID;
+		}
 
 
 		public struct ItemRepo
@@ -69,6 +75,7 @@ namespace nic_z_tego_nie_bd.Properties
 			public string id { get; set; }
 			public string name { get; set; }
 			public string tier  { get; set; }
+			public string material { get; set; }
 		}
 
 	}

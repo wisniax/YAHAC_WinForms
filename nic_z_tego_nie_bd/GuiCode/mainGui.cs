@@ -26,6 +26,8 @@ namespace nic_z_tego_nie_bd
 		{
 			InitializeComponent();
 			loadDefaultForm(Properties.Settings.Default.Starting_Ui);
+			itemuc1.initialize("ASPECT_OF_THE_END");
+			
 		}
 
 		private void loadDefaultForm(string name)
