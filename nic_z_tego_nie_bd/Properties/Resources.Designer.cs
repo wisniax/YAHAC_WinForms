@@ -61,6 +61,15 @@ namespace nic_z_tego_nie_bd.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to [{&quot;type&quot;:0,&quot;meta&quot;:0,&quot;name&quot;:&quot;Air&quot;,&quot;text_type&quot;:&quot;air&quot;},{&quot;type&quot;:1,&quot;meta&quot;:0,&quot;name&quot;:&quot;Stone&quot;,&quot;text_type&quot;:&quot;stone&quot;},{&quot;type&quot;:1,&quot;meta&quot;:1,&quot;name&quot;:&quot;Granite&quot;,&quot;text_type&quot;:&quot;stone&quot;},{&quot;type&quot;:1,&quot;meta&quot;:2,&quot;name&quot;:&quot;Polished Granite&quot;,&quot;text_type&quot;:&quot;stone&quot;},{&quot;type&quot;:1,&quot;meta&quot;:3,&quot;name&quot;:&quot;Diorite&quot;,&quot;text_type&quot;:&quot;stone&quot;},{&quot;type&quot;:1,&quot;meta&quot;:4,&quot;name&quot;:&quot;Polished Diorite&quot;,&quot;text_type&quot;:&quot;stone&quot;},{&quot;type&quot;:1,&quot;meta&quot;:5,&quot;name&quot;:&quot;Andesite&quot;,&quot;text_type&quot;:&quot;stone&quot;},{&quot;type&quot;:1,&quot;meta&quot;:6,&quot;name&quot;:&quot;Polished Andesite&quot;,&quot;text_type&quot;:&quot;stone&quot;},{&quot;type&quot;:2,&quot;meta&quot;:0,&quot;name&quot;:&quot;G....
+        /// </summary>
+        public static string DetailedVanillaItemsInfo {
+            get {
+                return ResourceManager.GetString("DetailedVanillaItemsInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap iconof {
@@ -76,6 +85,35 @@ namespace nic_z_tego_nie_bd.Properties {
         public static byte[] Minecraft_Textures_x32 {
             get {
                 object obj = ResourceManager.GetObject("Minecraft_Textures_x32", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap pytacz {
+            get {
+                object obj = ResourceManager.GetObject("pytacz", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string String1 {
+            get {
+                return ResourceManager.GetString("String1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        public static byte[] VanillaItemTextures {
+            get {
+                object obj = ResourceManager.GetObject("VanillaItemTextures", resourceCulture);
                 return ((byte[])(obj));
             }
         }

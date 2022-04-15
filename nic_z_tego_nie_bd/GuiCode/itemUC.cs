@@ -15,6 +15,8 @@ namespace nic_z_tego_nie_bd.GuiCode
 {
 	public partial class itemUC : UserControl
 	{
+		public delegate void HandleCalledEvent(string sender, MouseEvents whatsGoingOn);
+		HandleCalledEvent handleCalledEvent;
 		string item_id;
 		Image image;
 		public itemUC()
@@ -22,19 +24,22 @@ namespace nic_z_tego_nie_bd.GuiCode
 		 	InitializeComponent();
 		}
 
-		public void initialize(string item_id)
+		public void initialize(string item_id, HandleCalledEvent handleCalledEvent)
 		{
 			this.item_id = item_id;
 			renderImage();
-			//ParseStaticData();
-			//refreshData();
+			this.handleCalledEvent = handleCalledEvent;
 		}
 		void renderImage()
 		{
 			//pictureBox1.Image = Properties.Resources.iconof;
 			string materialid = Properties.AllItemsREPO.IDtoMATERIAL(item_id).ToLower();
-			if (MinecraftTextures.VanillaTextures.ContainsKey(materialid)) pictureBox1.Image = (Image)MinecraftTextures.VanillaTextures[materialid].Clone();
-			image = pictureBox1.Image;
+			if (Properties.AllItemsREPO.vanillaItems.ContainsKey(materialid)) pictureBox1.Image = (Image)(Properties.AllItemsREPO.vanillaItems[materialid].Texture.Clone());
+			image = (Image)pictureBox1.Image.Clone();
+		}
+		void refreshImage()
+		{
+			pictureBox1.Image = (Image)image.Clone();
 		}
 		void renderOverlay()
 		{
@@ -45,58 +50,49 @@ namespace nic_z_tego_nie_bd.GuiCode
 			graphics.FillRectangle(new SolidBrush(Color.FromArgb(69, Color.Azure)), 0, 0, bitmap.Width, bitmap.Height);
 			pictureBox1.Image = bitmap;
 		}
-
+		
+		//
+		//	Pass events to handle (to delegate)
+		//
 		private void pictureBox1_Click(object sender, EventArgs e)
 		{
-
-		}
-
-
-
-		private void pictureBox1_MouseHover(object sender, EventArgs e)
-		{
-
+			handleCalledEvent(item_id, MouseEvents.Click);
 		}
 
 		private void pictureBox1_MouseEnter(object sender, EventArgs e)
 		{
-			renderOverlay();
+			//renderOverlay();
+			//handleCalledEvent(item_id, MouseEvents.Enter);
 		}
 
 		private void pictureBox1_MouseLeave(object sender, EventArgs e)
 		{
-			renderImage();
+			refreshImage();
+			handleCalledEvent(item_id, MouseEvents.Leave);
+		}
+
+		private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
+		{
+			handleCalledEvent(item_id, MouseEvents.LocationChanged);
+		}
+		private void pictureBox1_MouseHover(object sender, EventArgs e)
+		{
+			renderOverlay();
+			handleCalledEvent(item_id, MouseEvents.Enter);
+		}
+
+		//
+		//	Objects
+		// 
+		public enum MouseEvents
+		{
+			Enter,
+			LocationChanged,
+			Click,
+			Leave
 		}
 	}
-	public static class MinecraftTextures
-	{
-		public static Dictionary<string, Image> VanillaTextures { get;}
-		static MinecraftTextures()
-		{
-			VanillaTextures = assignVanillaTextures();
-		}
-		private static Dictionary<string, Image> assignVanillaTextures()
-		{
-			var memoryStream = new MemoryStream(Properties.Resources.Minecraft_Textures_x32);
-			var VanillaTexturesArch = new ZipArchive(memoryStream, ZipArchiveMode.Read);
-			var images = VanillaTexturesArch.Entries.Where((a) => a.FullName.EndsWith(".png") && a.FullName.Contains("assets/minecraft/textures/items"));
-			var tempTextures = new Dictionary<string, Image>();
-			foreach (ZipArchiveEntry item in images)
-			{
-				var image = Image.FromStream(item.Open());
-				tempTextures.Add(item.Name.Split('.')[0], image);
-			}
 
 
 
-			//var cosie = MinecraftVanillaTextures.GetEntry("assets/minecraft/mcpatcher/cit/armor/farm/icons/helm.png");
-			//var wosie = cosie.Open();
-			//var cos = Image.FromStream(wosie);
-			return tempTextures;
-		}
-		public static void main()
-		{
-
-		}
-	}
 }

@@ -17,6 +17,7 @@ namespace nic_z_tego_nie_bd
 	{
 		public List<GuiCode.itemUC> itemsUi;
 		public long timestampBZ;
+		private string selectedItem;
 		bool success;
 		public Bazaar()
 		{
@@ -31,7 +32,7 @@ namespace nic_z_tego_nie_bd
 			foreach (var item in BazaarCheckup.bazaarObj.products)
 			{
 				var itemUC = new GuiCode.itemUC();
-				itemUC.initialize(item.Key);
+				itemUC.initialize(item.Key, RenderItemName);
 				tempitemsUi.Add(itemUC);
 			}
 			itemsUi = tempitemsUi;
@@ -39,39 +40,112 @@ namespace nic_z_tego_nie_bd
 			foreach (var item in itemsUi)
 			{
 				flowLayoutPanel1.Controls.Add(item);
+				
 			}
 			timestampBZ = BazaarCheckup.bazaarObj.lastUpdated;
+			labelItemNameTip.BringToFront();
 		}
-		//public void listWrite()
-		//{
-		//	listBox1.BeginUpdate();
-		//	var scroolpos = listBox1.TopIndex;
-		//	listBox1.Items.Clear();
-		//	foreach (var item in BazaarCheckup.bazaarObj.products)
-		//	{
-		//			listBox1.Items.Add(BazaarCheckup.bazaarObj.products[item.Key].product_name);
-		//	}
-		//	listBox1.TopIndex = scroolpos;
-		//	listBox1.EndUpdate();
-		//}
+		private Point CalcPointPosition()
+		{
+			var relativePoint = this.PointToClient(Cursor.Position);
+			relativePoint.Offset(24, 16);
+			return relativePoint;
+		}
+		private void RenderItemName(string sender_id, GuiCode.itemUC.MouseEvents mouseEvents)
+		{
+			switch (mouseEvents)
+			{
+				case GuiCode.itemUC.MouseEvents.Enter:
+					labelItemNameTip.Enabled = true;
+					labelItemNameTip.Location = CalcPointPosition();
+					labelItemNameTip.Text = Properties.AllItemsREPO.IDtoNAME(sender_id);
+					labelItemNameTip.Refresh();
+					labelItemNameTip.Visible = true;
+					break;
+				case GuiCode.itemUC.MouseEvents.LocationChanged:
+					labelItemNameTip.Location = CalcPointPosition();
+					break;
+				case GuiCode.itemUC.MouseEvents.Click:
+					labelItemNameTip.Visible = false;
+					labelItemNameTip.Enabled = false;
+					OpenClickedItem(sender_id);
+					break;
+				case GuiCode.itemUC.MouseEvents.Leave:
+					labelItemNameTip.Visible = false;
+					labelItemNameTip.Enabled = false;
+					break;
+				default:
+					break;
+			}
+		}
+		private void OpenClickedItem(string item_id)
+		{
+			if (!BazaarCheckup.bazaarObj.products.ContainsKey(item_id)) return;
+			selectedItem = item_id;
+			flowLayoutPanel1.Hide();
+			flowLayoutPanel1.Enabled = false;
+			timer1.Stop();
+			timestampBZ = 0;
+			listView1.Enabled = true;
+			listView1.Show();
+			timer2.Start();
+		}
+
 
 		private void timer1_Tick(object sender, EventArgs e)
 		{
 			if (BazaarCheckup.bazaarObj.lastUpdated != timestampBZ)
 			{
-				if (timestampBZ ==0) renderAllItems();
+				if (timestampBZ == 0) renderAllItems();
 			}
 		}
-		//private void listBox1_MouseDoubleClick(object sender, MouseEventArgs e)
-		//{
-		//	if (listBox1.SelectedItem == null) return;
-		//	listBox1.Hide();
-		//	timer1.Stop();
-		//	guilastUpdated = 0;
-		//	timer2.Start();
-		//	listViewSellPrice.Show();
-		//	listViewBuyPrice.Show();
-		//}
+
+		private void timer2_Tick(object sender, EventArgs e)
+		{
+			if (BazaarCheckup.bazaarObj.lastUpdated != timestampBZ)
+			{
+				timer2.Stop();
+				showExtraInfo();
+				timer2.Start();
+			}
+		}
+		private void showExtraInfo()
+		{
+			if (!BazaarCheckup.bazaarObj.products.ContainsKey(selectedItem)) return;
+			var bzItem = BazaarCheckup.bazaarObj.products[selectedItem];
+			int offersAmount = bzItem.buy_summary.Count >= bzItem.sell_summary.Count ? bzItem.buy_summary.Count : bzItem.sell_summary.Count;
+			listView1.Clear();
+			for (int i = 0; i < offersAmount; i++)
+			{
+				//Render buy offers
+				ListViewItem listViewItem;
+				if (i< bzItem.buy_summary.Count)
+				{
+					listViewItem = listView1.Items.Add(bzItem.buy_summary[i].amount.ToString("N0", CultureInfo.CreateSpecificCulture("fr-CA")));
+					listViewItem.SubItems.Add(bzItem.buy_summary[i].pricePerUnit.ToString("N1", CultureInfo.CreateSpecificCulture("fr-CA")));
+				}
+				else
+				{
+					listViewItem = listView1.Items.Add("");
+					listViewItem.SubItems.Add("");
+				}
+
+				//Render sell offers
+				if (i < bzItem.sell_summary.Count)
+				{
+					listViewItem.SubItems.Add(bzItem.sell_summary[i].amount.ToString("N0", CultureInfo.CreateSpecificCulture("fr-CA")));
+					listViewItem.SubItems.Add(bzItem.sell_summary[i].pricePerUnit.ToString("N1", CultureInfo.CreateSpecificCulture("fr-CA")));
+				}
+				else
+				{
+					listViewItem.SubItems.Add("");
+					listViewItem.SubItems.Add("");
+				}
+			}
+			timestampBZ = BazaarCheckup.bazaarObj.lastUpdated;
+			listView1.BringToFront();
+		}
+
 		//private void showExtraInfo()
 		//{
 		//	listViewSellPrice.Items.Clear();

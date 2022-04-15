@@ -37,6 +37,8 @@ namespace nic_z_tego_nie_bd.GuiCode
 			// 
 			this.pictureBox1.BackColor = System.Drawing.SystemColors.GrayText;
 			this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.pictureBox1.Image = global::nic_z_tego_nie_bd.Properties.Resources.pytacz;
+			this.pictureBox1.InitialImage = global::nic_z_tego_nie_bd.Properties.Resources.pytacz;
 			this.pictureBox1.Location = new System.Drawing.Point(1, 1);
 			this.pictureBox1.Name = "pictureBox1";
 			this.pictureBox1.Size = new System.Drawing.Size(32, 32);
@@ -47,6 +49,7 @@ namespace nic_z_tego_nie_bd.GuiCode
 			this.pictureBox1.MouseEnter += new System.EventHandler(this.pictureBox1_MouseEnter);
 			this.pictureBox1.MouseLeave += new System.EventHandler(this.pictureBox1_MouseLeave);
 			this.pictureBox1.MouseHover += new System.EventHandler(this.pictureBox1_MouseHover);
+			this.pictureBox1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseMove);
 			// 
 			// itemUC
 			// 
