@@ -18,11 +18,12 @@ namespace nic_z_tego_nie_bd.GuiCode
 	{
 		public delegate void HandleCalledEvent(string sender, MouseEvents whatsGoingOn);
 		HandleCalledEvent handleCalledEvent;
-		static TextureBrush enchantmentBrush;
+		public static TextureBrush enchantmentBrush;
 		string item_id;
 		public bool isGlowing;
 		bool isMouseOver;
 		Image image;
+		Image nextImage;
 		public itemUC()
 		{
 			InitializeComponent();
@@ -33,13 +34,12 @@ namespace nic_z_tego_nie_bd.GuiCode
 			this.item_id = item_id;
 			isGlowing = false;
 			isMouseOver = false;
-			renderImage();
+			preRenderImage();
 			this.handleCalledEvent = handleCalledEvent;
 		}
 
-		void renderImage()
+		void preRenderImage()
 		{
-			//pictureBox1.Image = Properties.Resources.iconof;
 			var referedItem = Properties.AllItemsREPO.IDtoITEM(item_id);
 			string materialid = Properties.AllItemsREPO.IDtoMATERIAL(item_id).ToLower();
 			if (Properties.AllItemsREPO.vanillaItems.ContainsKey(materialid)) pictureBox1.Image = (Image)(Properties.AllItemsREPO.vanillaItems[materialid].Texture.Clone());
@@ -62,21 +62,24 @@ namespace nic_z_tego_nie_bd.GuiCode
 			enchantmentBrush.TranslateTransform(2, -3);
 		}
 
-		public void redrawImageWithBrush()
+		public void redrawImageWithBrush() //TextureBrush encBrush
 		{
 			if (image == null) return;
 			Bitmap bitmap = (Bitmap)image.Clone();
 			Graphics graphics = Graphics.FromImage(bitmap);
 			graphics.DrawImage(bitmap, 0, 0);
-			graphics.FillRectangle(enchantmentBrush, 0, 0, bitmap.Width, bitmap.Height);
-			pictureBox1.Image = bitmap;
-			if (isMouseOver == true) renderOverlay();
+			lock (enchantmentBrush)
+			{
+				graphics.FillRectangle(enchantmentBrush, 0, 0, bitmap.Width, bitmap.Height);
+			}
+			if (isMouseOver == false) nextImage = bitmap;
+			else
+			{
+				graphics.FillRectangle(new SolidBrush(Color.FromArgb(69, Color.Azure)), 0, 0, bitmap.Width, bitmap.Height);
+				nextImage = bitmap;
+			}
 		}
-		
-		void refreshImage()
-		{
-			pictureBox1.Image = (Image)image.Clone();
-		}
+
 		void renderOverlay()
 		{
 			if (pictureBox1.Image == null) return;
@@ -85,6 +88,16 @@ namespace nic_z_tego_nie_bd.GuiCode
 			graphics.DrawImage(bitmap, 0, 0);
 			graphics.FillRectangle(new SolidBrush(Color.FromArgb(69, Color.Azure)), 0, 0, bitmap.Width, bitmap.Height);
 			pictureBox1.Image = bitmap;
+		}
+
+		public void loadNextImage()
+		{
+			pictureBox1.Image = (Image)nextImage.Clone();
+		}
+
+		void refreshImage()
+		{
+			pictureBox1.Image = (Image)image.Clone();
 		}
 
 		//

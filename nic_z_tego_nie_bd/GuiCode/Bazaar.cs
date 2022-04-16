@@ -99,18 +99,53 @@ namespace nic_z_tego_nie_bd
 		}
 
 
-		private void timer1_Tick(object sender, EventArgs e)
+		private async void timer1_Tick(object sender, EventArgs e)
 		{
+			timer1.Stop();
 			if (BazaarCheckup.bazaarObj.lastUpdated != timestampBZ)
 			{
 				if (timestampBZ == 0) renderAllItems();
+				//await Task.Delay(5000);
 			}
 			GuiCode.itemUC.TickEnchBrush();
+			//foreach (var item in itemsUi.FindAll(a => a.isGlowing == true))
+			//{
+			//	item.redrawImageWithBrush();
+			//	item.loadNextImage();
+			//}
+			List<Task> tasks = new();
+			//int itemsPerTask = 10;
+			//var glowingItemsUiList = itemsUi.FindAll(a => a.isGlowing == true);
+			//int itemsCount = glowingItemsUiList.Count();
+			//for (int i = 0; i < itemsCount; i += 10)
+			//{
+			//	var tempBrush = (TextureBrush)GuiCode.itemUC.enchantmentBrush.Clone();
+			//	var task = Task.Run(() => testFunction(glowingItemsUiList, i, itemsPerTask, itemsCount, tempBrush));
+			//	tasks.Add(task);
+			//}
+
 			foreach (var item in itemsUi.FindAll(a => a.isGlowing == true))
 			{
-				item.redrawImageWithBrush();
+				//item.redrawImageWithBrush();
+				var tempBrush = (TextureBrush)GuiCode.itemUC.enchantmentBrush.Clone();
+				var task = Task.Run(() => item.redrawImageWithBrush());
+				tasks.Add(task);
 			}
+			await Task.WhenAll(tasks);
+			foreach (var item in itemsUi.FindAll(a => a.isGlowing == true))
+			{
+				item.loadNextImage();
+			}
+			timer1.Start();
 		}
+		//void testFunction(List<GuiCode.itemUC> controls, int i, int itemsPerTask, int count, TextureBrush textureBrush)
+		//{
+		//	for (int j = 0; i + j < count && j < itemsPerTask; j++)
+		//	{
+		//		controls[i + j].redrawImageWithBrush(textureBrush);
+		//	}
+		//}
+
 
 		private void timer2_Tick(object sender, EventArgs e)
 		{
