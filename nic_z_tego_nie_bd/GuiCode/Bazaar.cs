@@ -127,7 +127,7 @@ namespace nic_z_tego_nie_bd
 			foreach (var item in itemsUi.FindAll(a => a.isGlowing == true))
 			{
 				//item.redrawImageWithBrush();
-				var tempBrush = (TextureBrush)GuiCode.itemUC.enchantmentBrush.Clone();
+				//var tempBrush = (TextureBrush)GuiCode.itemUC.enchantmentBrush.Clone();
 				var task = Task.Run(() => item.redrawImageWithBrush());
 				tasks.Add(task);
 			}

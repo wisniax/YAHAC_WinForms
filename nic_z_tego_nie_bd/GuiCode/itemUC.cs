@@ -17,6 +17,7 @@ namespace nic_z_tego_nie_bd.GuiCode
 	public partial class itemUC : UserControl
 	{
 		public delegate void HandleCalledEvent(string sender, MouseEvents whatsGoingOn);
+		private static readonly object BrushLock = new object();
 		HandleCalledEvent handleCalledEvent;
 		public static TextureBrush enchantmentBrush;
 		string item_id;
@@ -59,7 +60,10 @@ namespace nic_z_tego_nie_bd.GuiCode
 		public static void TickEnchBrush()
 		{
 			if (enchantmentBrush == null) return;
-			enchantmentBrush.TranslateTransform(2, -3);
+			lock (BrushLock)
+			{
+				enchantmentBrush.TranslateTransform(2, -3);
+			}
 		}
 
 		public void redrawImageWithBrush() //TextureBrush encBrush
@@ -68,7 +72,7 @@ namespace nic_z_tego_nie_bd.GuiCode
 			Bitmap bitmap = (Bitmap)image.Clone();
 			Graphics graphics = Graphics.FromImage(bitmap);
 			graphics.DrawImage(bitmap, 0, 0);
-			lock (enchantmentBrush)
+			lock (BrushLock)
 			{
 				graphics.FillRectangle(enchantmentBrush, 0, 0, bitmap.Width, bitmap.Height);
 			}
