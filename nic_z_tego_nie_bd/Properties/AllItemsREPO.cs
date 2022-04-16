@@ -127,6 +127,7 @@ namespace nic_z_tego_nie_bd.Properties
 			public int durability { get; set; }
 			public string tier  { get; set; }
 			public string material { get; set; }
+			public bool glowing { get; set; }
 		}
 		public class VanillaItem
 		{

@@ -30,15 +30,15 @@ namespace nic_z_tego_nie_bd
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
-			System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("dupa");
 			this.timer1 = new System.Windows.Forms.Timer(this.components);
 			this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
 			this.labelItemNameTip = new System.Windows.Forms.Label();
 			this.listView1 = new System.Windows.Forms.ListView();
-			this.columnHeaderBuyAmount = new System.Windows.Forms.ColumnHeader();
 			this.columnHeaderBuyPrice = new System.Windows.Forms.ColumnHeader();
-			this.columnHeaderSellAmount = new System.Windows.Forms.ColumnHeader();
+			this.columnHeaderBuyAmount = new System.Windows.Forms.ColumnHeader();
+			this.columnHeaderSpace = new System.Windows.Forms.ColumnHeader();
 			this.columnHeaderSellPrice = new System.Windows.Forms.ColumnHeader();
+			this.columnHeaderSellAmount = new System.Windows.Forms.ColumnHeader();
 			this.timer2 = new System.Windows.Forms.Timer(this.components);
 			this.SuspendLayout();
 			// 
@@ -79,16 +79,16 @@ namespace nic_z_tego_nie_bd
 			this.listView1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(28)))), ((int)(((byte)(28)))), ((int)(((byte)(28)))));
 			this.listView1.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeaderBuyAmount,
+            this.columnHeaderSpace,
             this.columnHeaderBuyPrice,
-            this.columnHeaderSellAmount,
-            this.columnHeaderSellPrice});
+            this.columnHeaderBuyAmount,
+            this.columnHeaderSellPrice,
+            this.columnHeaderSellAmount});
 			this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.listView1.Enabled = false;
 			this.listView1.ForeColor = System.Drawing.SystemColors.Info;
 			this.listView1.FullRowSelect = true;
 			this.listView1.HideSelection = false;
-			this.listView1.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1});
 			this.listView1.LabelWrap = false;
 			this.listView1.Location = new System.Drawing.Point(3, 3);
 			this.listView1.MultiSelect = false;
@@ -99,21 +99,36 @@ namespace nic_z_tego_nie_bd
 			this.listView1.View = System.Windows.Forms.View.Details;
 			this.listView1.Visible = false;
 			// 
-			// columnHeaderBuyAmount
-			// 
-			this.columnHeaderBuyAmount.Text = "Buy Amount";
-			// 
 			// columnHeaderBuyPrice
 			// 
+			this.columnHeaderBuyPrice.DisplayIndex = 0;
 			this.columnHeaderBuyPrice.Text = "Buy Price";
+			this.columnHeaderBuyPrice.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+			this.columnHeaderBuyPrice.Width = 120;
 			// 
-			// columnHeaderSellAmount
+			// columnHeaderBuyAmount
 			// 
-			this.columnHeaderSellAmount.Text = "Sell Amount";
+			this.columnHeaderBuyAmount.DisplayIndex = 1;
+			this.columnHeaderBuyAmount.Text = "Buy Amount";
+			this.columnHeaderBuyAmount.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+			this.columnHeaderBuyAmount.Width = 120;
+			// 
+			// columnHeaderSpace
+			// 
+			this.columnHeaderSpace.Text = "";
+			this.columnHeaderSpace.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
 			// 
 			// columnHeaderSellPrice
 			// 
 			this.columnHeaderSellPrice.Text = "Sell Price";
+			this.columnHeaderSellPrice.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+			this.columnHeaderSellPrice.Width = 120;
+			// 
+			// columnHeaderSellAmount
+			// 
+			this.columnHeaderSellAmount.Text = "Sell Amount";
+			this.columnHeaderSellAmount.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+			this.columnHeaderSellAmount.Width = 120;
 			// 
 			// timer2
 			// 
@@ -148,5 +163,6 @@ namespace nic_z_tego_nie_bd
 		private System.Windows.Forms.ColumnHeader columnHeaderBuyAmount;
 		private System.Windows.Forms.ColumnHeader columnHeaderSellPrice;
 		private System.Windows.Forms.ColumnHeader columnHeaderSellAmount;
+		private System.Windows.Forms.ColumnHeader columnHeaderSpace;
 	}
 }
