@@ -17,16 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Resources\iconof.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="Resources\iconof.png">
-      <CustomToolNamespace></CustomToolNamespace>
-    </Resource>
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>

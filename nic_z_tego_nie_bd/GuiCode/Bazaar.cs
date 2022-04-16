@@ -105,6 +105,11 @@ namespace nic_z_tego_nie_bd
 			{
 				if (timestampBZ == 0) renderAllItems();
 			}
+			GuiCode.itemUC.TickEnchBrush();
+			foreach (var item in itemsUi.FindAll(a => a.isGlowing == true))
+			{
+				item.redrawImageWithBrush();
+			}
 		}
 
 		private void timer2_Tick(object sender, EventArgs e)

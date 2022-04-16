@@ -72,9 +72,9 @@ namespace nic_z_tego_nie_bd.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap iconof {
+        public static System.Drawing.Bitmap enchanted_item_glint {
             get {
-                object obj = ResourceManager.GetObject("iconof", resourceCulture);
+                object obj = ResourceManager.GetObject("enchanted_item_glint", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

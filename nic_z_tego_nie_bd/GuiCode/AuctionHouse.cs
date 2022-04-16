@@ -326,7 +326,7 @@ namespace nic_z_tego_nie_bd
 						if (item.dictKey.Contains("[Lvl ") == true)
 						{
 							var index = item.dictKey.IndexOf(']');
-							item.dictKey = item.dictKey.Remove(0, index + 2);
+							item.dictKey = item.dictKey.Remove(0, index + 1).TrimEnd();
 						}
 
 						break;

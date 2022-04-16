@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.Windows;
 using System.IO.Compression;
 using System.IO;
+using System.Drawing.Imaging;
 
 namespace nic_z_tego_nie_bd.GuiCode
 {
@@ -17,26 +18,61 @@ namespace nic_z_tego_nie_bd.GuiCode
 	{
 		public delegate void HandleCalledEvent(string sender, MouseEvents whatsGoingOn);
 		HandleCalledEvent handleCalledEvent;
+		static TextureBrush enchantmentBrush;
 		string item_id;
+		public bool isGlowing;
+		bool isMouseOver;
 		Image image;
 		public itemUC()
 		{
-		 	InitializeComponent();
+			InitializeComponent();
 		}
 
 		public void initialize(string item_id, HandleCalledEvent handleCalledEvent)
 		{
 			this.item_id = item_id;
+			isGlowing = false;
+			isMouseOver = false;
 			renderImage();
 			this.handleCalledEvent = handleCalledEvent;
 		}
+
 		void renderImage()
 		{
 			//pictureBox1.Image = Properties.Resources.iconof;
+			var referedItem = Properties.AllItemsREPO.IDtoITEM(item_id);
 			string materialid = Properties.AllItemsREPO.IDtoMATERIAL(item_id).ToLower();
 			if (Properties.AllItemsREPO.vanillaItems.ContainsKey(materialid)) pictureBox1.Image = (Image)(Properties.AllItemsREPO.vanillaItems[materialid].Texture.Clone());
 			image = (Image)pictureBox1.Image.Clone();
+			if (referedItem.glowing == true)
+			{
+				isGlowing = true;
+				if (enchantmentBrush == null)
+				{
+					enchantmentBrush = new TextureBrush(Properties.UsefulConversions.ChangeImageOpacity(Properties.Resources.enchanted_item_glint, 0.3));
+					enchantmentBrush.RotateTransform(30);
+					//enchantmentBrush.ScaleTransform(0.5F, 0.5F);
+				}
+			}
 		}
+		//Move image a little
+		public static void TickEnchBrush()
+		{
+			if (enchantmentBrush == null) return;
+			enchantmentBrush.TranslateTransform(2, -3);
+		}
+
+		public void redrawImageWithBrush()
+		{
+			if (image == null) return;
+			Bitmap bitmap = (Bitmap)image.Clone();
+			Graphics graphics = Graphics.FromImage(bitmap);
+			graphics.DrawImage(bitmap, 0, 0);
+			graphics.FillRectangle(enchantmentBrush, 0, 0, bitmap.Width, bitmap.Height);
+			pictureBox1.Image = bitmap;
+			if (isMouseOver == true) renderOverlay();
+		}
+		
 		void refreshImage()
 		{
 			pictureBox1.Image = (Image)image.Clone();
@@ -50,7 +86,7 @@ namespace nic_z_tego_nie_bd.GuiCode
 			graphics.FillRectangle(new SolidBrush(Color.FromArgb(69, Color.Azure)), 0, 0, bitmap.Width, bitmap.Height);
 			pictureBox1.Image = bitmap;
 		}
-		
+
 		//
 		//	Pass events to handle (to delegate)
 		//
@@ -67,6 +103,7 @@ namespace nic_z_tego_nie_bd.GuiCode
 
 		private void pictureBox1_MouseLeave(object sender, EventArgs e)
 		{
+			isMouseOver = false;
 			refreshImage();
 			handleCalledEvent(item_id, MouseEvents.Leave);
 		}
@@ -77,9 +114,13 @@ namespace nic_z_tego_nie_bd.GuiCode
 		}
 		private void pictureBox1_MouseHover(object sender, EventArgs e)
 		{
+			isMouseOver = true;
 			renderOverlay();
 			handleCalledEvent(item_id, MouseEvents.Enter);
 		}
+
+
+
 
 		//
 		//	Objects

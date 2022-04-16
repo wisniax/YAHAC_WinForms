@@ -34,9 +34,9 @@ namespace nic_z_tego_nie_bd
 			this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
 			this.labelItemNameTip = new System.Windows.Forms.Label();
 			this.listView1 = new System.Windows.Forms.ListView();
+			this.columnHeaderSpace = new System.Windows.Forms.ColumnHeader();
 			this.columnHeaderBuyPrice = new System.Windows.Forms.ColumnHeader();
 			this.columnHeaderBuyAmount = new System.Windows.Forms.ColumnHeader();
-			this.columnHeaderSpace = new System.Windows.Forms.ColumnHeader();
 			this.columnHeaderSellPrice = new System.Windows.Forms.ColumnHeader();
 			this.columnHeaderSellAmount = new System.Windows.Forms.ColumnHeader();
 			this.timer2 = new System.Windows.Forms.Timer(this.components);
@@ -45,6 +45,7 @@ namespace nic_z_tego_nie_bd
 			// timer1
 			// 
 			this.timer1.Enabled = true;
+			this.timer1.Interval = 33;
 			this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
 			// 
 			// flowLayoutPanel1
@@ -99,24 +100,22 @@ namespace nic_z_tego_nie_bd
 			this.listView1.View = System.Windows.Forms.View.Details;
 			this.listView1.Visible = false;
 			// 
+			// columnHeaderSpace
+			// 
+			this.columnHeaderSpace.Text = "";
+			this.columnHeaderSpace.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+			// 
 			// columnHeaderBuyPrice
 			// 
-			this.columnHeaderBuyPrice.DisplayIndex = 0;
 			this.columnHeaderBuyPrice.Text = "Buy Price";
 			this.columnHeaderBuyPrice.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
 			this.columnHeaderBuyPrice.Width = 120;
 			// 
 			// columnHeaderBuyAmount
 			// 
-			this.columnHeaderBuyAmount.DisplayIndex = 1;
 			this.columnHeaderBuyAmount.Text = "Buy Amount";
 			this.columnHeaderBuyAmount.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
 			this.columnHeaderBuyAmount.Width = 120;
-			// 
-			// columnHeaderSpace
-			// 
-			this.columnHeaderSpace.Text = "";
-			this.columnHeaderSpace.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
 			// 
 			// columnHeaderSellPrice
 			// 
