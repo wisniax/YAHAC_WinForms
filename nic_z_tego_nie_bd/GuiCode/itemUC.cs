@@ -69,7 +69,8 @@ namespace nic_z_tego_nie_bd.GuiCode
 		public void redrawImageWithBrush() //TextureBrush encBrush
 		{
 			if (image == null) return;
-			Bitmap bitmap = (Bitmap)image.Clone();
+			//https://stackoverflow.com/questions/16055667/graphics-drawimage-out-of-memory-exception 2nd aswer
+			Bitmap bitmap = new(image);
 			Graphics graphics = Graphics.FromImage(bitmap);
 			graphics.DrawImage(bitmap, 0, 0);
 			lock (BrushLock)
