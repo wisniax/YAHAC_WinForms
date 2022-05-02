@@ -24,7 +24,6 @@ namespace nic_z_tego_nie_bd.GuiCode
 			if (uisToChooseFrom.Contains(comboBoxChoooseStartUi.SelectedItem)==false) { comboBoxChoooseStartUi.SelectedItem = uisToChooseFrom.First(s => s.Contains("Settings")); }
 			itemRecipe = new();
 			itemRecipe.reqItems = new();
-			//comboBoxItemToCraft.Text = "Adding new item";
 			generateComboItemToCraftList();
 			comboBoxAddItemToRecipe.DisplayMember = "name";
 			comboBoxAddItemToRecipe.ValueMember = "id";
@@ -169,6 +168,10 @@ namespace nic_z_tego_nie_bd.GuiCode
 			public string item_dictKey { get; set; }
 		}
 
+		private void checkBoxUseItemID_CheckedChanged(object sender, EventArgs e)
+		{
+			comboBoxAddItemToRecipe.DisplayMember = checkBoxUseItemID.Checked?"id":"name";
+		}
 	}
 
 

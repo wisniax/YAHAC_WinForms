@@ -1,4 +1,7 @@
-﻿namespace nic_z_tego_nie_bd {
+﻿
+
+namespace nic_z_tego_nie_bd
+{
     
     
     // This class allows you to handle specific events on the settings class:
@@ -6,8 +9,9 @@
     //  The PropertyChanged event is raised after a setting's value is changed.
     //  The SettingsLoaded event is raised after the setting values are loaded.
     //  The SettingsSaving event is raised before the setting values are saved.
-    public sealed partial class Settings {
-        
+    public sealed partial class Settings
+    {
+        //Settings needs to be shared across all versions Repo: https://stackoverflow.com/questions/534261/how-do-you-keep-user-config-settings-across-different-assembly-versions-in-net
         public Settings() {
             // // To add event handlers for saving and changing settings, uncomment the lines below:
             //
