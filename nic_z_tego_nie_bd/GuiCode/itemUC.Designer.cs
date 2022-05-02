@@ -18,6 +18,7 @@ namespace nic_z_tego_nie_bd.GuiCode
 			{
 				components.Dispose();
 			}
+			handleCalledEvent = null;
 			base.Dispose(disposing);
 		}
 

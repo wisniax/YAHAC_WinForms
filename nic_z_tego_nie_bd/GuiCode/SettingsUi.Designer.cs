@@ -33,6 +33,7 @@ namespace nic_z_tego_nie_bd.GuiCode
 			this.textBoxChooseUi = new System.Windows.Forms.TextBox();
 			this.buttonSave = new System.Windows.Forms.Button();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.checkBoxUseItemID = new System.Windows.Forms.CheckBox();
 			this.buttonSaveItem = new System.Windows.Forms.Button();
 			this.buttonRemoveWholeSelectedItem = new System.Windows.Forms.Button();
 			this.comboBoxChooseItemToRemove = new System.Windows.Forms.ComboBox();
@@ -76,7 +77,7 @@ namespace nic_z_tego_nie_bd.GuiCode
 			// buttonSave
 			// 
 			this.buttonSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonSave.Location = new System.Drawing.Point(588, 365);
+			this.buttonSave.Location = new System.Drawing.Point(574, 326);
 			this.buttonSave.Name = "buttonSave";
 			this.buttonSave.Size = new System.Drawing.Size(50, 23);
 			this.buttonSave.TabIndex = 2;
@@ -89,6 +90,7 @@ namespace nic_z_tego_nie_bd.GuiCode
 			this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupBox1.Controls.Add(this.checkBoxUseItemID);
 			this.groupBox1.Controls.Add(this.buttonSaveItem);
 			this.groupBox1.Controls.Add(this.buttonRemoveWholeSelectedItem);
 			this.groupBox1.Controls.Add(this.comboBoxChooseItemToRemove);
@@ -106,10 +108,23 @@ namespace nic_z_tego_nie_bd.GuiCode
 			this.groupBox1.Location = new System.Drawing.Point(0, 148);
 			this.groupBox1.Name = "groupBox1";
 			this.groupBox1.Padding = new System.Windows.Forms.Padding(10);
-			this.groupBox1.Size = new System.Drawing.Size(650, 302);
+			this.groupBox1.Size = new System.Drawing.Size(636, 263);
 			this.groupBox1.TabIndex = 3;
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "Items To Craft Config";
+			// 
+			// checkBoxUseItemID
+			// 
+			this.checkBoxUseItemID.AutoSize = true;
+			this.checkBoxUseItemID.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+			this.checkBoxUseItemID.Location = new System.Drawing.Point(164, 91);
+			this.checkBoxUseItemID.Name = "checkBoxUseItemID";
+			this.checkBoxUseItemID.Size = new System.Drawing.Size(67, 19);
+			this.checkBoxUseItemID.TabIndex = 20;
+			this.checkBoxUseItemID.Tag = "Use hypixel item id\'s for name resolving";
+			this.checkBoxUseItemID.Text = "Use ID\'s";
+			this.checkBoxUseItemID.UseVisualStyleBackColor = true;
+			this.checkBoxUseItemID.CheckedChanged += new System.EventHandler(this.checkBoxUseItemID_CheckedChanged);
 			// 
 			// buttonSaveItem
 			// 
@@ -250,7 +265,7 @@ namespace nic_z_tego_nie_bd.GuiCode
 			this.textBoxRecipe.Multiline = true;
 			this.textBoxRecipe.Name = "textBoxRecipe";
 			this.textBoxRecipe.ReadOnly = true;
-			this.textBoxRecipe.Size = new System.Drawing.Size(212, 213);
+			this.textBoxRecipe.Size = new System.Drawing.Size(198, 175);
 			this.textBoxRecipe.TabIndex = 7;
 			// 
 			// labelItemsReq
@@ -273,7 +288,7 @@ namespace nic_z_tego_nie_bd.GuiCode
 			this.comboBoxItemToCraft.FormattingEnabled = true;
 			this.comboBoxItemToCraft.Location = new System.Drawing.Point(10, 26);
 			this.comboBoxItemToCraft.Name = "comboBoxItemToCraft";
-			this.comboBoxItemToCraft.Size = new System.Drawing.Size(630, 23);
+			this.comboBoxItemToCraft.Size = new System.Drawing.Size(616, 23);
 			this.comboBoxItemToCraft.TabIndex = 5;
 			this.comboBoxItemToCraft.SelectionChangeCommitted += new System.EventHandler(this.comboBoxItemToCraft_SelectionChangeCommitted);
 			// 
@@ -281,7 +296,7 @@ namespace nic_z_tego_nie_bd.GuiCode
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(650, 450);
+			this.ClientSize = new System.Drawing.Size(636, 411);
 			this.Controls.Add(this.buttonSave);
 			this.Controls.Add(this.textBoxChooseUi);
 			this.Controls.Add(this.comboBoxChoooseStartUi);
@@ -317,5 +332,6 @@ namespace nic_z_tego_nie_bd.GuiCode
 		private System.Windows.Forms.Button buttonAddToItemReqList;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Button buttonSaveItem;
+		private System.Windows.Forms.CheckBox checkBoxUseItemID;
 	}
 }

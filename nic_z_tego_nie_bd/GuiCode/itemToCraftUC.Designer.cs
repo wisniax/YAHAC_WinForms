@@ -45,9 +45,12 @@ namespace nic_z_tego_nie_bd.GuiCode
 			this.labelProfit = new System.Windows.Forms.Label();
 			this.textBoxsellPrice = new System.Windows.Forms.TextBox();
 			this.labelsellPrice = new System.Windows.Forms.Label();
+			this.numericUpDownMultipl = new System.Windows.Forms.NumericUpDown();
+			this.checkBoxUsingOffer = new System.Windows.Forms.CheckBox();
 			this.panelRecipe.SuspendLayout();
 			this.panelBuy.SuspendLayout();
 			this.panelSell.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownMultipl)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// labelItemName
@@ -62,7 +65,7 @@ namespace nic_z_tego_nie_bd.GuiCode
 			this.labelItemName.Size = new System.Drawing.Size(490, 21);
 			this.labelItemName.TabIndex = 1;
 			this.labelItemName.Text = "NaN";
-			this.labelItemName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			this.labelItemName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// panelRecipe
 			// 
@@ -264,11 +267,47 @@ namespace nic_z_tego_nie_bd.GuiCode
 			this.labelsellPrice.Text = "Sell price";
 			this.labelsellPrice.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
+			// numericUpDownMultipl
+			// 
+			this.numericUpDownMultipl.BackColor = System.Drawing.SystemColors.MenuHighlight;
+			this.numericUpDownMultipl.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			this.numericUpDownMultipl.Font = new System.Drawing.Font("Lemon", 9.749999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.numericUpDownMultipl.Location = new System.Drawing.Point(438, 6);
+			this.numericUpDownMultipl.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+			this.numericUpDownMultipl.Name = "numericUpDownMultipl";
+			this.numericUpDownMultipl.Size = new System.Drawing.Size(57, 20);
+			this.numericUpDownMultipl.TabIndex = 4;
+			this.numericUpDownMultipl.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+			this.numericUpDownMultipl.ValueChanged += new System.EventHandler(this.numericUpDownMultipl_ValueChanged);
+			// 
+			// checkBoxUsingOffer
+			// 
+			this.checkBoxUsingOffer.AutoSize = true;
+			this.checkBoxUsingOffer.BackColor = System.Drawing.SystemColors.Highlight;
+			this.checkBoxUsingOffer.Font = new System.Drawing.Font("Lemon", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.checkBoxUsingOffer.Location = new System.Drawing.Point(321, 7);
+			this.checkBoxUsingOffer.Name = "checkBoxUsingOffer";
+			this.checkBoxUsingOffer.Size = new System.Drawing.Size(104, 19);
+			this.checkBoxUsingOffer.TabIndex = 5;
+			this.checkBoxUsingOffer.Text = "Using offer";
+			this.checkBoxUsingOffer.UseVisualStyleBackColor = false;
+			this.checkBoxUsingOffer.CheckedChanged += new System.EventHandler(this.checkBoxUsingOffer_CheckedChanged);
+			// 
 			// itemToCraftUC
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.SystemColors.WindowFrame;
+			this.Controls.Add(this.checkBoxUsingOffer);
+			this.Controls.Add(this.numericUpDownMultipl);
 			this.Controls.Add(this.panelSell);
 			this.Controls.Add(this.panelBuy);
 			this.Controls.Add(this.panelRecipe);
@@ -282,7 +321,9 @@ namespace nic_z_tego_nie_bd.GuiCode
 			this.panelBuy.PerformLayout();
 			this.panelSell.ResumeLayout(false);
 			this.panelSell.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownMultipl)).EndInit();
 			this.ResumeLayout(false);
+			this.PerformLayout();
 
 		}
 
@@ -304,5 +345,7 @@ namespace nic_z_tego_nie_bd.GuiCode
 		private System.Windows.Forms.Label labelsellPrice;
 		private System.Windows.Forms.TextBox textBoxInterest;
 		private System.Windows.Forms.TextBox textBoxProfit;
+		private System.Windows.Forms.NumericUpDown numericUpDownMultipl;
+		private System.Windows.Forms.CheckBox checkBoxUsingOffer;
 	}
 }

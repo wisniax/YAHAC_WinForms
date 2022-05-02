@@ -21,12 +21,26 @@ namespace nic_z_tego_nie_bd
 	public partial class MainGui : Form
 	{
 		public AuctionHouseFetcher auctionHouseFetcher;
-		public Settings settings;
+		//public Settings settings;
+		//public static ITR.ItemTextureResolver itemTextureResolver;
 		public MainGui()
 		{
+			if (Properties.Settings.Default.UpgradeRequired)
+			{
+				Properties.Settings.Default.Upgrade();
+				Properties.Settings.Default.UpgradeRequired = false;
+				Properties.Settings.Default.Save();
+			}
 			InitializeComponent();
-			loadDefaultForm(Properties.Settings.Default.Starting_Ui);			
+			loadDefaultForm(Properties.Settings.Default.Starting_Ui);
+			//if (Directory.Exists(@".\ITR_Cache.zip"))
+			//{
+			//	itemTextureResolver = new();
+			//	var task = itemTextureResolver.Init();
+			//	task.ContinueWith((_) => (doopy = true));
+			//}
 		}
+
 
 		private void loadDefaultForm(string name)
 		{
@@ -49,7 +63,7 @@ namespace nic_z_tego_nie_bd
 		public void loadForm(object objForm)
 		{
 			var asd = Properties.Settings.Default.Starting_Ui;
-			if (this.mainPanel.Controls.Count > 0) this.mainPanel.Controls.RemoveAt(0);
+			if (this.mainPanel.Controls.Count > 0) this.mainPanel.Controls[0].Dispose();
 			Form form = objForm as Form;
 			form.TopLevel = false;
 			form.Dock = DockStyle.Fill;
@@ -62,13 +76,13 @@ namespace nic_z_tego_nie_bd
 			if (DateTimeOffset.Now.ToUnixTimeMilliseconds() - BazaarCheckup.bazaarObj.lastUpdated > 12000)
 			{
 				timerBZ.Stop();
-				await Task.Run(()=> BazaarCheckup.refresh());
+				await Task.Run(() => BazaarCheckup.refresh());
 				timerBZ.Start();
 			}
 		}
 		private async void timerAH_Tick(object sender, EventArgs e)
 		{
-			if (DateTimeOffset.Now.ToUnixTimeMilliseconds() - AuctionHouseInstance.ahCache.lastUpdated > 65000) 
+			if (DateTimeOffset.Now.ToUnixTimeMilliseconds() - AuctionHouseInstance.ahCache.lastUpdated > 65000)
 			{
 				timerAH.Stop();
 				try
@@ -79,7 +93,7 @@ namespace nic_z_tego_nie_bd
 				timerAH.Start();
 			}
 		}
-		
+
 		private void buttonAh_Click(object sender, EventArgs e)
 		{
 			loadForm(new AuctionHouse());

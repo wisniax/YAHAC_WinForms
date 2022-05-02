@@ -18,6 +18,7 @@ namespace nic_z_tego_nie_bd
 			{
 				components.Dispose();
 			}
+			//timer1.Stop();
 			base.Dispose(disposing);
 		}
 
