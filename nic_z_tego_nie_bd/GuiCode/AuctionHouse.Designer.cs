@@ -62,7 +62,7 @@ namespace nic_z_tego_nie_bd
 			this.listViewItemDetails.Location = new System.Drawing.Point(3, 3);
 			this.listViewItemDetails.MultiSelect = false;
 			this.listViewItemDetails.Name = "listViewItemDetails";
-			this.listViewItemDetails.Size = new System.Drawing.Size(794, 444);
+			this.listViewItemDetails.Size = new System.Drawing.Size(630, 405);
 			this.listViewItemDetails.TabIndex = 1;
 			this.listViewItemDetails.UseCompatibleStateImageBehavior = false;
 			this.listViewItemDetails.View = System.Windows.Forms.View.Details;
@@ -92,7 +92,7 @@ namespace nic_z_tego_nie_bd
 			this.listViewItems.Location = new System.Drawing.Point(3, 3);
 			this.listViewItems.MultiSelect = false;
 			this.listViewItems.Name = "listViewItems";
-			this.listViewItems.Size = new System.Drawing.Size(794, 444);
+			this.listViewItems.Size = new System.Drawing.Size(630, 405);
 			this.listViewItems.TabIndex = 2;
 			this.listViewItems.UseCompatibleStateImageBehavior = false;
 			this.listViewItems.View = System.Windows.Forms.View.List;
@@ -102,7 +102,7 @@ namespace nic_z_tego_nie_bd
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(800, 450);
+			this.ClientSize = new System.Drawing.Size(636, 411);
 			this.ControlBox = false;
 			this.Controls.Add(this.listViewItems);
 			this.Controls.Add(this.listViewItemDetails);

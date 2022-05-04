@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using System.Net;
 using System.IO;
 using nic_z_tego_nie_bd.GuiCode;
+using System.Configuration;
 
 namespace nic_z_tego_nie_bd
 {
@@ -22,17 +23,21 @@ namespace nic_z_tego_nie_bd
 	{
 		public AuctionHouseFetcher auctionHouseFetcher;
 		//public Settings settings;
-		//public static ITR.ItemTextureResolver itemTextureResolver;
+
 		public MainGui()
 		{
+			//Update Settings file on update (so actually never)
 			if (Properties.Settings.Default.UpgradeRequired)
 			{
 				Properties.Settings.Default.Upgrade();
 				Properties.Settings.Default.UpgradeRequired = false;
 				Properties.Settings.Default.Save();
 			}
+
+			//Regular stuff
 			InitializeComponent();
 			loadDefaultForm(Properties.Settings.Default.Starting_Ui);
+			//var cos = new GuiCode.nbtReader("CHUJ");
 			//if (Directory.Exists(@".\ITR_Cache.zip"))
 			//{
 			//	itemTextureResolver = new();

@@ -450,6 +450,7 @@ namespace nic_z_tego_nie_bd
 		{
 			public string uuid { get; set; }
 			public string auctioneer { get; set; }
+			public string item_lore { get; set; }
 			public UInt64 start { get; set; }
 			public UInt64 end { get; set; }
 			public string item_name { get; set; }

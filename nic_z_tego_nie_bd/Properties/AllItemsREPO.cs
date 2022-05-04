@@ -9,6 +9,7 @@ using System.Drawing;
 using System.IO.Compression;
 using System.IO;
 using System.Drawing.Imaging;
+using System.Configuration;
 
 namespace nic_z_tego_nie_bd.Properties
 {
@@ -19,13 +20,22 @@ namespace nic_z_tego_nie_bd.Properties
 		public static ItemRepo itemRepo { get; private set; }
 		public static Dictionary<string, VanillaItem> vanillaItems { get; private set; }
 		public static Dictionary<string, List<Item>> rarityItemRepo { get; private set; }
+		public static ITR.ItemTextureResolver itemTextureResolver { get; private set; }
 		static AllItemsREPO()
 		{
+
+			//Some stuff for cute skins:)
+			string PathToCacheFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal).FilePath;
+			PathToCacheFile = PathToCacheFile.Remove(PathToCacheFile.LastIndexOf('\\'));
+			itemTextureResolver.FastInit(PathToCacheFile + @"\ITR_Cache.zip");
+			itemTextureResolver.LoadResourcepack(Properties.Resources.Wolds_and_Beyond_x16);
+
 			itemRepo = new();
 			rarityItemRepo = new();
 			vanillaItems = new();
 			populateVanillaList();
-			assignVanillaTextures();
+			assignCoolTextures();
+			//assignVanillaTextures();
 			populateList();
 			genRarityItemsRepo();
 		}
@@ -66,6 +76,15 @@ namespace nic_z_tego_nie_bd.Properties
 				}
 			}
 		}
+		private static void assignCoolTextures()
+		{
+			foreach (var item in AllItemsREPO.itemRepo.items)
+			{
+				item.Texture = itemTextureResolver.GetItemFromID(item.id).Texture;
+			}
+		}
+
+		[Obsolete("There's a new one :)")]
 		private static void assignVanillaTextures()
 		{
 			var memoryStream = new MemoryStream(Properties.Resources.VanillaItemTextures);
@@ -123,13 +142,19 @@ namespace nic_z_tego_nie_bd.Properties
 			else return new Item();
 		}
 
-
+		/// <summary>
+		/// List of items
+		/// </summary>
 		public struct ItemRepo
 		{
 			public bool success { get; set; }
 			public long lastUpdated { get; set; }
 			public List<Item> items { get; set; }
 		}
+
+		/// <summary>
+		/// Specific item in list.<br/>
+		/// </summary>
 		public class Item
 		{
 			public string id { get; set; }
@@ -138,6 +163,7 @@ namespace nic_z_tego_nie_bd.Properties
 			public string tier  { get; set; }
 			public string material { get; set; }
 			public bool glowing { get; set; }
+			public Image Texture { get; set; }
 		}
 		public class VanillaItem
 		{

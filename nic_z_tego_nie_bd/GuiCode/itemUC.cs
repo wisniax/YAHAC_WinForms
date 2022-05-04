@@ -42,8 +42,9 @@ namespace nic_z_tego_nie_bd.GuiCode
 		void preRenderImage()
 		{
 			var referedItem = Properties.AllItemsREPO.IDtoITEM(item_id);
-			string materialid = Properties.AllItemsREPO.IDtoMATERIAL(item_id).ToLower();
-			if (Properties.AllItemsREPO.vanillaItems.ContainsKey(materialid)) pictureBox1.Image = (Image)(Properties.AllItemsREPO.vanillaItems[materialid].Texture.Clone());
+			//string materialid = Properties.AllItemsREPO.IDtoMATERIAL(item_id).ToLower();
+			//if (Properties.AllItemsREPO.vanillaItems.ContainsKey(materialid)) pictureBox1.Image = (Image)(Properties.AllItemsREPO.vanillaItems[materialid].Texture.Clone());
+			pictureBox1.Image = (Image)referedItem.Texture.Clone();
 			image = (Image)pictureBox1.Image.Clone();
 			if (referedItem.glowing == true)
 			{
