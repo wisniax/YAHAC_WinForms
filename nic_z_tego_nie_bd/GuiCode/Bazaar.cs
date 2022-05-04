@@ -197,6 +197,7 @@ namespace nic_z_tego_nie_bd
 			{
 				item.Value.product_name = Properties.AllItemsREPO.IDtoNAME(item.Value.product_id);
 			}
+			if (bazaarObjtemp.products.ContainsKey("BAZAAR_COOKIE")) { bazaarObjtemp.products.Remove("BAZAAR_COOKIE"); }
 			bazaarObj = bazaarObjtemp;
 		}
 		static private BazaarObj deserializeBz(string toDes)

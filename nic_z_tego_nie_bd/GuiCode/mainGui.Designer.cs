@@ -42,6 +42,7 @@ namespace nic_z_tego_nie_bd
 			this.apiReqBox = new System.Windows.Forms.TextBox();
 			this.mainPanel = new System.Windows.Forms.Panel();
 			this.timerRefScreenTimer = new System.Windows.Forms.Timer(this.components);
+			this.buttonBetterAh = new System.Windows.Forms.Button();
 			this.panelSideMenu.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -55,6 +56,7 @@ namespace nic_z_tego_nie_bd
 			// 
 			this.panelSideMenu.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this.panelSideMenu.BackColor = System.Drawing.Color.Black;
+			this.panelSideMenu.Controls.Add(this.buttonBetterAh);
 			this.panelSideMenu.Controls.Add(this.button1);
 			this.panelSideMenu.Controls.Add(this.buttonSettings);
 			this.panelSideMenu.Controls.Add(this.buttonAh);
@@ -191,6 +193,21 @@ namespace nic_z_tego_nie_bd
 			this.timerRefScreenTimer.Enabled = true;
 			this.timerRefScreenTimer.Tick += new System.EventHandler(this.timerRefScreenTimer_Tick);
 			// 
+			// buttonBetterAh
+			// 
+			this.buttonBetterAh.BackColor = System.Drawing.SystemColors.AppWorkspace;
+			this.buttonBetterAh.Dock = System.Windows.Forms.DockStyle.Top;
+			this.buttonBetterAh.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this.buttonBetterAh.Font = new System.Drawing.Font("Sigmar One", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.buttonBetterAh.Location = new System.Drawing.Point(3, 123);
+			this.buttonBetterAh.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
+			this.buttonBetterAh.Name = "buttonBetterAh";
+			this.buttonBetterAh.Size = new System.Drawing.Size(144, 40);
+			this.buttonBetterAh.TabIndex = 4;
+			this.buttonBetterAh.Text = "Better AH";
+			this.buttonBetterAh.UseVisualStyleBackColor = false;
+			this.buttonBetterAh.Click += new System.EventHandler(this.buttonBetterAh_Click);
+			// 
 			// MainGui
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -222,6 +239,7 @@ namespace nic_z_tego_nie_bd
 		private System.Windows.Forms.Timer timerRefScreenTimer;
 		private System.Windows.Forms.Button buttonSettings;
 		private System.Windows.Forms.Button button1;
+		private System.Windows.Forms.Button buttonBetterAh;
 	}
 }
 

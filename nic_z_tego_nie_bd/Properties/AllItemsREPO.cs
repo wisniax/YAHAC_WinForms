@@ -27,6 +27,7 @@ namespace nic_z_tego_nie_bd.Properties
 			//Some stuff for cute skins:)
 			string PathToCacheFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal).FilePath;
 			PathToCacheFile = PathToCacheFile.Remove(PathToCacheFile.LastIndexOf('\\'));
+			itemTextureResolver = new();
 			itemTextureResolver.FastInit(PathToCacheFile + @"\ITR_Cache.zip");
 			itemTextureResolver.LoadResourcepack(Properties.Resources.Wolds_and_Beyond_x16);
 
@@ -34,10 +35,10 @@ namespace nic_z_tego_nie_bd.Properties
 			rarityItemRepo = new();
 			vanillaItems = new();
 			populateVanillaList();
-			assignCoolTextures();
 			//assignVanillaTextures();
 			populateList();
 			genRarityItemsRepo();
+			assignCoolTextures();
 		}
 
 		private static void populateList()

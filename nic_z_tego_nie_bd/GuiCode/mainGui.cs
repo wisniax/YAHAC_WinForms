@@ -60,6 +60,9 @@ namespace nic_z_tego_nie_bd
 				case "Item Crafts":
 					loadForm(new ItemCrafts());
 					break;
+				case "Better AH":
+					loadForm(new BetterAH());
+					break;
 				default:
 					loadForm(new SettingsUi());
 					break;
@@ -127,6 +130,11 @@ namespace nic_z_tego_nie_bd
 		private void button1_Click(object sender, EventArgs e)
 		{
 			loadForm(new ItemCrafts());
+		}
+
+		private void buttonBetterAh_Click(object sender, EventArgs e)
+		{
+			loadForm(new BetterAH());
 		}
 	}//END OF CLASS
 }//END OF NAMESPACE
