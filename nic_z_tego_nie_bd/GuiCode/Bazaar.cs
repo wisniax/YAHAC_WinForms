@@ -37,10 +37,7 @@ namespace nic_z_tego_nie_bd
 			}
 			itemsUi = tempitemsUi;
 			flowLayoutPanel1.Controls.Clear();
-			foreach (var item in itemsUi)
-			{
-				flowLayoutPanel1.Controls.Add(item);
-			}
+			flowLayoutPanel1.Controls.AddRange(itemsUi.ToArray());
 			timestampBZ = BazaarCheckup.bazaarObj.lastUpdated;
 			labelItemNameTip.BringToFront();
 		}
@@ -57,13 +54,13 @@ namespace nic_z_tego_nie_bd
 
 			return relativePoint;
 		}
-		private void RenderItemName(string sender_id, GuiCode.itemUC.MouseEvents mouseEvents)
+		private void RenderItemName(GuiCode.itemUC sender, GuiCode.itemUC.MouseEvents mouseEvents)
 		{
 			switch (mouseEvents)
 			{
 				case GuiCode.itemUC.MouseEvents.Enter:
 					labelItemNameTip.Enabled = true;
-					labelItemNameTip.Text = Properties.AllItemsREPO.IDtoNAME(sender_id);
+					labelItemNameTip.Text = Properties.AllItemsREPO.IDtoNAME(sender.item_id);
 					labelItemNameTip.Location = CalcPointPosition(labelItemNameTip);
 					labelItemNameTip.Refresh();
 					labelItemNameTip.Visible = true;
@@ -74,7 +71,7 @@ namespace nic_z_tego_nie_bd
 				case GuiCode.itemUC.MouseEvents.Click:
 					labelItemNameTip.Visible = false;
 					labelItemNameTip.Enabled = false;
-					OpenClickedItem(sender_id);
+					OpenClickedItem(sender.item_id);
 					break;
 				case GuiCode.itemUC.MouseEvents.Leave:
 					labelItemNameTip.Visible = false;

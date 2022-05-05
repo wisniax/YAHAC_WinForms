@@ -90,7 +90,9 @@ namespace nic_z_tego_nie_bd.GuiCode
 							buyNowPrice += (UInt64)(bzOrders[i].pricePerUnit * (bzOrders[i].amount >= reqItemAmountLeft ? reqItemAmountLeft : bzOrders[i].amount));
 							reqItemAmountLeft = bzOrders[i].amount >= reqItemAmountLeft ? 0 : reqItemAmountLeft - bzOrders[i].amount;
 						}
-						buyViaOfferPrice += ((UInt64)(bzOrdersOffer[0].pricePerUnit + 0.1M) * (reqItem.amount * (uint)numericUpDownMultipl.Value));
+						if (bzOrdersOffer.Count() != 0) { buyViaOfferPrice += ((UInt64)(bzOrdersOffer[0].pricePerUnit + 0.1M) * (reqItem.amount * (uint)numericUpDownMultipl.Value)); }
+						else { buyViaOfferPrice += ((UInt64)(bzOrders[0].pricePerUnit - 0.1M) * (reqItem.amount * (uint)numericUpDownMultipl.Value)); }
+
 						break;
 					case ItemsToCraft.Source.AuctionHouse:
 						var ahOrders = AuctionHouseInstance.ahCache.items[reqItem.item_dictKey]; //BZ list regarding this specific item

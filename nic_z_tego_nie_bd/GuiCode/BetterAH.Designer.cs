@@ -29,6 +29,7 @@ namespace nic_z_tego_nie_bd.GuiCode
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			this.label1 = new System.Windows.Forms.Label();
 			this.label2 = new System.Windows.Forms.Label();
 			this.comboBoxItemSelect = new System.Windows.Forms.ComboBox();
@@ -41,6 +42,9 @@ namespace nic_z_tego_nie_bd.GuiCode
 			this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
 			this.label4 = new System.Windows.Forms.Label();
 			this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+			this.labelItemNameTip = new System.Windows.Forms.Label();
+			this.timer1 = new System.Windows.Forms.Timer(this.components);
+			this.button2 = new System.Windows.Forms.Button();
 			this.panelConfig.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
 			this.SuspendLayout();
@@ -71,7 +75,8 @@ namespace nic_z_tego_nie_bd.GuiCode
 			// 
 			// comboBoxItemSelect
 			// 
-			this.comboBoxItemSelect.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxItemSelect.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+			this.comboBoxItemSelect.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
 			this.comboBoxItemSelect.FormattingEnabled = true;
 			this.comboBoxItemSelect.Location = new System.Drawing.Point(12, 56);
 			this.comboBoxItemSelect.Name = "comboBoxItemSelect";
@@ -92,6 +97,7 @@ namespace nic_z_tego_nie_bd.GuiCode
 			// 
 			// textBoxString
 			// 
+			this.textBoxString.Enabled = false;
 			this.textBoxString.Location = new System.Drawing.Point(208, 56);
 			this.textBoxString.Name = "textBoxString";
 			this.textBoxString.Size = new System.Drawing.Size(112, 23);
@@ -124,6 +130,7 @@ namespace nic_z_tego_nie_bd.GuiCode
 			this.panelConfig.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.panelConfig.BackColor = System.Drawing.SystemColors.WindowFrame;
+			this.panelConfig.Controls.Add(this.button2);
 			this.panelConfig.Controls.Add(this.button1);
 			this.panelConfig.Controls.Add(this.numericUpDown1);
 			this.panelConfig.Controls.Add(this.label4);
@@ -175,10 +182,39 @@ namespace nic_z_tego_nie_bd.GuiCode
 			// 
 			// flowLayoutPanel1
 			// 
+			this.flowLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.flowLayoutPanel1.Location = new System.Drawing.Point(12, 107);
 			this.flowLayoutPanel1.Name = "flowLayoutPanel1";
 			this.flowLayoutPanel1.Size = new System.Drawing.Size(612, 292);
 			this.flowLayoutPanel1.TabIndex = 1;
+			// 
+			// labelItemNameTip
+			// 
+			this.labelItemNameTip.AutoSize = true;
+			this.labelItemNameTip.Enabled = false;
+			this.labelItemNameTip.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+			this.labelItemNameTip.Location = new System.Drawing.Point(0, 0);
+			this.labelItemNameTip.Name = "labelItemNameTip";
+			this.labelItemNameTip.Size = new System.Drawing.Size(31, 15);
+			this.labelItemNameTip.TabIndex = 2;
+			this.labelItemNameTip.Text = "NaN";
+			this.labelItemNameTip.Visible = false;
+			// 
+			// timer1
+			// 
+			this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+			// 
+			// button2
+			// 
+			this.button2.Location = new System.Drawing.Point(530, 6);
+			this.button2.Name = "button2";
+			this.button2.Size = new System.Drawing.Size(79, 23);
+			this.button2.TabIndex = 12;
+			this.button2.Text = "Remove all";
+			this.button2.UseVisualStyleBackColor = true;
+			this.button2.Click += new System.EventHandler(this.button2_Click_1);
 			// 
 			// BetterAH
 			// 
@@ -186,6 +222,7 @@ namespace nic_z_tego_nie_bd.GuiCode
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
 			this.ClientSize = new System.Drawing.Size(636, 411);
+			this.Controls.Add(this.labelItemNameTip);
 			this.Controls.Add(this.flowLayoutPanel1);
 			this.Controls.Add(this.panelConfig);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -195,6 +232,7 @@ namespace nic_z_tego_nie_bd.GuiCode
 			this.panelConfig.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
 			this.ResumeLayout(false);
+			this.PerformLayout();
 
 		}
 
@@ -212,5 +250,8 @@ namespace nic_z_tego_nie_bd.GuiCode
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.Button button1;
 		private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+		private System.Windows.Forms.Label labelItemNameTip;
+		private System.Windows.Forms.Timer timer1;
+		private System.Windows.Forms.Button button2;
 	}
 }

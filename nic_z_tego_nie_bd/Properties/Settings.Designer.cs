@@ -37,7 +37,7 @@ namespace nic_z_tego_nie_bd.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("none")]
+        [global::System.Configuration.DefaultSettingValueAttribute("null")]
         public string items {
             get {
                 return ((string)(this["items"]));
@@ -56,6 +56,18 @@ namespace nic_z_tego_nie_bd.Properties {
             }
             set {
                 this["UpgradeRequired"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("null")]
+        public string BetterAHQuery {
+            get {
+                return ((string)(this["BetterAHQuery"]));
+            }
+            set {
+                this["BetterAHQuery"] = value;
             }
         }
     }

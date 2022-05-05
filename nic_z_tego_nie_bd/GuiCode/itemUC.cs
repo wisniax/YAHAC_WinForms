@@ -16,11 +16,12 @@ namespace nic_z_tego_nie_bd.GuiCode
 {
 	public partial class itemUC : UserControl
 	{
-		public delegate void HandleCalledEvent(string sender, MouseEvents whatsGoingOn);
+		public delegate void HandleCalledEvent(itemUC sender, MouseEvents whatsGoingOn);
 		private static readonly object BrushLock = new object();
 		HandleCalledEvent handleCalledEvent;
 		public static TextureBrush enchantmentBrush;
-		string item_id;
+		public string item_id { get; set; }
+		public string tag { get; set; }
 		public bool isGlowing;
 		bool isMouseOver;
 		Image image;
@@ -111,7 +112,7 @@ namespace nic_z_tego_nie_bd.GuiCode
 		//
 		private void pictureBox1_Click(object sender, EventArgs e)
 		{
-			handleCalledEvent(item_id, MouseEvents.Click);
+			handleCalledEvent(this, MouseEvents.Click);
 		}
 
 		private void pictureBox1_MouseEnter(object sender, EventArgs e)
@@ -124,18 +125,18 @@ namespace nic_z_tego_nie_bd.GuiCode
 		{
 			isMouseOver = false;
 			refreshImage();
-			handleCalledEvent(item_id, MouseEvents.Leave);
+			handleCalledEvent(this, MouseEvents.Leave);
 		}
 
 		private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
 		{
-			handleCalledEvent(item_id, MouseEvents.LocationChanged);
+			handleCalledEvent(this, MouseEvents.LocationChanged);
 		}
 		private void pictureBox1_MouseHover(object sender, EventArgs e)
 		{
 			isMouseOver = true;
 			renderOverlay();
-			handleCalledEvent(item_id, MouseEvents.Enter);
+			handleCalledEvent(this, MouseEvents.Enter);
 		}
 
 

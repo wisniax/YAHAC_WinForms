@@ -7,6 +7,8 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -15,13 +17,132 @@ namespace nic_z_tego_nie_bd.GuiCode
 	public partial class BetterAH : Form
 	{
 		List<ItemToSearchFor> itemsToSearchFor;
+		List<AuctionHouseFetcher.itemData> matchingItems;
+		public List<GuiCode.itemUC> itemsUi;
+		long lastCalculated;
+
 		public BetterAH()
 		{
-			itemsToSearchFor = new();
+			matchingItems = new();
+			itemsUi = new();
+			itemsToSearchFor = loadRecipes();
+			if (itemsToSearchFor == null) itemsToSearchFor = new();
 			InitializeComponent();
 			comboBoxItemSelect.DisplayMember = "name";
 			comboBoxItemSelect.DataSource = Properties.AllItemsREPO.itemRepo.items;
+			timer1.Start();
 		}
+
+		void findMatchingItems()
+		{
+			List<AuctionHouseFetcher.itemData> tempmatchingItems = new();
+			if (itemsToSearchFor.Count == 0) { timer1.Stop(); return; }
+			foreach (var item in itemsToSearchFor)
+			{
+				//Get list of items on AH that match ID
+				if (!AuctionHouseInstance.ahCache.items.ContainsKey(item.item_dictKey)) { continue; }
+				var itemsToSearchOn = AuctionHouseInstance.ahCache.items[item.item_dictKey];
+
+				//Get the ones that match price and query
+				foreach (var entry in itemsToSearchOn)
+				{
+					if (!entry.bin) continue;                           //Skip if not bin
+					if (entry.starting_bid > item.maxPrice) continue;   //Skip if price's too high
+
+					//Skip if lore doesn't contain text
+					try
+					{
+						foreach (var text in item.searchQueries)
+						{
+							if (!entry.item_lore.Contains(text)) throw new Exception();
+						}
+					}
+					catch (Exception)
+					{
+						continue;
+					}
+
+					//Finally add matching item to list
+					tempmatchingItems.Add(entry);
+				}
+				//if (matchingItems.Count == 0) continue;					//test whether any items were added
+			}
+			tempmatchingItems.Sort((a, b) => a.starting_bid.CompareTo(b.starting_bid));
+			matchingItems = tempmatchingItems;
+			lastCalculated = AuctionHouseInstance.ahCache.lastUpdated;
+		}
+
+
+
+
+		//Should be a seperate class not a copy paste but well gonna migrate to WPF soonTM anyway so why bother
+		void renderAllItems()
+		{
+			List<GuiCode.itemUC> tempitemsUi = new();
+			if (BazaarCheckup.bazaarObj.success != true) return;
+			foreach (var item in matchingItems)
+			{
+				var itemUCC = new GuiCode.itemUC();
+				itemUCC.initialize(item.dictKey, RenderItemName);
+				itemUCC.tag = item.uuid;
+				tempitemsUi.Add(itemUCC);
+			}
+			itemsUi = tempitemsUi;
+			flowLayoutPanel1.Controls.Clear();
+			flowLayoutPanel1.Controls.AddRange(itemsUi.ToArray());
+			//timestampBZ = BazaarCheckup.bazaarObj.lastUpdated;
+			//labelItemNameTip.BringToFront();
+		}
+		private Point CalcPointPosition(Control control)
+		{
+			Point OFFSET = new(24, 16);
+			Point point = Cursor.Position;
+			var relativePoint = this.PointToClient(point);
+			relativePoint.Offset(OFFSET);
+			var controlSize = this.Size;
+
+			if (controlSize.Width < relativePoint.X + control.Size.Width) relativePoint.Offset((-2) * OFFSET.X - control.Width, 0);
+			if (controlSize.Height < relativePoint.Y + control.Size.Height) relativePoint.Offset(0, (-2) * OFFSET.Y - control.Height);
+
+			return relativePoint;
+		}
+		private void RenderItemName(itemUC sender, GuiCode.itemUC.MouseEvents mouseEvents)
+		{
+			switch (mouseEvents)
+			{
+				case GuiCode.itemUC.MouseEvents.Enter:
+					labelItemNameTip.Enabled = true;
+					labelItemNameTip.Text = Properties.AllItemsREPO.IDtoNAME(sender.item_id);
+					labelItemNameTip.Location = CalcPointPosition(labelItemNameTip);
+					labelItemNameTip.Refresh();
+					labelItemNameTip.Visible = true;
+					break;
+				case GuiCode.itemUC.MouseEvents.LocationChanged:
+					labelItemNameTip.Location = CalcPointPosition(labelItemNameTip);
+					break;
+				case GuiCode.itemUC.MouseEvents.Click:
+					labelItemNameTip.Visible = false;
+					labelItemNameTip.Enabled = false;
+					CopyToClipboard("/viewauction " + sender.tag);
+					break;
+				case GuiCode.itemUC.MouseEvents.Leave:
+					labelItemNameTip.Visible = false;
+					labelItemNameTip.Enabled = false;
+					break;
+				default:
+					break;
+			}
+		}
+		void CopyToClipboard(string str)
+		{
+			var thread = new Thread(() => Clipboard.SetText(str));
+			thread.SetApartmentState(ApartmentState.STA);
+			thread.Start();
+			thread.Join();
+		}
+
+
+
 
 
 		class ItemToSearchFor
@@ -29,6 +150,7 @@ namespace nic_z_tego_nie_bd.GuiCode
 			public string item_dictKey { get; set; }
 			public List<String> searchQueries { get; set; }
 			public UInt32 maxPrice { get; set; }
+			public bool ready { get; set; }
 		}
 
 
@@ -47,6 +169,7 @@ namespace nic_z_tego_nie_bd.GuiCode
 			comboBoxItemSelect.Enabled = false;
 			button1.Enabled = false;
 			buttonAdd.Enabled = true;
+			textBoxString.Enabled = true;
 		}
 		private void buttonAdd_Click(object sender, EventArgs e)
 		{
@@ -59,10 +182,43 @@ namespace nic_z_tego_nie_bd.GuiCode
 		{
 			var item = itemsToSearchFor.Last();
 			item.maxPrice = (UInt32)numericUpDown1.Value;
+			item.ready = true;
 			comboBoxItemSelect.Enabled = true;
 			button1.Enabled = true;
 			buttonAdd.Enabled = false;
+			textBoxString.Enabled = false;
 			buttonSave.Enabled = false;
+			saveRecipes();
+			timer1.Start();
+		}
+
+		private void timer1_Tick(object sender, EventArgs e)
+		{
+			if ((lastCalculated != AuctionHouseInstance.ahCache.lastUpdated) && AuctionHouseInstance.ahCache.lastUpdated != 0)
+			{
+				findMatchingItems();
+				renderAllItems();
+			}
+		}
+
+		private void button2_Click_1(object sender, EventArgs e)
+		{
+			itemsToSearchFor = new();
+			saveRecipes();
+			lastCalculated = 0;
+		}
+
+
+		void saveRecipes()
+		{
+			var stronk = JsonSerializer.Serialize(itemsToSearchFor);
+			Properties.Settings.Default.BetterAHQuery = stronk;
+			Properties.Settings.Default.Save();
+		}
+		List<ItemToSearchFor> loadRecipes()
+		{
+			var stronk = JsonSerializer.Deserialize<List<ItemToSearchFor>>(Properties.Settings.Default.BetterAHQuery);
+			return stronk;
 		}
 	}
 
