@@ -71,12 +71,15 @@ namespace nic_z_tego_nie_bd.Properties {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("null")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Yoo")]
         public string easterEggs {
             get {
                 return ((string)(this["easterEggs"]));
+            }
+            set {
+                this["easterEggs"] = value;
             }
         }
         

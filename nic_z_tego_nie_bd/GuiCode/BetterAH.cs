@@ -130,6 +130,7 @@ namespace nic_z_tego_nie_bd.GuiCode
 			//timestampBZ = BazaarCheckup.bazaarObj.lastUpdated;
 			labelItemNameTip.BringToFront();
 			if (Properties.Settings.Default.playSound) playSound();
+			var cos = Properties.Settings.Default.easterEggs;
 			if (Encode(Properties.Settings.Default.easterEggs) == "6582df3932a187c34d14e9dd9d47317732e675030f4663c043aa3692983609b9") JadeRald();
 		}
 		void playSound()
@@ -236,6 +237,7 @@ namespace nic_z_tego_nie_bd.GuiCode
 			var stronk = JsonSerializer.Deserialize<List<ItemToSearchFor>>(Properties.Settings.Default.BetterAHQuery);
 			return stronk;
 		}
+
 	}
 
 
