@@ -21,7 +21,7 @@ namespace nic_z_tego_nie_bd.GuiCode
 		HandleCalledEvent handleCalledEvent;
 		public static TextureBrush enchantmentBrush;
 		public string item_id { get; set; }
-		public string tag { get; set; }
+		//public string tag { get; set; }
 		public bool isGlowing;
 		bool isMouseOver;
 		Image image;
@@ -29,6 +29,8 @@ namespace nic_z_tego_nie_bd.GuiCode
 		public itemUC()
 		{
 			InitializeComponent();
+			Size size = new Size((int)Properties.Settings.Default.itemsUCsize, (int)Properties.Settings.Default.itemsUCsize);
+			this.Size = size;
 		}
 
 		public void initialize(string item_id, HandleCalledEvent handleCalledEvent)

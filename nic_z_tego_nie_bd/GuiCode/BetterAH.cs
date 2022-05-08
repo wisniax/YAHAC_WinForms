@@ -6,6 +6,8 @@ using System.Drawing;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Media;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
@@ -16,9 +18,11 @@ namespace nic_z_tego_nie_bd.GuiCode
 {
 	public partial class BetterAH : Form
 	{
+		private readonly object locker = new object();
 		List<ItemToSearchFor> itemsToSearchFor;
 		List<AuctionHouseFetcher.itemData> matchingItems;
 		public List<GuiCode.itemUC> itemsUi;
+		SoundPlayer soundPlayer;
 		long lastCalculated;
 
 		public BetterAH()
@@ -27,20 +31,53 @@ namespace nic_z_tego_nie_bd.GuiCode
 			itemsUi = new();
 			itemsToSearchFor = loadRecipes();
 			if (itemsToSearchFor == null) itemsToSearchFor = new();
+			if (Properties.Settings.Default.playSound)
+			{
+				soundPlayer = new(Properties.Resources.notify_sound);
+			}
 			InitializeComponent();
-			comboBoxItemSelect.DisplayMember = "name";
-			comboBoxItemSelect.DataSource = Properties.AllItemsREPO.itemRepo.items;
 			timer1.Start();
 		}
 
-		void findMatchingItems()
+		static string Encode(string rawData)
 		{
+			// Create a SHA256   
+			using (SHA256 sha256Hash = SHA256.Create())
+			{
+				// ComputeHash - returns byte array  
+				byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(rawData));
+
+				// Convert byte array to a string   
+				StringBuilder builder = new StringBuilder();
+				for (int i = 0; i < bytes.Length; i++)
+				{
+					builder.Append(bytes[i].ToString("x2"));
+				}
+				return builder.ToString();
+			}
+		}
+
+		void findMatchingItems()
+		{   //THIS WAY FINDING ITEMS IS 12 times faster for me... Wonder whyy (Totally not 12 threads CPU)
 			List<AuctionHouseFetcher.itemData> tempmatchingItems = new();
 			if (itemsToSearchFor.Count == 0) { timer1.Stop(); return; }
+			var tasks = new List<Task>();
 			foreach (var item in itemsToSearchFor)
 			{
+				tasks.Add(Task.Run(() => checkIfItemsMatch(item, tempmatchingItems)));
+			}
+			Task.WaitAll(tasks.ToArray());
+			tempmatchingItems.Sort((a, b) => a.starting_bid.CompareTo(b.starting_bid));
+			matchingItems = tempmatchingItems;
+			lastCalculated = AuctionHouseInstance.ahCache.lastUpdated;
+		}
+
+		void checkIfItemsMatch(ItemToSearchFor item, List<AuctionHouseFetcher.itemData> tempmatchingItems)
+		{
+
+			{
 				//Get list of items on AH that match ID
-				if (!AuctionHouseInstance.ahCache.items.ContainsKey(item.item_dictKey)) { continue; }
+				if (!AuctionHouseInstance.ahCache.items.ContainsKey(item.item_dictKey)) { return; }
 				var itemsToSearchOn = AuctionHouseInstance.ahCache.items[item.item_dictKey];
 
 				//Get the ones that match price and query
@@ -63,13 +100,13 @@ namespace nic_z_tego_nie_bd.GuiCode
 					}
 
 					//Finally add matching item to list
-					tempmatchingItems.Add(entry);
+					lock (locker)
+					{
+						tempmatchingItems.Add(entry);
+					}
 				}
 				//if (matchingItems.Count == 0) continue;					//test whether any items were added
 			}
-			tempmatchingItems.Sort((a, b) => a.starting_bid.CompareTo(b.starting_bid));
-			matchingItems = tempmatchingItems;
-			lastCalculated = AuctionHouseInstance.ahCache.lastUpdated;
 		}
 
 
@@ -84,14 +121,42 @@ namespace nic_z_tego_nie_bd.GuiCode
 			{
 				var itemUCC = new GuiCode.itemUC();
 				itemUCC.initialize(item.dictKey, RenderItemName);
-				itemUCC.tag = item.uuid;
+				itemUCC.Tag = item;
 				tempitemsUi.Add(itemUCC);
 			}
 			itemsUi = tempitemsUi;
 			flowLayoutPanel1.Controls.Clear();
 			flowLayoutPanel1.Controls.AddRange(itemsUi.ToArray());
 			//timestampBZ = BazaarCheckup.bazaarObj.lastUpdated;
-			//labelItemNameTip.BringToFront();
+			labelItemNameTip.BringToFront();
+			if (Properties.Settings.Default.playSound) playSound();
+			if (Encode(Properties.Settings.Default.easterEggs) == "6582df3932a187c34d14e9dd9d47317732e675030f4663c043aa3692983609b9") JadeRald();
+		}
+		void playSound()
+		{
+			var lista = itemsToSearchFor.FindAll((a) => a.priority >= 1);
+			foreach (var item in lista)
+			{
+				if (itemsUi.Exists((a) => a.item_id == item.item_dictKey))
+				{
+					soundPlayer.Play();
+					return;
+				}
+			}
+		}
+		void JadeRald()
+		{
+			var lista = itemsToSearchFor.FindAll((a) => a.priority >= 5);
+			lista.Sort((a, b) => b.priority.CompareTo(a.priority));
+			foreach (var item in lista)
+			{
+				if (itemsUi.Exists((a) => a.item_id == item.item_dictKey))
+				{
+					var smth = itemsUi.Find((a) => a.item_id == item.item_dictKey);
+					CopyToClipboard("/viewauction " + ((AuctionHouseFetcher.itemData)smth.Tag).uuid);
+					return;
+				}
+			}
 		}
 		private Point CalcPointPosition(Control control)
 		{
@@ -123,7 +188,7 @@ namespace nic_z_tego_nie_bd.GuiCode
 				case GuiCode.itemUC.MouseEvents.Click:
 					labelItemNameTip.Visible = false;
 					labelItemNameTip.Enabled = false;
-					CopyToClipboard("/viewauction " + sender.tag);
+					CopyToClipboard("/viewauction " + ((AuctionHouseFetcher.itemData)sender.Tag).uuid);
 					break;
 				case GuiCode.itemUC.MouseEvents.Leave:
 					labelItemNameTip.Visible = false;
@@ -142,54 +207,12 @@ namespace nic_z_tego_nie_bd.GuiCode
 		}
 
 
-
-
-
-		class ItemToSearchFor
+		public class ItemToSearchFor
 		{
 			public string item_dictKey { get; set; }
 			public List<String> searchQueries { get; set; }
 			public UInt32 maxPrice { get; set; }
-			public bool ready { get; set; }
-		}
-
-
-
-
-
-
-
-		//ADDING ITEMS :)
-		private void button1_Click(object sender, EventArgs e)
-		{
-			var item = new ItemToSearchFor();
-			item.searchQueries = new();
-			item.item_dictKey = ((Properties.AllItemsREPO.Item)comboBoxItemSelect.SelectedItem).id;
-			itemsToSearchFor.Add(item);
-			comboBoxItemSelect.Enabled = false;
-			button1.Enabled = false;
-			buttonAdd.Enabled = true;
-			textBoxString.Enabled = true;
-		}
-		private void buttonAdd_Click(object sender, EventArgs e)
-		{
-			var item = itemsToSearchFor.Last();
-			item.searchQueries.Add(textBoxString.Text);
-			buttonSave.Enabled = true;
-		}
-
-		private void button2_Click(object sender, EventArgs e)
-		{
-			var item = itemsToSearchFor.Last();
-			item.maxPrice = (UInt32)numericUpDown1.Value;
-			item.ready = true;
-			comboBoxItemSelect.Enabled = true;
-			button1.Enabled = true;
-			buttonAdd.Enabled = false;
-			textBoxString.Enabled = false;
-			buttonSave.Enabled = false;
-			saveRecipes();
-			timer1.Start();
+			public UInt16 priority { get; set; }
 		}
 
 		private void timer1_Tick(object sender, EventArgs e)
@@ -199,13 +222,6 @@ namespace nic_z_tego_nie_bd.GuiCode
 				findMatchingItems();
 				renderAllItems();
 			}
-		}
-
-		private void button2_Click_1(object sender, EventArgs e)
-		{
-			itemsToSearchFor = new();
-			saveRecipes();
-			lastCalculated = 0;
 		}
 
 
@@ -221,18 +237,6 @@ namespace nic_z_tego_nie_bd.GuiCode
 			return stronk;
 		}
 	}
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

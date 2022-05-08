@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Media;
 
 namespace nic_z_tego_nie_bd.GuiCode
 {
@@ -18,16 +19,19 @@ namespace nic_z_tego_nie_bd.GuiCode
 		public SettingsUi()
 		{
 			InitializeComponent();
-			var uisToChooseFrom = new List<string> { "AuctionHouse", "Bazaar","Item Crafts", "Settings" };
+			var uisToChooseFrom = new List<string> { "AuctionHouse", "Bazaar","Item Crafts", "Settings", "Better AH" };
 			comboBoxChoooseStartUi.DataSource = uisToChooseFrom;
 			comboBoxChoooseStartUi.SelectedItem = Properties.Settings.Default.Starting_Ui;
 			if (uisToChooseFrom.Contains(comboBoxChoooseStartUi.SelectedItem)==false) { comboBoxChoooseStartUi.SelectedItem = uisToChooseFrom.First(s => s.Contains("Settings")); }
+			checkBoxPlaySound.Checked = Properties.Settings.Default.playSound;
+			numericUpDownIconsSize.Value = Properties.Settings.Default.itemsUCsize;
 			itemRecipe = new();
 			itemRecipe.reqItems = new();
 			generateComboItemToCraftList();
 			comboBoxAddItemToRecipe.DisplayMember = "name";
 			comboBoxAddItemToRecipe.ValueMember = "id";
 			comboBoxAddItemToRecipe.DataSource = Properties.AllItemsREPO.itemRepo.items;
+			this.checkBoxPlaySound.CheckedChanged += new System.EventHandler(this.checkBoxPlaySound_CheckedChanged);
 		}
 
 
@@ -124,6 +128,8 @@ namespace nic_z_tego_nie_bd.GuiCode
 		{
 			var startUi = comboBoxChoooseStartUi.SelectedItem.ToString();
 			Properties.Settings.Default.Starting_Ui = startUi;
+			Properties.Settings.Default.playSound = checkBoxPlaySound.Checked;
+			Properties.Settings.Default.itemsUCsize = (uint)numericUpDownIconsSize.Value;
 			Properties.Settings.Default.Save();
 			if (buttonSaveItem.Enabled)
 			{
@@ -172,6 +178,24 @@ namespace nic_z_tego_nie_bd.GuiCode
 		{
 			comboBoxAddItemToRecipe.DisplayMember = checkBoxUseItemID.Checked?"id":"name";
 		}
+
+		private void buttonSwitch_Click(object sender, EventArgs e)
+		{
+			Point location = groupBox1.Location;
+			groupBox1.Hide();
+			groupBox1.Enabled = false;
+			var cos = new AddItemUC();
+			cos.Location = location;
+			this.Controls.Add(cos);
+			cos.BringToFront();
+		}
+
+		private void checkBoxPlaySound_CheckedChanged(object sender, EventArgs e)
+		{
+			SoundPlayer soundPlayer = new(Properties.Resources.notify_sound);
+			soundPlayer.Play();
+			Properties.Settings.Default.playSound = checkBoxPlaySound.Checked;
+		}
 	}
 
 
@@ -193,8 +217,9 @@ namespace nic_z_tego_nie_bd.GuiCode
 			try
 			{
 				items = loadRecipes();
+				if (items == null) throw new Exception();
 			}
-			catch
+			catch (Exception e)
 			{
 				items = new();
 			}

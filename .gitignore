@@ -361,3 +361,4 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/nic_z_tego_nie_bd/Properties/PublishProfiles

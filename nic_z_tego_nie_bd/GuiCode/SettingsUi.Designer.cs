@@ -48,8 +48,13 @@ namespace nic_z_tego_nie_bd.GuiCode
 			this.textBoxRecipe = new System.Windows.Forms.TextBox();
 			this.labelItemsReq = new System.Windows.Forms.Label();
 			this.comboBoxItemToCraft = new System.Windows.Forms.ComboBox();
+			this.textBox1 = new System.Windows.Forms.TextBox();
+			this.numericUpDownIconsSize = new System.Windows.Forms.NumericUpDown();
+			this.checkBoxPlaySound = new System.Windows.Forms.CheckBox();
+			this.buttonSwitch = new System.Windows.Forms.Button();
 			this.groupBox1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownItemToAddAmount)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownIconsSize)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// comboBoxChoooseStartUi
@@ -105,10 +110,10 @@ namespace nic_z_tego_nie_bd.GuiCode
 			this.groupBox1.Controls.Add(this.textBoxRecipe);
 			this.groupBox1.Controls.Add(this.labelItemsReq);
 			this.groupBox1.Controls.Add(this.comboBoxItemToCraft);
-			this.groupBox1.Location = new System.Drawing.Point(0, 148);
+			this.groupBox1.Location = new System.Drawing.Point(0, 157);
 			this.groupBox1.Name = "groupBox1";
 			this.groupBox1.Padding = new System.Windows.Forms.Padding(10);
-			this.groupBox1.Size = new System.Drawing.Size(636, 263);
+			this.groupBox1.Size = new System.Drawing.Size(636, 254);
 			this.groupBox1.TabIndex = 3;
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "Items To Craft Config";
@@ -265,7 +270,7 @@ namespace nic_z_tego_nie_bd.GuiCode
 			this.textBoxRecipe.Multiline = true;
 			this.textBoxRecipe.Name = "textBoxRecipe";
 			this.textBoxRecipe.ReadOnly = true;
-			this.textBoxRecipe.Size = new System.Drawing.Size(198, 175);
+			this.textBoxRecipe.Size = new System.Drawing.Size(198, 166);
 			this.textBoxRecipe.TabIndex = 7;
 			// 
 			// labelItemsReq
@@ -292,11 +297,69 @@ namespace nic_z_tego_nie_bd.GuiCode
 			this.comboBoxItemToCraft.TabIndex = 5;
 			this.comboBoxItemToCraft.SelectionChangeCommitted += new System.EventHandler(this.comboBoxItemToCraft_SelectionChangeCommitted);
 			// 
+			// textBox1
+			// 
+			this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			this.textBox1.Cursor = System.Windows.Forms.Cursors.Arrow;
+			this.textBox1.Location = new System.Drawing.Point(139, 19);
+			this.textBox1.Name = "textBox1";
+			this.textBox1.ReadOnly = true;
+			this.textBox1.Size = new System.Drawing.Size(121, 16);
+			this.textBox1.TabIndex = 4;
+			this.textBox1.Text = "Item Icons Size";
+			this.textBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+			// 
+			// numericUpDownIconsSize
+			// 
+			this.numericUpDownIconsSize.Location = new System.Drawing.Point(139, 41);
+			this.numericUpDownIconsSize.Maximum = new decimal(new int[] {
+            68,
+            0,
+            0,
+            0});
+			this.numericUpDownIconsSize.Minimum = new decimal(new int[] {
+            34,
+            0,
+            0,
+            0});
+			this.numericUpDownIconsSize.Name = "numericUpDownIconsSize";
+			this.numericUpDownIconsSize.Size = new System.Drawing.Size(121, 23);
+			this.numericUpDownIconsSize.TabIndex = 23;
+			this.numericUpDownIconsSize.Value = new decimal(new int[] {
+            34,
+            0,
+            0,
+            0});
+			// 
+			// checkBoxPlaySound
+			// 
+			this.checkBoxPlaySound.AutoSize = true;
+			this.checkBoxPlaySound.Location = new System.Drawing.Point(266, 43);
+			this.checkBoxPlaySound.Name = "checkBoxPlaySound";
+			this.checkBoxPlaySound.Size = new System.Drawing.Size(85, 19);
+			this.checkBoxPlaySound.TabIndex = 25;
+			this.checkBoxPlaySound.Text = "Play Sound";
+			this.checkBoxPlaySound.UseVisualStyleBackColor = true;
+			// 
+			// buttonSwitch
+			// 
+			this.buttonSwitch.Location = new System.Drawing.Point(463, 128);
+			this.buttonSwitch.Name = "buttonSwitch";
+			this.buttonSwitch.Size = new System.Drawing.Size(161, 23);
+			this.buttonSwitch.TabIndex = 26;
+			this.buttonSwitch.Text = "Switch to Better AH config";
+			this.buttonSwitch.UseVisualStyleBackColor = true;
+			this.buttonSwitch.Click += new System.EventHandler(this.buttonSwitch_Click);
+			// 
 			// SettingsUi
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(636, 411);
+			this.Controls.Add(this.buttonSwitch);
+			this.Controls.Add(this.checkBoxPlaySound);
+			this.Controls.Add(this.numericUpDownIconsSize);
+			this.Controls.Add(this.textBox1);
 			this.Controls.Add(this.buttonSave);
 			this.Controls.Add(this.textBoxChooseUi);
 			this.Controls.Add(this.comboBoxChoooseStartUi);
@@ -307,6 +370,7 @@ namespace nic_z_tego_nie_bd.GuiCode
 			this.groupBox1.ResumeLayout(false);
 			this.groupBox1.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownItemToAddAmount)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownIconsSize)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -333,5 +397,9 @@ namespace nic_z_tego_nie_bd.GuiCode
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Button buttonSaveItem;
 		private System.Windows.Forms.CheckBox checkBoxUseItemID;
+		private System.Windows.Forms.TextBox textBox1;
+		private System.Windows.Forms.NumericUpDown numericUpDownIconsSize;
+		private System.Windows.Forms.CheckBox checkBoxPlaySound;
+		private System.Windows.Forms.Button buttonSwitch;
 	}
 }

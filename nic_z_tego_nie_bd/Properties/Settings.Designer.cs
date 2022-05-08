@@ -70,5 +70,38 @@ namespace nic_z_tego_nie_bd.Properties {
                 this["BetterAHQuery"] = value;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("null")]
+        public string easterEggs {
+            get {
+                return ((string)(this["easterEggs"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("34")]
+        public uint itemsUCsize {
+            get {
+                return ((uint)(this["itemsUCsize"]));
+            }
+            set {
+                this["itemsUCsize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool playSound {
+            get {
+                return ((bool)(this["playSound"]));
+            }
+            set {
+                this["playSound"] = value;
+            }
+        }
     }
 }
