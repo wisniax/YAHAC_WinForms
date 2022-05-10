@@ -30,9 +30,9 @@ namespace nic_z_tego_nie_bd
 		{
 			listViewItems.BeginUpdate();
 			//listViewItems.Items.Clear();
-			guilastUpdated = AuctionHouseInstance.ahCache.lastUpdated;
+			guilastUpdated = MainGui.AHInstance.ahCache.lastUpdated;
 			if (Properties.AllItemsREPO.itemRepo.success != true) return;
-			var sorted = AuctionHouseInstance.ahCache.items.OrderBy(x => Properties.AllItemsREPO.IDtoNAME(x.Key));
+			var sorted = MainGui.AHInstance.ahCache.items.OrderBy(x => Properties.AllItemsREPO.IDtoNAME(x.Key));
 			foreach (var item in sorted)
 			{
 				var addedID = listViewItems.Items.Add(Properties.AllItemsREPO.IDtoNAME(item.Key));
@@ -74,7 +74,7 @@ namespace nic_z_tego_nie_bd
 
 		private void timer1_Tick(object sender, EventArgs e)
 		{
-			if ((guilastUpdated != AuctionHouseInstance.ahCache.lastUpdated) && (AuctionHouseInstance.ahCache.success == true))
+			if ((guilastUpdated != MainGui.AHInstance.ahCache.lastUpdated) && (MainGui.AHInstance.ahCache.success == true))
 			{
 				timer1.Stop();
 				listBoxWrite();
@@ -101,7 +101,7 @@ namespace nic_z_tego_nie_bd
 			//render item of given id to list
 			try
 			{
-				var listedItems = AuctionHouseInstance.ahCache.items[selectedItem];
+				var listedItems = MainGui.AHInstance.ahCache.items[selectedItem];
 				listedItems.Sort((x, y) => x.starting_bid.CompareTo(y.starting_bid));
 				foreach (var item in listedItems)
 				{
@@ -116,9 +116,9 @@ namespace nic_z_tego_nie_bd
 
 		private void timer2_Tick(object sender, EventArgs e)
 		{
-			if (AuctionHouseInstance.ahCache.lastUpdated != guilastUpdated)
+			if (MainGui.AHInstance.ahCache.lastUpdated != guilastUpdated)
 			{
-				guilastUpdated = AuctionHouseInstance.ahCache.lastUpdated;
+				guilastUpdated = MainGui.AHInstance.ahCache.lastUpdated;
 				showExtraInfo();
 			}
 		}
@@ -142,10 +142,10 @@ namespace nic_z_tego_nie_bd
 
 
 	//AH MAIN CLASS
-	public static class AuctionHouseInstance
+	public class AuctionHouseInstance : IAuctionHouse
 	{
-		public static auctionHouse ahCache;
-		static AuctionHouseInstance()
+		public auctionHouse ahCache { get; set; }
+		public AuctionHouseInstance()
 		{
 			ahCache = new auctionHouse();
 			ahCache.items = new Dictionary<string, List<AuctionHouseFetcher.itemData>>();
@@ -153,15 +153,21 @@ namespace nic_z_tego_nie_bd
 		}
 
 		//Main AH caching function
-		public static async Task refresh()
+		public void hardrefresh()
 		{
+			return;
+		}
+		public async Task<bool> refresh()
+		{
+			if (DateTimeOffset.Now.ToUnixTimeMilliseconds() - ahCache.lastUpdated <= 55000) return false;
 			var ahFetcher = new AuctionHouseFetcher();
 			var ahFetchTask = await ahFetcher.refresh();
-			if (ahFetchTask == false) return;
+			if (ahFetchTask == false) return false;
 			auctionHouse ahCacheTemp = new auctionHouse();
 			ahCacheTemp.items = new Dictionary<string, List<AuctionHouseFetcher.itemData>>();
 			ahCacheTemp.totalAuctions = ahFetcher.AHpages[0].totalAuctions;
 			ahCacheTemp.lastUpdated = ahFetcher.AHpages[0].lastUpdated;
+			ahCacheTemp.age = DateTimeOffset.Now.ToUnixTimeMilliseconds();
 			ahCacheTemp.totalPages = ahFetcher.AHpages[0].totalPages;
 
 
@@ -201,6 +207,7 @@ namespace nic_z_tego_nie_bd
 			ahCacheTemp.success = ahFetcher.AHpages[0].success;
 			//var cos = from entry in ahCacheTemp.items orderby Properties.AllItemsREPO.IDtoNAME(entry.Key) ascending select entry; //ahCacheTemp.items.OrderByDescending(x => Properties.AllItemsREPO.IDtoNAME(x.Key));
 			ahCache = ahCacheTemp;
+			return true;
 		}
 
 		//Function to prepare page for export to dictionary
@@ -210,8 +217,8 @@ namespace nic_z_tego_nie_bd
 
 
 			//All the reforges in game
-			var swordReforges = new[] { "Gentle", "Odd", "Fast", "Fair", "Epic", "Sharp", "Sharp", "Spicy", 
-				"Legendary", "Dirty", "Fabled", "Suspicious", "Gilded", "Warped", "Withered", "Bulky", 
+			var swordReforges = new[] { "Gentle", "Odd", "Fast", "Fair", "Epic", "Sharp", "Sharp", "Spicy",
+				"Legendary", "Dirty", "Fabled", "Suspicious", "Gilded", "Warped", "Withered", "Bulky",
 				"Heroic", "Forceful"};
 
 			var rodReforges = new[] { "Salty", "Treacherous", "Stiff", "Lucky" };
@@ -239,7 +246,7 @@ namespace nic_z_tego_nie_bd
 				item.dictKey = item.item_name;
 
 				//Set dict key for item with matching name of the same rarity
-				item.dictKey = assignDictKey(item.item_name,item.tier);
+				item.dictKey = assignDictKey(item.item_name, item.tier);
 				if (item.dictKey != item.item_name) continue;
 
 				//Set dict key for item witch matching name of the 1 lower rarity
@@ -277,19 +284,19 @@ namespace nic_z_tego_nie_bd
 					case "weapon":
 						item.dictKey = Regex.Replace(item.dictKey, @"[^\u0020-\u007E]", string.Empty);
 						item.dictKey = item.dictKey.Trim();
-					
+
 						if ((swordReforges.Any(s => item.dictKey.Contains(s)) == true) || (bowReforges.Any(s => item.dictKey.Contains(s)) == true))
 						{
 							int spcIndex = item.dictKey.IndexOf(' ');
 							item.dictKey = item.dictKey.Remove(0, spcIndex + 1);
 						}
-					
+
 						break;
-					
+
 					case "armor": //BUG: Wise Dragon Armor -> Dragon Armor --> Partialy solved (added pre item dict assign)
 						item.dictKey = Regex.Replace(item.dictKey, @"[^\u0020-\u007E]", string.Empty);
 						item.dictKey = item.dictKey.Trim();
-					
+
 						if (armorReforges.Any(s => item.dictKey.Contains(s)) == true)
 						{
 							int spcIndex = item.dictKey.IndexOf(' ');
@@ -301,16 +308,16 @@ namespace nic_z_tego_nie_bd
 							spcIndex = item.dictKey.IndexOf(' ', spcIndex + 1);
 							item.dictKey = item.dictKey.Remove(0, spcIndex + 1);
 						}
-					
+
 						break;
-					
+
 					case "accessories":
 						if (AccessoriesReforges.Any(s => item.dictKey.Contains(s)) == true)
 						{
 							int spcIndex = item.dictKey.IndexOf(' ');
 							item.dictKey = item.dictKey.Remove(0, spcIndex + 1);
 						}
-					
+
 						break;
 
 					case "consumables":
@@ -334,8 +341,8 @@ namespace nic_z_tego_nie_bd
 						item.dictKey = "Unsorted :(";
 						break;
 				}//ENDOF switch
-				//var repoElem = Properties.AllItemsREPO.itemRepo.items.Find(matchID => matchID.name == item.dictKey);
-				//if (repoElem != null) item.dictKey = repoElem.name;
+				 //var repoElem = Properties.AllItemsREPO.itemRepo.items.Find(matchID => matchID.name == item.dictKey);
+				 //if (repoElem != null) item.dictKey = repoElem.name;
 			}//ENDOF foreach item
 		}//ENDOF function
 
@@ -354,12 +361,13 @@ namespace nic_z_tego_nie_bd
 
 
 
-		public struct auctionHouse
+		public class auctionHouse
 		{
 			public bool success { get; set; }
 			public UInt32 totalAuctions { get; set; }
 			public UInt16 totalPages { get; set; }
 			public long lastUpdated { get; set; }
+			public long age { get; set; }
 			public Dictionary<string, List<AuctionHouseFetcher.itemData>> items { get; set; }
 		}
 
@@ -390,7 +398,7 @@ namespace nic_z_tego_nie_bd
 			AHpages.Add(firstPage);
 			page1TimeStamp = AHpages[0].lastUpdated;
 			int page1age = (int)(DateTimeOffset.Now.ToUnixTimeMilliseconds() - page1TimeStamp);
-			if (page1age < 55000)
+			if (page1age < 60000)
 			{
 
 				//Crate list of TO DO tasks
@@ -451,9 +459,10 @@ namespace nic_z_tego_nie_bd
 			public string uuid { get; set; }
 			public string auctioneer { get; set; }
 			public string item_lore { get; set; }
-			public UInt64 start { get; set; }
-			public UInt64 end { get; set; }
+			public long start { get; set; }
+			public long end { get; set; }
 			public string item_name { get; set; }
+			public string item_bytes { get; set; }
 			public string tier { get; set; }
 			public string category { get; set; }
 			public string dictKey { get; set; }

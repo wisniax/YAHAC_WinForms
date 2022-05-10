@@ -106,5 +106,17 @@ namespace nic_z_tego_nie_bd.Properties {
                 this["playSound"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3000")]
+        public int tasks {
+            get {
+                return ((int)(this["tasks"]));
+            }
+            set {
+                this["tasks"] = value;
+            }
+        }
     }
 }

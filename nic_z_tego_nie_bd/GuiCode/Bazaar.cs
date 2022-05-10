@@ -182,13 +182,18 @@ namespace nic_z_tego_nie_bd
 		{
 			httpCliento = new HttpCliento();
 			bazaarObj = new BazaarObj();
+			bazaarObj.age = 0;
 		}
 		static public void refresh()
 		{
+			if ((DateTimeOffset.Now.ToUnixTimeMilliseconds() - BazaarCheckup.bazaarObj.age < 12500) && DateTimeOffset.Now.ToUnixTimeMilliseconds() - bazaarObj.lastUpdated < 25000) return;
 			var bzTask = httpCliento.GetAsync(bzUrl);
 			var cachedBz = bzTask.Result.Content.ReadAsStringAsync();
 			bzString = cachedBz.Result;
-			var bazaarObjtemp = deserializeBz(bzString);
+			BazaarObj bazaarObjtemp = new();
+			var age = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+			bazaarObjtemp = deserializeBz(bzString);
+			bazaarObjtemp.age = age;
 			if (Properties.AllItemsREPO.itemRepo.success != true) return;
 			foreach (var item in bazaarObjtemp.products)
 			{
@@ -207,6 +212,7 @@ namespace nic_z_tego_nie_bd
 		{
 			public bool success { get; set; }
 			public long lastUpdated { get; set; }
+			public long age { get; set; }
 			public Dictionary<string, BazaarItemDef> products { get; set; }
 		}
 		public class BazaarItemDef

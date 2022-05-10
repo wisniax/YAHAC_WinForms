@@ -44,7 +44,7 @@ namespace nic_z_tego_nie_bd
 			}
 			//flowLayoutPanel1.VerticalScroll.Value = tempLocation;
 			flowLayoutPanel1.AutoScrollPosition = new Point(0,Math.Abs(tempLocation));
-			timestampAH = AuctionHouseInstance.ahCache.lastUpdated;
+			timestampAH = MainGui.AHInstance.ahCache.lastUpdated;
 			timestampBZ = BazaarCheckup.bazaarObj.lastUpdated;
 		}
 		private void refreshAllUis()
@@ -53,13 +53,13 @@ namespace nic_z_tego_nie_bd
 			{
 				item.refreshData();
 			}
-			timestampAH = AuctionHouseInstance.ahCache.lastUpdated;
+			timestampAH = MainGui.AHInstance.ahCache.lastUpdated;
 			timestampBZ = BazaarCheckup.bazaarObj.lastUpdated;
 		}
 
 		private void timer1_Tick(object sender, EventArgs e)
 		{
-			if (timestampAH!= AuctionHouseInstance.ahCache.lastUpdated) //Check only for ah bc update takes too long and does not remember current pos :(
+			if (timestampAH!= MainGui.AHInstance.ahCache.lastUpdated) //Check only for ah bc update takes too long and does not remember current pos :(
 			{
 				timer1.Stop();
 				refreshAllUis();

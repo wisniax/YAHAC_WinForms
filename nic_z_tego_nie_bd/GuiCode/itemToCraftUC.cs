@@ -51,10 +51,10 @@ namespace nic_z_tego_nie_bd.GuiCode
 			UInt64 buyViaOfferPrice = 0;
 			decimal expectedProfit = 0;
 			decimal interest = 0;
-			while (BazaarCheckup.bazaarObj.success != true || AuctionHouseInstance.ahCache.success != true) { return; }
+			while (BazaarCheckup.bazaarObj.success != true || MainGui.AHInstance.ahCache.success != true) { return; }
 
 			ItemsToCraft.Source source = BazaarCheckup.bazaarObj.products.ContainsKey(itemRecipe.item_dictKey) == true ? ItemsToCraft.Source.Bazaar : ItemsToCraft.Source.AuctionHouse;
-			if (source != ItemsToCraft.Source.AuctionHouse || AuctionHouseInstance.ahCache.items.ContainsKey(itemRecipe.item_dictKey) == true)
+			if (source != ItemsToCraft.Source.AuctionHouse || MainGui.AHInstance.ahCache.items.ContainsKey(itemRecipe.item_dictKey) == true)
 			{ //Add something if item is not found HERE
 				switch (source)
 				{
@@ -62,8 +62,8 @@ namespace nic_z_tego_nie_bd.GuiCode
 						sellPrice = (BazaarCheckup.bazaarObj.products[itemRecipe.item_dictKey].buy_summary[0].pricePerUnit - 0.1M) * numericUpDownMultipl.Value;
 						break;
 					case ItemsToCraft.Source.AuctionHouse:
-						AuctionHouseInstance.ahCache.items[itemRecipe.item_dictKey].Sort((a, b) => a.starting_bid.CompareTo(b.starting_bid));
-						sellPrice = ((decimal)AuctionHouseInstance.ahCache.items[itemRecipe.item_dictKey][0].starting_bid - 1) * numericUpDownMultipl.Value;
+						MainGui.AHInstance.ahCache.items[itemRecipe.item_dictKey].Sort((a, b) => a.starting_bid.CompareTo(b.starting_bid));
+						sellPrice = ((decimal)MainGui.AHInstance.ahCache.items[itemRecipe.item_dictKey][0].starting_bid - 1) * numericUpDownMultipl.Value;
 						break;
 				}
 			}
@@ -78,7 +78,7 @@ namespace nic_z_tego_nie_bd.GuiCode
 			{
 				var reqItemAmountLeft = reqItem.amount * numericUpDownMultipl.Value;
 				ItemsToCraft.Source reqItemSource = BazaarCheckup.bazaarObj.products.ContainsKey(reqItem.item_dictKey) == true ? ItemsToCraft.Source.Bazaar : ItemsToCraft.Source.AuctionHouse;
-				if (reqItemSource == ItemsToCraft.Source.AuctionHouse && AuctionHouseInstance.ahCache.items.ContainsKey(reqItem.item_dictKey) == false) return; //Add something if item is not found HERE
+				if (reqItemSource == ItemsToCraft.Source.AuctionHouse && MainGui.AHInstance.ahCache.items.ContainsKey(reqItem.item_dictKey) == false) return; //Add something if item is not found HERE
 				switch (reqItemSource)
 				{
 					case ItemsToCraft.Source.Bazaar:
@@ -95,7 +95,7 @@ namespace nic_z_tego_nie_bd.GuiCode
 
 						break;
 					case ItemsToCraft.Source.AuctionHouse:
-						var ahOrders = AuctionHouseInstance.ahCache.items[reqItem.item_dictKey]; //BZ list regarding this specific item
+						var ahOrders = MainGui.AHInstance.ahCache.items[reqItem.item_dictKey]; //BZ list regarding this specific item
 						ahOrders.Sort((a, b) => a.starting_bid.CompareTo(b.starting_bid));
 						for (int i = 0; reqItemAmountLeft > 0; i++)
 						{

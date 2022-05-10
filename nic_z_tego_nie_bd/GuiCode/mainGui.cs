@@ -12,6 +12,7 @@ using System.Net;
 using System.IO;
 using nic_z_tego_nie_bd.GuiCode;
 using System.Configuration;
+using System.Security.Cryptography;
 
 namespace nic_z_tego_nie_bd
 {
@@ -19,10 +20,14 @@ namespace nic_z_tego_nie_bd
 	//https://stackoverflow.com/questions/661561/how-do-i-update-the-gui-from-another-thread
 	//https://docs.microsoft.com/pl-pl/dotnet/api/system.componentmodel.backgroundworker?view=net-6.0
 	//https://docs.microsoft.com/en-us/dotnet/api/system.windows.forms.control.invoke?redirectedfrom=MSDN&view=windowsdesktop-6.0#System_Windows_Forms_Control_Invoke_System_Delegate_
+
+
+
 	public partial class MainGui : Form
 	{
 		public AuctionHouseFetcher auctionHouseFetcher;
 		//public Settings settings;
+		static public IAuctionHouse AHInstance { get; private set; }
 
 		public MainGui()
 		{
@@ -33,6 +38,10 @@ namespace nic_z_tego_nie_bd
 				Properties.Settings.Default.UpgradeRequired = false;
 				Properties.Settings.Default.Save();
 			}
+			if (MainGui.Encode(Properties.Settings.Default.easterEggs) == "6582df3932a187c34d14e9dd9d47317732e675030f4663c043aa3692983609b9") AHInstance = new AuctionHouseAlpha();
+			else AHInstance = new AuctionHouseInstance();
+
+
 
 			//Regular stuff
 			InitializeComponent();
@@ -79,27 +88,23 @@ namespace nic_z_tego_nie_bd
 			this.mainPanel.Tag = form;
 			form.Show();
 		}
+
+		public static async Task awaitTasks()
+		{
+			await Task.Delay(Properties.Settings.Default.tasks);
+		}
+
 		private async void timer1_Tick(object sender, EventArgs e)
 		{
-			if (DateTimeOffset.Now.ToUnixTimeMilliseconds() - BazaarCheckup.bazaarObj.lastUpdated > 12000)
-			{
 				timerBZ.Stop();
 				await Task.Run(() => BazaarCheckup.refresh());
 				timerBZ.Start();
-			}
 		}
 		private async void timerAH_Tick(object sender, EventArgs e)
 		{
-			if (DateTimeOffset.Now.ToUnixTimeMilliseconds() - AuctionHouseInstance.ahCache.lastUpdated > 65000)
-			{
-				timerAH.Stop();
-				try
-				{
-					await Task.Run(() => AuctionHouseInstance.refresh());
-				}
-				catch { }
-				timerAH.Start();
-			}
+			timerAH.Stop();
+			var cos = await AHInstance.refresh();
+			timerAH.Start();
 		}
 
 		private void buttonAh_Click(object sender, EventArgs e)
@@ -109,7 +114,7 @@ namespace nic_z_tego_nie_bd
 
 		private void timerRefScreenTimer_Tick(object sender, EventArgs e)
 		{
-			decimal ahTime = (Decimal)(DateTimeOffset.Now.ToUnixTimeMilliseconds() - AuctionHouseInstance.ahCache.lastUpdated) / 1000;
+			decimal ahTime = (Decimal)(DateTimeOffset.Now.ToUnixTimeMilliseconds() - AHInstance.ahCache.lastUpdated) / 1000;
 			decimal bzTime = (Decimal)(DateTimeOffset.Now.ToUnixTimeMilliseconds() - BazaarCheckup.bazaarObj.lastUpdated) / 1000;
 			int reqInLastMin = HttpCliento.reqInLastMinute;
 			ahAgeBox.Text = ahTime.ToString("F1");
@@ -135,6 +140,28 @@ namespace nic_z_tego_nie_bd
 		private void buttonBetterAh_Click(object sender, EventArgs e)
 		{
 			loadForm(new BetterAH());
+		}
+
+		private void ahAgeBox_DoubleClick(object sender, EventArgs e)
+		{
+			AHInstance.hardrefresh();
+		}
+		public static string Encode(string rawData)
+		{
+			// Create a SHA256   
+			using (SHA256 sha256Hash = SHA256.Create())
+			{
+				// ComputeHash - returns byte array  
+				byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(rawData));
+
+				// Convert byte array to a string   
+				StringBuilder builder = new StringBuilder();
+				for (int i = 0; i < bytes.Length; i++)
+				{
+					builder.Append(bytes[i].ToString("x2"));
+				}
+				return builder.ToString();
+			}
 		}
 	}//END OF CLASS
 }//END OF NAMESPACE

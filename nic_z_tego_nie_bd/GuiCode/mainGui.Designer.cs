@@ -32,6 +32,7 @@ namespace nic_z_tego_nie_bd
 			this.components = new System.ComponentModel.Container();
 			this.timerBZ = new System.Windows.Forms.Timer(this.components);
 			this.panelSideMenu = new System.Windows.Forms.Panel();
+			this.buttonBetterAh = new System.Windows.Forms.Button();
 			this.button1 = new System.Windows.Forms.Button();
 			this.buttonSettings = new System.Windows.Forms.Button();
 			this.buttonAh = new System.Windows.Forms.Button();
@@ -42,7 +43,6 @@ namespace nic_z_tego_nie_bd
 			this.apiReqBox = new System.Windows.Forms.TextBox();
 			this.mainPanel = new System.Windows.Forms.Panel();
 			this.timerRefScreenTimer = new System.Windows.Forms.Timer(this.components);
-			this.buttonBetterAh = new System.Windows.Forms.Button();
 			this.panelSideMenu.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -68,6 +68,21 @@ namespace nic_z_tego_nie_bd
 			this.panelSideMenu.Padding = new System.Windows.Forms.Padding(3);
 			this.panelSideMenu.Size = new System.Drawing.Size(150, 411);
 			this.panelSideMenu.TabIndex = 0;
+			// 
+			// buttonBetterAh
+			// 
+			this.buttonBetterAh.BackColor = System.Drawing.SystemColors.AppWorkspace;
+			this.buttonBetterAh.Dock = System.Windows.Forms.DockStyle.Top;
+			this.buttonBetterAh.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this.buttonBetterAh.Font = new System.Drawing.Font("Sigmar One", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.buttonBetterAh.Location = new System.Drawing.Point(3, 123);
+			this.buttonBetterAh.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
+			this.buttonBetterAh.Name = "buttonBetterAh";
+			this.buttonBetterAh.Size = new System.Drawing.Size(144, 40);
+			this.buttonBetterAh.TabIndex = 4;
+			this.buttonBetterAh.Text = "Better AH";
+			this.buttonBetterAh.UseVisualStyleBackColor = false;
+			this.buttonBetterAh.Click += new System.EventHandler(this.buttonBetterAh_Click);
 			// 
 			// button1
 			// 
@@ -148,6 +163,7 @@ namespace nic_z_tego_nie_bd
 			this.ahAgeBox.TabIndex = 3;
 			this.ahAgeBox.Text = "AH";
 			this.ahAgeBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+			this.ahAgeBox.DoubleClick += new System.EventHandler(this.ahAgeBox_DoubleClick);
 			// 
 			// bzAgeBox
 			// 
@@ -193,21 +209,6 @@ namespace nic_z_tego_nie_bd
 			this.timerRefScreenTimer.Enabled = true;
 			this.timerRefScreenTimer.Tick += new System.EventHandler(this.timerRefScreenTimer_Tick);
 			// 
-			// buttonBetterAh
-			// 
-			this.buttonBetterAh.BackColor = System.Drawing.SystemColors.AppWorkspace;
-			this.buttonBetterAh.Dock = System.Windows.Forms.DockStyle.Top;
-			this.buttonBetterAh.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.buttonBetterAh.Font = new System.Drawing.Font("Sigmar One", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-			this.buttonBetterAh.Location = new System.Drawing.Point(3, 123);
-			this.buttonBetterAh.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
-			this.buttonBetterAh.Name = "buttonBetterAh";
-			this.buttonBetterAh.Size = new System.Drawing.Size(144, 40);
-			this.buttonBetterAh.TabIndex = 4;
-			this.buttonBetterAh.Text = "Better AH";
-			this.buttonBetterAh.UseVisualStyleBackColor = false;
-			this.buttonBetterAh.Click += new System.EventHandler(this.buttonBetterAh_Click);
-			// 
 			// MainGui
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -219,7 +220,7 @@ namespace nic_z_tego_nie_bd
 			this.Controls.Add(this.bzAgeBox);
 			this.Controls.Add(this.mainPanel);
 			this.Name = "MainGui";
-			this.Text = "Form1";
+			this.Text = "YAHAC";
 			this.panelSideMenu.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();

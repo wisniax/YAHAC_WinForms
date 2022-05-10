@@ -39,24 +39,6 @@ namespace nic_z_tego_nie_bd.GuiCode
 			timer1.Start();
 		}
 
-		static string Encode(string rawData)
-		{
-			// Create a SHA256   
-			using (SHA256 sha256Hash = SHA256.Create())
-			{
-				// ComputeHash - returns byte array  
-				byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(rawData));
-
-				// Convert byte array to a string   
-				StringBuilder builder = new StringBuilder();
-				for (int i = 0; i < bytes.Length; i++)
-				{
-					builder.Append(bytes[i].ToString("x2"));
-				}
-				return builder.ToString();
-			}
-		}
-
 		void findMatchingItems()
 		{   //THIS WAY FINDING ITEMS IS 12 times faster for me... Wonder whyy (Totally not 12 threads CPU)
 			List<AuctionHouseFetcher.itemData> tempmatchingItems = new();
@@ -69,7 +51,7 @@ namespace nic_z_tego_nie_bd.GuiCode
 			Task.WaitAll(tasks.ToArray());
 			tempmatchingItems.Sort((a, b) => a.starting_bid.CompareTo(b.starting_bid));
 			matchingItems = tempmatchingItems;
-			lastCalculated = AuctionHouseInstance.ahCache.lastUpdated;
+			lastCalculated = MainGui.AHInstance.ahCache.lastUpdated;
 		}
 
 		void checkIfItemsMatch(ItemToSearchFor item, List<AuctionHouseFetcher.itemData> tempmatchingItems)
@@ -77,8 +59,8 @@ namespace nic_z_tego_nie_bd.GuiCode
 
 			{
 				//Get list of items on AH that match ID
-				if (!AuctionHouseInstance.ahCache.items.ContainsKey(item.item_dictKey)) { return; }
-				var itemsToSearchOn = AuctionHouseInstance.ahCache.items[item.item_dictKey];
+				if (!MainGui.AHInstance.ahCache.items.ContainsKey(item.item_dictKey)) { return; }
+				var itemsToSearchOn = MainGui.AHInstance.ahCache.items[item.item_dictKey];
 
 				//Get the ones that match price and query
 				foreach (var entry in itemsToSearchOn)
@@ -131,7 +113,7 @@ namespace nic_z_tego_nie_bd.GuiCode
 			labelItemNameTip.BringToFront();
 			if (Properties.Settings.Default.playSound) playSound();
 			var cos = Properties.Settings.Default.easterEggs;
-			if (Encode(Properties.Settings.Default.easterEggs) == "6582df3932a187c34d14e9dd9d47317732e675030f4663c043aa3692983609b9") JadeRald();
+			if (MainGui.Encode(Properties.Settings.Default.easterEggs) == "6582df3932a187c34d14e9dd9d47317732e675030f4663c043aa3692983609b9") JadeRald();
 		}
 		void playSound()
 		{
@@ -218,13 +200,14 @@ namespace nic_z_tego_nie_bd.GuiCode
 
 		private void timer1_Tick(object sender, EventArgs e)
 		{
-			if ((lastCalculated != AuctionHouseInstance.ahCache.lastUpdated) && AuctionHouseInstance.ahCache.lastUpdated != 0)
+			if ((lastCalculated != MainGui.AHInstance.ahCache.lastUpdated) && (MainGui.AHInstance.ahCache.lastUpdated != 0))
 			{
+				timer1.Stop();
 				findMatchingItems();
 				renderAllItems();
+				timer1.Start();
 			}
 		}
-
 
 		void saveRecipes()
 		{
@@ -238,22 +221,5 @@ namespace nic_z_tego_nie_bd.GuiCode
 			return stronk;
 		}
 
-	}
-
-
-
-	public class nbtReader
-	{
-		public nbtReader(string strong)
-		{
-			strong = @"H4sIAAAAAAAAAEWQ3U4bMRCFZxNKkwUVCXFZoeGn6g0pyfIT6F0IIJAaqCBVL6txPMlaWu9Gtpc2vEmfIO+RB0PMRmq58VjHZ75jnRigCZGJASCqQc3o6G8E7/pFmYcohnqgSR2aN0bzdUYTL66XGN5r46cZzZqw8q1w3BB1DdYWc3XhmJ8Zb2FvMe/+TDnHWVFiSk+cfw6oWARNlias0eSwK6aQMmbkAy7mdOLl7BYOrUAPqlUH26JYyglHhQ8eyTFqHjkmLww1g3V5l9XOJ5lf5B8fZfYLq0zO+NuEFE1g6yUNJQl2lm7VC8EZVQbG69KbIq9iLeclhgK25E7TaTZD+ufyFViCxot51r8fDO7vGrByR5ZhU8Q32GNKTkMMG1d/gqP/uo8hfmPVYVUtW6oKh0bVOGz0hsOH24sfw6tfjze9h0vBl6Xo+zwaj5LzRLXUqT5rHY8paVHntN1Sie50k3bC+kw1oBmMZR/ITuHDyeHxYZLg0dd2B78PAGqwerlsXOLgFXUUxnPsAQAA";
-			strong = strong.Replace(@"\u003d", "="); //Must have bc HYPIXEL :)
-			var byteArray = Convert.FromBase64String(strong);
-			MemoryStream memoryStream = new(byteArray);
-			GZipStream gZipStream = new(memoryStream, CompressionMode.Decompress, false);
-			SharpNBT.TagReader tagReader = new(gZipStream, SharpNBT.FormatOptions.BigEndian);
-			SharpNBT.TagContainer tag = tagReader.ReadTag() as SharpNBT.TagContainer;
-			tag.ToJsonString();
-		}
 	}
 }
