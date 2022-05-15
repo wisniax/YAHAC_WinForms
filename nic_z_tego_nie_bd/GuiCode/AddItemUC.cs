@@ -161,8 +161,8 @@ namespace nic_z_tego_nie_bd.GuiCode
 			{
 				newItem = new();
 				newItem.searchQueries = new();
-				numericUpDownItemPriority.Value = newItem.priority;
-				numericUpDownMaxPrice.Value = newItem.maxPrice;
+				//numericUpDownItemPriority.Value = newItem.priority;
+				//numericUpDownMaxPrice.Value = newItem.maxPrice;
 				buttonRemoveWholeSelectedItem.Enabled = false;
 				buttonSaveItem.Enabled = false;
 				buttonAddToItemReqList.Enabled = true;
