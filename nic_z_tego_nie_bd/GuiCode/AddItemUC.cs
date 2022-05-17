@@ -45,23 +45,26 @@ namespace nic_z_tego_nie_bd.GuiCode
 			Properties.Settings.Default.BetterAHQuery = stronk;
 			Properties.Settings.Default.Save();
 		}
+
 		List<BetterAH.ItemToSearchFor> loadRecipes()
 		{
 			var stronk = JsonSerializer.Deserialize<List<BetterAH.ItemToSearchFor>>(Properties.Settings.Default.BetterAHQuery);
 			return stronk;
 		}
 		//Generates combo box responsible for selecting stored item recipes
-		private void generateComboItemToCraftList()
+		private void generateComboItemToCraftList(string selectKey = null)
 		{
 			comboBoxItemToCraft.Items.Clear();
 			var recipePairs = new List<ItemRecipePair>();
-			var addNewItem = new ItemRecipePair { item_name = "Add new item", item_dictKey = "Add new item" };
+			var addNewItem = new ItemRecipePair { item_name = "Add new item", item_dictKey = "Add new item", recipe_key = "Add new item" };
 			recipePairs.Add(addNewItem);
 			if (itemsToSearchFor != null)
 			{
 				foreach (var item in itemsToSearchFor)
 				{
-					recipePairs.Add(new ItemRecipePair { item_name = Properties.AllItemsREPO.IDtoNAME(item.item_dictKey), item_dictKey = item.item_dictKey });
+					var recipePair = new ItemRecipePair { item_name = Properties.AllItemsREPO.IDtoNAME(item.item_dictKey), item_dictKey = item.item_dictKey, recipe_key = item.recipe_key };
+					if ((recipePair.recipe_key == selectKey) && (selectKey != null)) addNewItem = recipePair;
+					recipePairs.Add(recipePair);
 				}
 			}
 			comboBoxItemToCraft.DisplayMember = "item_name";
@@ -90,6 +93,25 @@ namespace nic_z_tego_nie_bd.GuiCode
 			}
 		}
 
+		private string assignNewUniqueKey(string item_dictKey)
+		{
+
+			string str = new(item_dictKey);
+			str += ':';
+			var matchingDictKeys = itemsToSearchFor.FindAll((a) => a.item_dictKey == item_dictKey);
+			int i = new();
+			while (i < matchingDictKeys.Count)
+			{
+				var tempstr = str + i.ToString();
+				if (itemsToSearchFor.Exists((a) => a.recipe_key == tempstr)) i++;
+				else break;
+			}
+
+			str += i.ToString();
+
+			return str;
+		}
+
 		///
 		///		BUTTON CLICKS
 		///
@@ -99,16 +121,20 @@ namespace nic_z_tego_nie_bd.GuiCode
 		{
 			public string item_name { get; set; }
 			public string item_dictKey { get; set; }
+			public string recipe_key { get; set; }
 		}
 
 		private void buttonSaveItem_Click_1(object sender, EventArgs e)
 		{
 			newItem.maxPrice = (uint)numericUpDownMaxPrice.Value;
 			newItem.priority = (ushort)numericUpDownItemPriority.Value;
-			if (!itemsToSearchFor.Contains(newItem))
+			if (!itemsToSearchFor.Exists((a) => a.recipe_key == newItem.recipe_key))
 			{
 				itemsToSearchFor.Add(newItem);
 			}
+
+			//if (newItem.id==0) newItem.id = itemsToSearchFor.Count((a) => a.item_dictKey == newItem.item_dictKey);
+
 			newItem = new();
 			newItem.searchQueries = new();
 			saveRecipes();
@@ -122,7 +148,8 @@ namespace nic_z_tego_nie_bd.GuiCode
 			{
 				if (!Properties.AllItemsREPO.itemRepo.items.Contains((Properties.AllItemsREPO.Item)comboBoxAddItemToRecipe.SelectedItem)) return;
 				newItem.item_dictKey = ((Properties.AllItemsREPO.Item)comboBoxAddItemToRecipe.SelectedItem).id;
-				var itemek = new ItemRecipePair { item_name = Properties.AllItemsREPO.IDtoNAME(newItem.item_dictKey), item_dictKey = newItem.item_dictKey };
+				newItem.recipe_key = assignNewUniqueKey(newItem.item_dictKey);
+				var itemek = new ItemRecipePair { item_name = Properties.AllItemsREPO.IDtoNAME(newItem.item_dictKey), item_dictKey = newItem.item_dictKey, recipe_key = newItem.recipe_key };
 				comboBoxItemToCraft.Items.Add(itemek);
 				buttonRemoveWholeSelectedItem.Enabled = true;
 				buttonSaveItem.Enabled = true;
@@ -172,7 +199,16 @@ namespace nic_z_tego_nie_bd.GuiCode
 			}
 			else
 			{
-				newItem = itemsToSearchFor.Find(a => a.item_dictKey == selectedPair.item_dictKey);
+				newItem = itemsToSearchFor.Find(a => (a.recipe_key == selectedPair.recipe_key) && a.recipe_key != null);
+
+				if (newItem == null)
+				{
+					newItem = itemsToSearchFor.Find(a => (a.item_dictKey == selectedPair.item_dictKey) && a.recipe_key == null);
+					newItem.recipe_key = assignNewUniqueKey(selectedPair.item_dictKey);
+					saveRecipes();
+					generateComboItemToCraftList(newItem.recipe_key);
+				}
+
 				if (newItem.searchQueries == null) newItem.searchQueries = new();
 				numericUpDownItemPriority.Value = newItem.priority;
 				numericUpDownMaxPrice.Value = newItem.maxPrice;

@@ -22,6 +22,7 @@ namespace nic_z_tego_nie_bd.GuiCode
 		List<ItemToSearchFor> itemsToSearchFor;
 		List<AuctionHouseFetcher.itemData> matchingItems;
 		public List<GuiCode.itemUC> itemsUi;
+		string highlitedAuction_uuid;
 		SoundPlayer soundPlayer;
 		long lastCalculated;
 
@@ -29,6 +30,7 @@ namespace nic_z_tego_nie_bd.GuiCode
 		{
 			matchingItems = new();
 			itemsUi = new();
+			highlitedAuction_uuid = new("");
 			itemsToSearchFor = loadRecipes();
 			if (itemsToSearchFor == null) itemsToSearchFor = new();
 			if (Properties.Settings.Default.playSound)
@@ -56,7 +58,6 @@ namespace nic_z_tego_nie_bd.GuiCode
 
 		void checkIfItemsMatch(ItemToSearchFor item, List<AuctionHouseFetcher.itemData> tempmatchingItems)
 		{
-
 			{
 				//Get list of items on AH that match ID
 				if (!MainGui.AHInstance.ahCache.items.ContainsKey(item.item_dictKey)) { return; }
@@ -111,12 +112,28 @@ namespace nic_z_tego_nie_bd.GuiCode
 			flowLayoutPanel1.Controls.AddRange(itemsUi.ToArray());
 			//timestampBZ = BazaarCheckup.bazaarObj.lastUpdated;
 			labelItemNameTip.BringToFront();
-			if (Properties.Settings.Default.playSound) playSound();
-			var cos = Properties.Settings.Default.easterEggs;
-			if (MainGui.Encode(Properties.Settings.Default.easterEggs) == "6582df3932a187c34d14e9dd9d47317732e675030f4663c043aa3692983609b9") JadeRald();
+			var temp_uuid = getHighestPrio_uuid();
+			if (Properties.Settings.Default.playSound) playSound(temp_uuid);
+			if (MainGui.Encode(Properties.Settings.Default.easterEggs) == "6582df3932a187c34d14e9dd9d47317732e675030f4663c043aa3692983609b9") JadeRald(temp_uuid);
+			highlitedAuction_uuid = temp_uuid;
 		}
-		void playSound()
+		string getHighestPrio_uuid()
 		{
+			var lista = itemsToSearchFor.FindAll((a) => a.priority >= 1);
+			lista.Sort((a, b) => b.priority.CompareTo(a.priority));
+			foreach (var item in lista)
+			{
+				if (itemsUi.Exists((a) => a.item_id == item.item_dictKey))
+				{
+					var smth = itemsUi.Find((a) => a.item_id == item.item_dictKey);
+					return new string(((AuctionHouseFetcher.itemData)smth.Tag).uuid);
+				}
+			}
+			return new string("");
+		}
+		void playSound(string uuid)
+		{
+			if (highlitedAuction_uuid == uuid) { return; }
 			var lista = itemsToSearchFor.FindAll((a) => a.priority >= 1);
 			foreach (var item in lista)
 			{
@@ -127,8 +144,9 @@ namespace nic_z_tego_nie_bd.GuiCode
 				}
 			}
 		}
-		void JadeRald()
+		void JadeRald(string uuid)
 		{
+			if (highlitedAuction_uuid == uuid) { return; }
 			var lista = itemsToSearchFor.FindAll((a) => a.priority >= 5);
 			lista.Sort((a, b) => b.priority.CompareTo(a.priority));
 			foreach (var item in lista)
@@ -196,6 +214,7 @@ namespace nic_z_tego_nie_bd.GuiCode
 			public List<String> searchQueries { get; set; }
 			public UInt32 maxPrice { get; set; }
 			public UInt16 priority { get; set; }
+			public string recipe_key { get; set; }
 		}
 
 		private void timer1_Tick(object sender, EventArgs e)

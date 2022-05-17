@@ -95,8 +95,9 @@ namespace nic_z_tego_nie_bd
 		}
 		public async Task<bool> refresh()
 		{
-			if ((DateTimeOffset.Now.ToUnixTimeMilliseconds() - ahCache.age <= floatingAge) && DateTimeOffset.Now.ToUnixTimeMilliseconds() - ahCache.lastUpdated <= 120000) return false;
-			if (!wholeAHGathered) { while (!(await fetchAllPages())) ; wholeAHGathered = true; floatingAge = 45000; return false; } //If its first init or smth went rly wrong redownload whole ah and start anew
+			if (DateTimeOffset.Now.ToUnixTimeMilliseconds() - ahCache.lastUpdated >= 110000) { wholeAHGathered = false; floatingAge = 40000; }
+			if ((DateTimeOffset.Now.ToUnixTimeMilliseconds() - ahCache.age <= floatingAge)) return false;
+			if (!wholeAHGathered) { while (!(await fetchAllPages())); wholeAHGathered = true; floatingAge = 45000; return false; } //If its first init or smth went rly wrong redownload whole ah and start anew
 			var AHEndedPageTask = getAHEndedPageAsync();
 			var AHEndedPage = await AHEndedPageTask;
 			if ((AHEndedPage.lastUpdated == ahCache.lastUpdated) || !AHEndedPage.success) { floatingAge += 1000; return false; }
