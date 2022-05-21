@@ -28,9 +28,11 @@ namespace nic_z_tego_nie_bd
 		public AuctionHouseFetcher auctionHouseFetcher;
 		//public Settings settings;
 		static public IAuctionHouse AHInstance { get; private set; }
+		static public int timedif { get; set; }
 
 		public MainGui()
 		{
+			timedif = 8000;
 			//Update Settings file on update (so actually never)
 			if (Properties.Settings.Default.UpgradeRequired)
 			{
@@ -38,7 +40,8 @@ namespace nic_z_tego_nie_bd
 				Properties.Settings.Default.UpgradeRequired = false;
 				Properties.Settings.Default.Save();
 			}
-			if (MainGui.Encode(Properties.Settings.Default.easterEggs) == "6582df3932a187c34d14e9dd9d47317732e675030f4663c043aa3692983609b9") AHInstance = new AuctionHouseAlpha();
+			if (MainGui.Encode(Properties.Settings.Default.easterEggs) == "6582df3932a187c34d14e9dd9d47317732e675030f4663c043aa3692983609b9") { AHInstance = new AuctionHouseAlpha(); timedif = 0; }
+			else if (MainGui.Encode(Properties.Settings.Default.easterEggs) == "34e8a6a096eb19b29620a92d2b1c72c9df8b3f6e4ddfc9db8d52f4418965aae2") AHInstance = new AuctionHouseAlpha();
 			else AHInstance = new AuctionHouseInstance();
 
 

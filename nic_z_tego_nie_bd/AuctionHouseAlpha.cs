@@ -153,6 +153,7 @@ namespace nic_z_tego_nie_bd
 			//never does bc non bin auctions are deleted sooo cant rly check whether i have good ah :( i hope so tho
 			//bool doesMatch = totalAuctions == ahCacheTemp.totalAuctions;
 			ahCacheTemp.success = AHFirstPage.success;
+			await Task.Delay(MainGui.timedif);
 			//Waiting for async tasks to be completed
 			await MainGui.awaitTasks();
 			ahCache = ahCacheTemp;
@@ -371,12 +372,6 @@ namespace nic_z_tego_nie_bd
 		{
 			string itemId = Regex.Match(nbtString, "\"?\\bid\\b\"?: ?\"([A-Z_:0-9]+)\"").Groups[1].Value;
 			return itemId;
-			//nbtString = nbtString.Replace("uuid", "uuha");
-			//nbtString = nbtString.Replace("mob_id", "mob_ha");
-			//var splitted = nbtString.Split("ExtraAttributes");
-			//splitted = splitted[1].Split("id: ");
-			//splitted = splitted[1].Split("\"");
-			//return splitted[1];
 		}
 	}
 }
