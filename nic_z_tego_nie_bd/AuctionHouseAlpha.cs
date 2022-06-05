@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -25,11 +26,14 @@ namespace nic_z_tego_nie_bd
 		public bool isInitialized { get; private set; }
 		bool wholeAHGathered = false;
 		HttpCliento httpCliento;
-		const int tasksD = 5000;
-		int floatingAge;
+		bool success;
+		long updateAt;
+		string lastModif;
 		public AuctionHouseAlpha()
 		{
-			floatingAge = 45000;
+			lastModif = "";
+			updateAt = -1;
+			success = false;
 			httpCliento = new();
 			isInitialized = false;
 			ahCache = new();
@@ -42,6 +46,26 @@ namespace nic_z_tego_nie_bd
 		{
 			wholeAHGathered = false;
 		}
+
+		bool checkHeader()
+		{
+			if (updateAt - 2000 > DateTimeOffset.Now.ToUnixTimeMilliseconds()) return false;
+			var httpRequest = (HttpWebRequest)WebRequest.Create(auctionsUrl + '0');
+			httpRequest.Method = "HEAD";
+			httpRequest.Proxy = null;
+			var httpResponse = (HttpWebResponse)httpRequest.GetResponse();
+			var agestr = httpResponse.GetResponseHeader("Age");
+			int actualAge = new();
+			bool success = Int32.TryParse(agestr, out actualAge);    // or, use `int.TryParse()`
+			if (success)
+			{
+				updateAt = DateTimeOffset.Now.ToUnixTimeMilliseconds() + ((60 - actualAge) * 1000);
+			}
+			if (lastModif == httpResponse.GetResponseHeader("Last-Modified")) return false;
+			lastModif = httpResponse.GetResponseHeader("Last-Modified");
+			return true;
+		}
+
 		public async Task<bool> fetchAllPages()
 		{
 			var ahFetcher = new AuctionHouseFetcher();
@@ -95,18 +119,25 @@ namespace nic_z_tego_nie_bd
 		}
 		public async Task<bool> refresh()
 		{
-			if (DateTimeOffset.Now.ToUnixTimeMilliseconds() - ahCache.lastUpdated >= 110000) { wholeAHGathered = false; floatingAge = 40000; }
-			if ((DateTimeOffset.Now.ToUnixTimeMilliseconds() - ahCache.age <= floatingAge)) return false;
-			if (!wholeAHGathered) { while (!(await fetchAllPages())); wholeAHGathered = true; floatingAge = 45000; return false; } //If its first init or smth went rly wrong redownload whole ah and start anew
+			if (!checkHeader() && success) return false;
+			//checkHeader();
+			//int delay = (int)(updateAt - DateTimeOffset.Now.ToUnixTimeMilliseconds() - 3200);
+			//if (delay > 0) await Task.Delay(delay);
+			//checkHeader();
+			//while (DateTimeOffset.Now.ToUnixTimeMilliseconds() < updateAt) ;
+			if (DateTimeOffset.Now.ToUnixTimeMilliseconds() - ahCache.lastUpdated >= 110000) { wholeAHGathered = false; }
+			//if ((DateTimeOffset.Now.ToUnixTimeMilliseconds() - ahCache.age <= floatingAge)) return false;
+			if (!wholeAHGathered) { while (!(await fetchAllPages())) ; wholeAHGathered = true; success = true; return true; } //If its first init or smth went rly wrong redownload whole ah and start anew
+
 			var AHEndedPageTask = getAHEndedPageAsync();
 			var AHEndedPage = await AHEndedPageTask;
-			if ((AHEndedPage.lastUpdated == ahCache.lastUpdated) || !AHEndedPage.success) { floatingAge += 1000; return false; }
-			floatingAge -= 250;
+			if (!AHEndedPage.success) { await Task.Delay(900); success = false; return false; }
+			if (AHEndedPage.lastUpdated == ahCache.lastUpdated) { await Task.Delay(900); success = false; return false; }
 			var AHFirstPageTask = getAHPageAsync();
-			if (AHEndedPage.lastUpdated - ahCache.lastUpdated >= 100000) { wholeAHGathered = false; return false; }
+			if (AHEndedPage.lastUpdated - ahCache.lastUpdated >= 100000) { wholeAHGathered = false; success = false; return false; }
 			var AHFirstPage = await AHFirstPageTask;
-			if (!AHFirstPage.success) { await Task.Delay(900); return false; }
-			if (AHEndedPage.lastUpdated != AHFirstPage.lastUpdated) { await Task.Delay(250); return false; }
+			if (!AHFirstPage.success) { await Task.Delay(900); success = false; return false; }
+			if (AHEndedPage.lastUpdated != AHFirstPage.lastUpdated) { await Task.Delay(250); success = false; return false; }
 
 			foreach (var auction in AHEndedPage.auctions)
 			{
@@ -157,7 +188,8 @@ namespace nic_z_tego_nie_bd
 			//Waiting for async tasks to be completed
 			await MainGui.awaitTasks();
 			ahCache = ahCacheTemp;
-			return true;
+			success = true;
+			return success;
 		}
 
 

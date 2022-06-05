@@ -147,7 +147,7 @@ namespace nic_z_tego_nie_bd
 			// timerAH
 			// 
 			this.timerAH.Enabled = true;
-			this.timerAH.Interval = 1000;
+			this.timerAH.Interval = 200;
 			this.timerAH.Tick += new System.EventHandler(this.timerAH_Tick);
 			// 
 			// ahAgeBox
